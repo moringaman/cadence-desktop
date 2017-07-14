@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="183px" height="122px" viewBox="0 0 183 122" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="92.4376275%" y1="-131.215361%" x2="101.999998%" y2="100.999999%" id="linearGradient-1">
+            <stop stop-color="#3023AE" offset="0%"></stop>
+            <stop stop-color="#C96DD8" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mobile-Portrait" transform="translate(-61.000000, -372.000000)" fill="url(#linearGradient-1)">
+            <g id="Group-5" transform="translate(32.000000, 344.000000)">
+                <path d="M215.42235,69.8865699 C182.730561,75.472119 159.42235,90.0174468 159.42235,107.081101 C159.42235,124.144756 182.730561,138.690084 215.42235,144.275633 L215.42235,161.154126 C163.53999,159.427913 122.42235,135.463497 122.42235,106.154126 C122.42235,76.8447555 163.53999,52.8803395 215.42235,51.1541261 L215.42235,69.8865699 Z" id="Combined-Shape" transform="translate(168.922350, 106.154126) rotate(225.000000) translate(-168.922350, -106.154126) "></path>
+                <path d="M119.033356,35.6721315 C86.3415667,41.2576807 63.0333558,55.8030085 63.0333558,72.8666631 C63.0333558,89.9303178 86.3415667,104.475646 119.033356,110.061195 L119.033356,126.939688 C67.1509954,125.213474 26.0333558,101.249058 26.0333558,71.9396878 C26.0333558,42.6303172 67.1509954,18.6659012 119.033356,16.9396878 L119.033356,35.6721315 Z" id="Combined-Shape-Copy" transform="translate(72.533356, 71.939688) rotate(45.000000) translate(-72.533356, -71.939688) "></path>
+            </g>
+        </g>
+    </g>
+</svg>
