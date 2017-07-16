@@ -77,6 +77,14 @@ html{
    /* background: url('./assets/background.png');
     opacity: 0.2;*/
     overflow: hidden;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 }
 
 body {
@@ -120,7 +128,7 @@ p {
   height: 550px;
   width: 99%;
   z-index: 99;
-   
+ 
 }
 
 

@@ -58,5 +58,11 @@ li i:hover {
     color: blueviolet;
 }
 
+.fa {
+    font-size: 50px;
+    text-align: center;
+    vertical-align: top;
+}
+
 
 </style>
