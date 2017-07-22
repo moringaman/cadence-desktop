@@ -11,15 +11,15 @@
 <div class="field">
   <label class="label">Email</label>
   <p class="control has-icons-left has-icons-right">
-    <input class="input" type="text" placeholder="Email address" v-model="user.email">
+    <input class="input" type="text" :class="[{'is-danger': !user.email == '' && !isValid}, {'is-success': !isValid}]" placeholder="Email address" v-model="user.email">
     <span class="icon is-small is-left">
       <i class="fa fa-envelope"></i>
     </span>
-   <!-- <span class="icon is-small is-right">
+    <span v-if="!user.email == '' && !isValid" class="icon is-small is-right">
       <i class="fa fa-warning"></i>
-    </span> -->
+    </span>
   </p>
-  <!--<p class="help is-danger">This email is invalid</p>-->
+  <p class="help is-danger" v-if="!user.email == '' && !isValid">This email is invalid</p>
 </div>
 
 <div class="field">
@@ -34,8 +34,9 @@
 
 <hr>
 
-       <a class="button is-primary" @click="login">Login</a>
-       <a class="button is-info" @click="signUp">Sign Up</a>
+       <a class="button is-primary" :class="{'is-success': isValid}" @click.prevent="login" v-if="isValid">Login</a>
+       <a class="button is-primary" @click.prevent.native="login" v-if="!isValid" disabled>Login</a>
+       <a class="button is-info" @click.prevent="signUp">Sign Up</a>
        <router-link class="button"  to="/cadence">Just Use</router-link>
       <!--  <a class="button is-danger" @click="close">Exit</a> -->
        </div>
@@ -109,18 +110,21 @@ var usersRef = Firebase.database().ref('users')
        this.$electron.shell.win.close();
       },
       login () {
-        if (this.isValid) {
-          this.emailValid = true;
-           const promise = auth.signInWithEmailAndPassword(this.user.email, this.user.password)
-        //var router = new Router()
-        .then(user =>  this.loggedInUser,
-        this.$emit('userLoggedIn', this.loggedInUser),
-                this.$router.push('/cadence') )
-          .catch( e => console.log(e.message)); 
-        } else {
+        if (!this.isValid) {
+               //TODO: set validEmail to false disabling the submit button
         return  alert("please enter a valid email address!")
         }
-       
+          this.emailValid = true;
+           var vm = this;
+           const promise = auth.signInWithEmailAndPassword(this.user.email, this.user.password)
+           .then(function (data) {
+              vm.loggedInUser = auth.currentUser,
+                  vm.$emit('userLoggedIn', vm.loggedInUser),
+                vm.$router.push('/cadence')
+           })
+           .catch( function (e) {
+              alert(e.message + e.code)
+           })
       },
       signUp () {
        const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
