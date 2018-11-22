@@ -3,15 +3,20 @@
   
        <div  class="list" >       
     <app-cdn v-for=" (search,index) in searchData" :key="search.name"
-     @click.native="copyCDN(index)" >
+      @click.native="copyCDN(index)">
      <div class="card">
          <div class="card-header">
              <p class="card-content header">
         {{search.name}}<span> ({{search.version}}) </span>
        </p> 
-        <a class="card-header-icon">
-      <span class="icon">
+        <a class="card-header-icon" @click.prevent="copyCDN(index)" >
+      <span class="icon" >
         <i class="fa fa-clipboard"></i>
+      </span>
+      </a>
+      <a class="card-header-icon" >
+       <span class="icon">
+        <i class="fa fa-download"></i>
       </span>
     </a>
        </div>
@@ -43,8 +48,10 @@ export default {
     },
     methods: {
         copyCDN(index){
-            this.$emit('cdnCopied', index);
-          
+            this.$emit('cdnCopied', index);   
+        },
+        downloadSource(index) {
+            console.log('downloading file')
         }
     }
 }
