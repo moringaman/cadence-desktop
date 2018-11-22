@@ -1,14 +1,49 @@
 <template>
     <div class="list-view">
-    <slot>
-    </slot>
+      <div class="card">
+         <div class="card-header">  
+             <p class="card-content header">
+        {{Data.name}}<span> ({{Data.version}}) </span>
+       </p> 
+        <a class="card-header-icon" >
+      <span class="icon" @click="copyCDN()">
+        <i class="fa fa-clipboard"></i>
+      </span>
+      </a>
+      <a class="card-header-icon" >
+       <span class="icon">
+        <i class="fa fa-download"></i>
+      </span>
+    </a>
+       </div>
+       <div class="card-content">
+           <div class="content">
+       {{Data.latest}}
+       </div>
+       </div>
+       </div>
   </div>
 </template>
 
 <script>
 export default {
+    props: ['Data'],
+    methods: {
 
+},
+methods: {
+    copyCDN (index){
+      var  cdn  = this.Data.latest;
+      let clipboard = this.$clipboard
+      let notify = this.$notify
+      this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
+    }
+},
+ceated() {
+    console.log(this.Data)
 }
+}
+
 </script>
 
 <style>

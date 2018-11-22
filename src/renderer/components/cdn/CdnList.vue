@@ -1,32 +1,8 @@
 <template>
 <div> 
-  
        <div  class="list" >       
     <app-cdn v-for=" (search,index) in searchData" :key="search.name"
-      @click.native="copyCDN(index)">
-     <div class="card">
-         <div class="card-header">
-             <p class="card-content header">
-        {{search.name}}<span> ({{search.version}}) </span>
-       </p> 
-        <a class="card-header-icon" @click.prevent="copyCDN(index)" >
-      <span class="icon" >
-        <i class="fa fa-clipboard"></i>
-      </span>
-      </a>
-      <a class="card-header-icon" >
-       <span class="icon">
-        <i class="fa fa-download"></i>
-      </span>
-    </a>
-       </div>
-       <div class="card-content">
-           <div class="content">
-       {{search.latest}}
-       </div>
-       </div>
-       </div>
-       
+      @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
        </div> 
      

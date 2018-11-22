@@ -6,6 +6,7 @@ import Notify from 'vue-notifyjs'
 import VueBar from 'vuebar';
 import VueUp from'vueup';
 import Firebase from 'firebase';
+import Vuex from 'vuex';
 import VueFire from'vuefire'
 
 Vue.use(VueBar)
@@ -15,7 +16,8 @@ Vue.use(Router)
 Vue.use(BootstrapVue)
 Vue.use(VueUp)
 Vue.use(Firebase)
-Vue.use(VueFire)
+Vue.use(Vuex)
+
 
 export default new Router({
   routes: [

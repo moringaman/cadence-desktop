@@ -11,7 +11,7 @@
         <div class="main-logo" v-if="searchData.length == 0"><img src="../././assets/logo2.svg">
         <br><span><p>Search for any Available CND for your project</p></span></div>
          <div v-show="!searchData.length == 0" class="scroll-list" v-bar="{preventParentScroll:true}">
-    <app-cdn-list :searchData="searchData" @cdnCopied='copyCDN'></app-cdn-list>   
+    <app-cdn-list :searchData="searchData"></app-cdn-list>   
       </div>
 <notifications class="alert"></notifications>
       
@@ -29,12 +29,13 @@ import Header from './cdn/Header.vue';
 import CdnList from './cdn/CdnList.vue';
 import Menu from './cdn/Menu.vue';
 import Footer from './cdn/Footer.vue';
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   
   data: function (){
   return {
-      searchData: []
+        // searchData: []
   }
   },
   components: {
@@ -44,25 +45,29 @@ export default {
         appFooter: Footer,
   },
   methods: {
+    ...mapActions([
+        'fetchSearchData'
+    ]),
     fetchData (search){
-      axios.get(URL + search +'&fields=version,description')
-      .then( (response) => {
-        this.searchData = response.data.results;
-         console.log(response);
-      })
+      this.$store.dispatch('fetchSearchData', search)
+      // axios.get(URL + search +'&fields=version,description')
+      // .then( (response) => {
+      //   this.searchData = response.data.results;
+      //    console.log(response);
+      // })
     },
-    copyCDN (index){
-     var  cdn  = this.searchData[index].latest;
-     var ext = cdn.split('.').pop();
-     var link 
-     ext === "js" ? link = `<script type="txt/javascript" src="${cdn}"><\/script>`: 
-     link = `<link rel="stylesheet" type="text/css" href="${cdn}>`
-    this.$clipboard(link); 
-    this.$notify({
-        message: 'Copied: ' + link
-      }); 
-      console.log(ext);
-    }
+    // copyCDN (index){
+    //   var  cdn  = this.searchData[index].latest;
+    //   let clipboard = this.$clipboard
+    //   let notify = this.$notify
+    //   this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
+    // }
+  },
+  computed: mapGetters([
+    'searchData'
+  ]),
+  created() {
+    console.log(this.$store);
   }
 }
 </script>
