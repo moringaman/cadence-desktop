@@ -10,7 +10,7 @@ const mutations = {
 
 const actions = {
   copyCDN(state, {cdn, clipboard, notify}) {
-    
+    console.log('CDN: ', cdn)
     var ext = cdn.split('.').pop();
     var link 
     ext === "js" ? link = `<script type="txt/javascript" src="${cdn}"><\/script>`: 

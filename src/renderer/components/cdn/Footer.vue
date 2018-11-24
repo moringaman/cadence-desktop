@@ -28,7 +28,7 @@ div {
 }
 
 div p {
-    color: white;
+    color: rgb(150, 148, 148);
     line-height: 10px;
     font-size: 14px;
 }

@@ -8,10 +8,13 @@
     <div class="column">
       <app-header @searchCDN="fetchData"></app-header>    
       <!-- <div class="scroll-list"> -->
-        <div class="main-logo" v-if="searchData.length == 0"><img src="../././assets/logo2.svg">
+        <div class="main-logo" v-if="searchData.length == 0 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
         <br><span><p>Search for any Available CND for your project</p></span></div>
-         <div v-show="!searchData.length == 0" class="scroll-list" v-bar="{preventParentScroll:true}">
-    <app-cdn-list :searchData="searchData"></app-cdn-list>   
+         <div v-if="!searchData.length == 0" class="scroll-list" v-bar="{preventParentScroll:true}">
+    <app-cdn-list :searchData="searchData" :localCDNStorage="localCDNStorage"></app-cdn-list>   
+      </div>
+           <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true}">
+    <app-cdn-list :localCDNStorage="localCDNStorage"></app-cdn-list>   
       </div>
 <notifications class="alert"></notifications>
       
@@ -29,7 +32,7 @@ import Header from './cdn/Header.vue';
 import CdnList from './cdn/CdnList.vue';
 import Menu from './cdn/Menu.vue';
 import Footer from './cdn/Footer.vue';
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   
@@ -48,6 +51,9 @@ export default {
     ...mapActions([
         'fetchSearchData'
     ]),
+    ...mapMutations([
+      'loadStoredCNs'
+    ]),
     fetchData (search){
       this.$store.dispatch('fetchSearchData', search)
       // axios.get(URL + search +'&fields=version,description')
@@ -63,11 +69,16 @@ export default {
     //   this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
     // }
   },
+  loadCDNStorage(){
+
+  },
   computed: mapGetters([
-    'searchData'
+    'searchData',
+    'localCDNStorage'
   ]),
   created() {
-    console.log(this.$store);
+    if (localStorage.getItem('localCDNs') !== null) this.$store.commit('loadStoredCNs')
+    console.log(localStorage.getItem('localCDNs'))
   }
 }
 </script>

@@ -4,6 +4,7 @@
     </div>
     <ul style="display: block">
         <li class="nav-item"><i class="fa fa-heart fa-3x"></i></li>
+        <li class="nav-item" @click='clearSearch()'><i class="fa fa-download fa-3x"></i></li>
         <li class="nav-item"><i class="fa fa-history fa-3x"></i></li>
         <li class="nav-item"><i class="fa fa-thumbs-o-up fa-3x"></i></li>
         <li ><router-link to='/'> <i class="fa fa-sign-out fa-3x"></i></router-link></li>
@@ -14,10 +15,18 @@
 
 <script>
 
-
+ import { mapActions } from 'vuex';
 
 export default {
-
+   
+methods: {
+     ...mapActions([
+        'clearSearchData'
+    ]),
+    clearSearch() {
+        this.$store.commit('clearSearchData')
+    }
+}
 }
 </script>
 

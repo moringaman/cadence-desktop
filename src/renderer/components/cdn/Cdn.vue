@@ -3,22 +3,27 @@
       <div class="card">
          <div class="card-header">  
              <p class="card-content header">
-        {{Data.name}}<span> ({{Data.version}}) </span>
-       </p> 
+        {{Data.name}}<span> ({{Data.version}} {{Data.cdnVersion}}) </span>
+       </p>
+          <a class="card-header-icon" >
+      <span class="icon" @click="favoriteCDN()">
+        <i class="fa fa-heart"></i>
+      </span>
+      </a> 
         <a class="card-header-icon" >
       <span class="icon" @click="copyCDN()">
         <i class="fa fa-clipboard"></i>
       </span>
       </a>
       <a class="card-header-icon" >
-       <span class="icon">
+       <span class="icon" @click='downloadCDN()'>
         <i class="fa fa-download"></i>
       </span>
     </a>
        </div>
        <div class="card-content">
            <div class="content">
-       {{Data.latest}}
+       {{Data.latest}} {{Data.file}}
        </div>
        </div>
        </div>
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+import wget from 'wget-improved';
 export default {
     props: ['Data'],
     methods: {
@@ -37,6 +43,16 @@ methods: {
       let clipboard = this.$clipboard
       let notify = this.$notify
       this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
+    },
+    downloadCDN () {
+        // let wget = this.wget
+        // let {cdnName, cdn, version} = this.Data
+        console.log("wget: ", wget)
+         let cdnName = this.Data.name
+         let version = this.Data.version
+         var  cdn  = this.Data.latest;
+         let notify = this.$notify
+        this.$store.dispatch('downloadCDN', {wget, cdn, cdnName, version, notify })
     }
 },
 ceated() {
@@ -81,6 +97,7 @@ div {
 .card-content.header {
     text-align: center;
     padding: 10px;
+    padding-left: 90px;
     width: 95%;
     font-size: 24px;
     font-weight: bold;

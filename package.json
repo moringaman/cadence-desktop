@@ -64,7 +64,8 @@
     "vuebar": "0.0.11",
     "vuefire": "^1.4.3",
     "vueup": "^1.0.0",
-    "vuex": "^2.3.1"
+    "vuex": "^2.3.1",
+    "wget-improved": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",

@@ -1,7 +1,10 @@
 <template>
 <div> 
        <div  class="list" >       
-    <app-cdn v-for=" (search,index) in searchData" :key="search.name"
+    <app-cdn  v-for=" (search,index) in searchData" :key="search.name"
+      @click.native="copyCDN(index)" :Data='search'>
+        </app-cdn>
+        <app-cdn  v-for=" (search,index) in localCDNStorage" :key="search.name"
       @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
        </div> 
@@ -13,7 +16,7 @@
 
 import Cdn from './Cdn.vue'
 export default {
-    props: ['searchData'],
+    props: ['searchData', 'localCDNStorage'],
     data: function (){
         return {
             
