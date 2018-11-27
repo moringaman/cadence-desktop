@@ -2,15 +2,24 @@ import axios from 'axios';
 
 const state = {
   searchData: [],
-  users: []
+  lastSearchData: [],
+  users: [],
+  showHistory: false
 }
 
 const mutations = {
   loadSearchData (state, payload) {
     state.searchData = payload
+    state.lastSearchData = payload
   },
   clearSearchData (state) {
+    if (state.searchData < 0) {
+      state.lastSearchData = state.searchData
+    }
     state.searchData = []
+  },
+  toggleShowHistory (state, payload) {
+    state.showHistory =  payload
   }
 }
 
@@ -22,6 +31,7 @@ const actions = {
     .then( (response) => {
       let searchData = response.data.results;
       commit('clearSearchData')
+      commit('toggleShowHistory' ,false)
       commit('loadSearchData', searchData )
        console.log(response);
     })
@@ -30,7 +40,9 @@ const actions = {
 }
 
 const getters = {
-   searchData: state => state.searchData
+   searchData: state => state.searchData,
+   lastSearchData: state => state.lastSearchData,
+   showHistory: state => state.showHistory
 }
 
 export default {

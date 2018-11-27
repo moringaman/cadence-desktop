@@ -181,6 +181,7 @@ var usersRef = Firebase.database().ref('users')
 
   body, input { 
      outline: none;
+     overflow: hidden;
    }
 
   

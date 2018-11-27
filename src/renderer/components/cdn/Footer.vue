@@ -12,6 +12,9 @@ export default {
 
 <style scoped>
 
+body {
+    overflow: hidden;
+}
 
 div {
     height: 30px;

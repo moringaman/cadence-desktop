@@ -1,7 +1,8 @@
 const path = require('path')
 
 const state = {
-   localCDNs: [] //localStorage.getItem('localCDNs')
+   localCDNs: [], //localStorage.getItem('localCDNs')
+   ipAddress: '127.0.0.1'
 }
 
 const mutations = {
@@ -16,22 +17,24 @@ const mutations = {
       let localCDNStorage = localStorage.getItem('localCDNs') //.split(',')
     //   console.log('localStorage', JSON.parse(localCDNStorage))
     console.log(JSON.parse(localCDNStorage))
+    // if (state.localCNDs.length > 0) {
     let parsedObj = JSON.parse(localCDNStorage)
      for (var obj in parsedObj) {
          console.log(parsedObj[obj])
         state.localCDNs.push(parsedObj[obj])
-    }
-    // for(let i = 0; i< localCDNStorage.length; i++ ){
-    //     if (localCDNStorage[i] !== null) {
-    //         state.localCDNs.push(JSON.parse(localCDNStorage)[i])
-    //     }
+     } 
     // }
-    //   state.localCDNs = localCDNStorage 
+  },
+  setIpAddress(state,payload){
+      state.ipAddress = payload
   }
 }
 
 const actions = {
     downloadCDN({commit}, {cdn, cdnName, version, wget, notify}) {
+        // return new Promise((resolve, reject) => {
+            
+        // })
         const src = cdn;
         let name = cdnName
         let cdnVersion = version
@@ -62,22 +65,15 @@ const actions = {
             // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
             let localCDNs = localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
             console.log("LocalCDNs: ", localCDNs)
-
-    // var ext = cdn.split('.').pop();
-    // var link 
-    // ext === "js" ? link = `<script type="txt/javascript" src="${cdn}"><\/script>`: 
-    // link = `<link rel="stylesheet" type="text/css" href="${cdn}>`
-//    clipboard(link); 
-    notify({
-        message: 'Copied: ' + cdn
-      }); 
+             commit('setNotification', `Downloaded: ${cdn}`) 
     //   console.log(ext);
   }
 }
 
 const getters = {
     //  searchData: state => state.searchData
-    localCDNStorage: state => state.localCDNs
+    localCDNStorage: state => state.localCDNs,
+    ipAddress: state => state.ipAddress
   }
 
 

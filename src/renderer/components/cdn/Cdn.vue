@@ -15,15 +15,15 @@
         <i class="fa fa-clipboard"></i>
       </span>
       </a>
-      <a class="card-header-icon" >
+      <a v-if='searchData.length > 1' class="card-header-icon" >
        <span class="icon" @click='downloadCDN()'>
-        <i class="fa fa-download"></i>
+        <i  class="fa fa-download"></i>
       </span>
     </a>
        </div>
        <div class="card-content">
            <div class="content">
-       {{Data.latest}} {{Data.file}}
+       {{Data.latest}}<span v-if='searchData.length < 1'>http://localhost:9990/</span>{{Data.file}}
        </div>
        </div>
        </div>
@@ -32,17 +32,25 @@
 
 <script>
 import wget from 'wget-improved';
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
     props: ['Data'],
-    methods: {
 
-},
 methods: {
     copyCDN (index){
-      var  cdn  = this.Data.latest;
+        if (this.Data.latest){
+            var  cdn  = this.Data.latest;
+        } 
+        else {
+            var cdn = `http://localhost:9990/${this.Data.file}`
+        }
       let clipboard = this.$clipboard
       let notify = this.$notify
       this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
+      setTimeout(() => {
+       this.$store.commit('clearNotification')// TODO call clear mutuation
+    }, 3000)
     },
     downloadCDN () {
         // let wget = this.wget
@@ -53,7 +61,18 @@ methods: {
          var  cdn  = this.Data.latest;
          let notify = this.$notify
         this.$store.dispatch('downloadCDN', {wget, cdn, cdnName, version, notify })
-    }
+        setTimeout(() => {
+       this.$store.commit('clearNotification')// TODO call clear mutuation
+    }, 3000)
+    },
+    ...mapMutations([
+        'clearNotification'
+    ])
+},
+computed: {
+    ...mapGetters([
+        'searchData'
+    ])
 },
 ceated() {
     console.log(this.Data)
@@ -118,6 +137,10 @@ div {
 
 .card-header-icon {
     align-self: right;
+}
+
+.card-header-icon:hover {
+    color: blueviolet;
 }
 
 .card:hover{
