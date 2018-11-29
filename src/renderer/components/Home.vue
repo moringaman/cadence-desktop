@@ -49,47 +49,32 @@
 </template>
 
 <script>
-  import SystemInformation from './LandingPage/SystemInformation'
-  import Firebase from 'firebase';
-  import Router from 'vue-router';
+  
+  import Firebase from 'firebase'
+  import Router from 'vue-router'
+  import {mapGetters} from 'vuex'
 
 // Email Address validation 
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-// Setup Firebase
-var config = {
-    apiKey: "AIzaSyBhAK7lteBJ1_0ynbyC3C0KnZq7EHzbQpU",
-    authDomain: "cadence-8edfc.firebaseapp.com",
-    databaseURL: "https://cadence-8edfc.firebaseio.com",
-    storageBucket: "cadence-8edfc.appspot.com"
-}
-
-Firebase.initializeApp(config);
-const auth = Firebase.auth();
-var usersRef = Firebase.database().ref('users')
   
   export default {
     name: 'landing-page',
-    components: { 
-      SystemInformation
-       },
+    components: {},
     data: function (){
         return  {
        user:{
           email: '',
           password: ''
        },
-       loggedInUser: [],
-       isLoggedIn: false,
-       userExists: false,
        emailValid: false
       }
     },
-     firebase: {
-    users: usersRef
-  },
-  // computed property for form validation state
   computed: {
+    ...mapGetters ([
+      'currentUser',
+      'loggedIn'
+    ]),
     validation: function () {
       return {
         email: emailRE.test(this.user.email)
@@ -100,6 +85,14 @@ var usersRef = Firebase.database().ref('users')
       return Object.keys(validation).every(function (key) {
         return validation[key]
       })
+    }
+  },
+  watch: {
+    loggedIn: function (data) {
+        if (this.loggedIn === true) {
+            console.log("true")
+            this.$router.push('/cadence') 
+          }
     }
   },
     methods: {
@@ -115,16 +108,9 @@ var usersRef = Firebase.database().ref('users')
         return  alert("please enter a valid email address!")
         }
           this.emailValid = true;
-           var vm = this;
-           const promise = auth.signInWithEmailAndPassword(this.user.email, this.user.password)
-           .then(function (data) {
-              vm.loggedInUser = auth.currentUser,
-                  vm.$emit('userLoggedIn', vm.loggedInUser),
-                vm.$router.push('/cadence')
-           })
-           .catch( function (e) {
-              alert(e.message + e.code)
-           })
+          this.$store.dispatch('authenticate', {email:this.user.email, password: this.user.password})
+          
+
       },
       signUp () {
        const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
@@ -132,8 +118,9 @@ var usersRef = Firebase.database().ref('users')
           .catch(e => console.log(e.message));
       },
       logOut () {
-       auth.signOut();
-       this.$router.push('/');
+      //  auth.signOut();
+      //  this.$router.push('/');
+      this.$store.dispatch('setLoggedOut')
       }
     }
   }

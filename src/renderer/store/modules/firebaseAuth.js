@@ -1,44 +1,46 @@
 
 
-import Firebase from 'firebase';
-import Router from 'vue-router';
-
-var config = {
-    apiKey: "AIzaSyBhAK7lteBJ1_0ynbyC3C0KnZq7EHzbQpU",
-    authDomain: "cadence-8edfc.firebaseapp.com",
-    databaseURL: "https://cadence-8edfc.firebaseio.com",
-    storageBucket: "cadence-8edfc.appspot.com"
-}
+import Firebase from '../../helpers/firebase'
+let auth = Firebase.auth();
 
 const state = {
     loggedIn: false,
-    CurrentUser: ''
+    currentUser: {}
 }
 
 const mutations = {
-    setLoggedin(state, payload) {
+    setLoggedIn (state, payload) {
         state.loggedIn = payload.loggedIn
         state.currentUser = payload.user
+    },
+    setLoggedOut (state) {
+        state.loggedIn = false
     }
 }
 
 const actions = {
     authenticate({commit}, payload) {
-        Firebase.initializeApp(config);
-        const auth = Firebase.auth();
-        var usersRef = Firebase.database().ref('users')
-        let vm = this
-        const promise = auth.signInWithEmailAndPassword(payload.email, payload.password)
+        let { email , password } = payload
+        console.log(email)
+        auth.signInWithEmailAndPassword(email, password)
            .then(function (data) {
-              return loggedInUser = auth.currentUser,
-                commit('setLoggedIn', {loggedIn:true, user: loggedInUser})
+               console.log('DATA:', data)
+            let user = auth.currentUser
+            commit('setLoggedIn', {loggedIn:true, user: user.uid})
+           }).catch(err=> {
+               console.log(err)
            })
+    },
+    signOut({commit}) {
+        auth.signOut();
+        commit('setLoggedOut')
     }
 
 }
 
 const getters = {
-
+    loggedIn: state => state.loggedIn,
+    currentUser: state => state.currentUser
 }
 
 export default {

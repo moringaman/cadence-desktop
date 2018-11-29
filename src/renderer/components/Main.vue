@@ -110,8 +110,16 @@ export default {
           'localCDNStorage',
           'notification',
           'showHistory',
-          'ipAddress'
+          'ipAddress',
+          'loggedIn'
     ])
+  },
+  watch: {
+    loggedIn: function () {
+      if (this.loggedIn === false) {
+          this.$router.push('/')
+      }
+    }
   },
   created() {
     if (localStorage.getItem('localCDNs') !== null && this.localCDNStorage.length === 0) this.$store.commit('loadStoredCNs')
