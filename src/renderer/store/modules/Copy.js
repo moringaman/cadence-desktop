@@ -1,13 +1,12 @@
 // import { copyOrLinkFile } from "electron-builder-util/out/fs";
 
+// const state = {
+    
+// }
 
-const state = {
-    // notification: ' '
-}
+// const mutations = {
 
-const mutations = {
-
-}
+// }
 
 const actions = {
   copyCDN({commit} , {cdn, clipboard, notify}) {
@@ -23,14 +22,13 @@ const actions = {
   }
 }
 
-const getters = {
-  //  searchData: state => state.searchData
-  // notification: state => state.notification
-}
+// const getters = {
+  
+// }
 
 export default {
-  state,
-  mutations,
+  // state,
+  // mutations,
   actions,
-  getters
+  // getters
 }

@@ -49,12 +49,10 @@ methods: {
       let notify = this.$notify
       this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
       setTimeout(() => {
-       this.$store.commit('clearNotification')// TODO call clear mutuation
+       this.$store.commit('clearNotification')
     }, 3000)
     },
     downloadCDN () {
-        // let wget = this.wget
-        // let {cdnName, cdn, version} = this.Data
         console.log("wget: ", wget)
          let cdnName = this.Data.name
          let version = this.Data.version
@@ -62,7 +60,7 @@ methods: {
          let notify = this.$notify
         this.$store.dispatch('downloadCDN', {wget, cdn, cdnName, version, notify })
         setTimeout(() => {
-       this.$store.commit('clearNotification')// TODO call clear mutuation
+       this.$store.commit('clearNotification')
     }, 3000)
     },
     ...mapMutations([

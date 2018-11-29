@@ -26,6 +26,7 @@ export default {
   max-width: 900px;
   color: blueviolet;
   font-weight: bold;
+  font-size: 0.8em;
   background-color: yellow;
   border: 1px solid lightgray;
   text-align: left;
