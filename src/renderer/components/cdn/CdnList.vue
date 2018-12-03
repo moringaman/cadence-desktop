@@ -4,7 +4,7 @@
     <app-cdn  v-for=" (search,index) in searchData" :key="search.name"
       @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
-        <app-cdn  v-for=" (search,index) in localCDNStorage" :key="search.name"
+        <app-cdn v-if='showLocalStorage' v-for=" (search,index) in localCDNStorage" :key="search.name"
       @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
        </div> 
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 import Cdn from './Cdn.vue'
 export default {
     props: ['searchData', 'localCDNStorage'],
@@ -32,6 +32,11 @@ export default {
         downloadSource(index) {
             console.log('downloading file')
         }
+    },
+    computed: {
+        ...mapGetters([
+            'showLocalStorage'
+        ])
     }
 }
 </script>

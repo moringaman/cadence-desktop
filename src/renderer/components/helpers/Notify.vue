@@ -22,18 +22,19 @@ export default {
   bottom: 70px;
   right: 10px;
   min-height: 80px;
-  width: 900px;
-  max-width: 900px;
-  color: blueviolet;
+  width: 500px;
+  max-width: 500px;
+  color: #fff;
   font-weight: bold;
-  font-size: 0.8em;
-  background-color: yellow;
+  font-size: 1em;
+  background-color: blueviolet;
   border: 1px solid lightgray;
   text-align: left;
   border-radius: 10px;
-  padding: 30px 20px 10px 20px;
+  padding: 10px 10px 10px 50px;
   z-index: 300;
   word-wrap:normal;
+  opacity: .7;
   /* overflow: hidden; */
 }
 
@@ -43,12 +44,12 @@ export default {
   background-color: white;
   color: blueviolet;
   padding: 2px;
-  border: 3px solid lightgray;
+  border: 3px solid blueviolet;
   border-radius: 50%;
-  position: relative;
+  position: absolute;
   z-index: 301;
-  margin-top: -48px;
-  transform: translate(-40px, -37px);
+  top: 10px;
+  transform: translate(-50px, -30px);
 }
 
 .notify > .icon-circle > .icon-circle__icon {

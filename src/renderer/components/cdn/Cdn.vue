@@ -10,22 +10,25 @@
         <i class="fa fa-heart"></i>
       </span>
       </a> 
-        <a class="card-header-icon" >
+        <a class="card-header-icon tooltip" data-tooltip="copy to clipboard" >
       <span class="icon" @click="copyCDN()">
         <i class="fa fa-clipboard"></i>
       </span>
       </a>
-      <a v-if='searchData.length > 1' class="card-header-icon" >
+      <a v-if='searchData.length > 1' class="card-header-icon tooltip" data-tooltip="download?" >
        <span class="icon" @click='downloadCDN()'>
         <i  class="fa fa-download"></i>
       </span>
     </a>
        </div>
-       <div class="card-content">
-           <div class="content">
-       {{Data.latest}}<span v-if='searchData.length < 1'>http://localhost:9990/</span>{{Data.file}}
-       </div>
-       </div>
+        <div class="card-content" >
+            <div v-if="showProgress === true && currentFile === fileNameData" class='content'>
+                    <progress class="progress is-primary" :value='progress * 100' max="100"></progress>
+                </div>
+            <div v-else class="content tooltip is-tooltip-multiline" data-tooltip='Data.description' >
+                {{Data.latest}}<span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/</span>{{Data.file}}
+                </div>
+        </div>
        </div>
   </div>
 </template>
@@ -36,7 +39,11 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
     props: ['Data'],
-
+    data() {
+        return {
+            fileNameData: '/this/file/is/nonexistent'
+        }
+    },
 methods: {
     copyCDN (index){
         if (this.Data.latest){
@@ -45,8 +52,8 @@ methods: {
         else {
             var cdn = `http://localhost:9990/${this.Data.file}`
         }
-      let clipboard = this.$clipboard
-      let notify = this.$notify
+      let clipboard = this.$clipboard,
+      notify = this.$notify
       this.$store.dispatch('copyCDN', { cdn, clipboard, notify })
       setTimeout(() => {
        this.$store.commit('clearNotification')
@@ -54,14 +61,17 @@ methods: {
     },
     downloadCDN () {
         console.log("wget: ", wget)
-         let cdnName = this.Data.name
-         let version = this.Data.version
-         var  cdn  = this.Data.latest;
-         let notify = this.$notify
+         let cdnName = this.Data.name,
+         version = this.Data.version,
+         cdn  = this.Data.latest,
+         notify = this.$notify
         this.$store.dispatch('downloadCDN', {wget, cdn, cdnName, version, notify })
-        setTimeout(() => {
-       this.$store.commit('clearNotification')
-    }, 3000)
+        .then(() => {
+                 setTimeout(() => {
+                    this.$store.commit('clearNotification')
+                    }, 5000)
+        })
+   
     },
     ...mapMutations([
         'clearNotification'
@@ -69,11 +79,27 @@ methods: {
 },
 computed: {
     ...mapGetters([
-        'searchData'
-    ])
+        'searchData',
+        'progress',
+        'currentFile',
+        'showLocalStorage'
+    ]),
+    // fileNameData() {
+    //     return 
+    // },
+    showProgress () {
+        if (this.progress > 0 &&  this.progress < 1) {
+            return true
+        } else {
+            return false
+        }
+    }
 },
-ceated() {
-    console.log(this.Data)
+created() {
+        if (this.searchData.length > 1) {
+             this.fileNameData = this.Data.latest.split('/').splice('-1' )[0]
+            console.log(this.fileNameData)
+        } 
 }
 }
 
@@ -118,8 +144,8 @@ div {
     width: 95%;
     font-size: 24px;
     font-weight: bold;
-    opacity: 0.7;
-    color:black;
+    opacity: 1;
+    color:grey;
 }
 
 .card-content.header span {
@@ -135,10 +161,14 @@ div {
 
 .card-header-icon {
     align-self: right;
+    color: blueviolet;
+    opacity: 0.6;
 }
 
 .card-header-icon:hover {
-    color: blueviolet;
+    color: #fff;
+    background-color:blueviolet;
+    opacity: 0.6;
 }
 
 .card:hover{

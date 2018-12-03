@@ -71,7 +71,8 @@ export default {
   },
   methods: {
     ...mapActions([
-        'fetchSearchData'
+        'fetchSearchData',
+        'getFavs'
     ]),
     ...mapMutations([
       'loadStoredCNs'
@@ -111,12 +112,13 @@ export default {
           'notification',
           'showHistory',
           'ipAddress',
-          'loggedIn'
+          'loggedIn',
+          'basicUser'
     ])
   },
   watch: {
     loggedIn: function () {
-      if (this.loggedIn === false) {
+      if (this.loggedIn === false || this.basicUser === false) {
           this.$router.push('/')
       }
     }
@@ -125,6 +127,11 @@ export default {
     if (localStorage.getItem('localCDNs') !== null && this.localCDNStorage.length === 0) this.$store.commit('loadStoredCNs')
     console.log(localStorage.getItem('localCDNs'))
       this.getIp()
+      if (this.loggedIn === false && this.basicUser === false ) {
+        this.$router.push('/')
+      }
+      console.log('fetching favourites')
+      this.$store.dispatch('getFavs')
   }
 }
 

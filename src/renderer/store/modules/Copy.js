@@ -1,34 +1,18 @@
-// import { copyOrLinkFile } from "electron-builder-util/out/fs";
 
-// const state = {
-    
-// }
-
-// const mutations = {
-
-// }
 
 const actions = {
   copyCDN({commit} , {cdn, clipboard, notify}) {
-    console.log('CDN: ', cdn)
-    var ext = cdn.split('.').pop();
-    console.log('LINK: ', ext)
-    var link 
+    var name = cdn.split('/').pop(),
+    ext = cdn.split('.').pop(),
+    link 
     ext === "js" ? link = `<script src="${cdn}"><\/script>`: 
     link = `<link rel="stylesheet" type="text/css" href="${cdn}">`
-   clipboard(link); 
-    commit('setNotification', `Copied: ${link}` ) //maybe in component?
-    console.log(ext);
+    clipboard(link); 
+    commit('setNotification', `Copied script tag for: ${name} to your clipboard to be pasted into your webpage` ) //maybe in component?
   }
 }
 
-// const getters = {
-  
-// }
 
 export default {
-  // state,
-  // mutations,
-  actions,
-  // getters
+  actions
 }

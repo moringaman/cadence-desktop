@@ -3,12 +3,15 @@
     <div class="logo"><img src="../../assets/logo2.svg">Cadence
     </div>
     <ul style="display: block">
-        <li class="nav-item"><i class="fa fa-heart fa-3x"></i></li>
-        <li class="nav-item" @click='clearSearch()'><i class="fa fa-download fa-3x"></i></li>
-        <li class="nav-item" @click='showHistory()'><i class="fa fa-history fa-3x"></i></li>
-        <li class="nav-item"><i class="fa fa-thumbs-o-up fa-3x"></i></li>
-        <!-- <li ><router-link to='/'> <i class="fa fa-sign-out fa-3x"></i></router-link></li> -->
-        <li @click='signOut' > <i class="fa fa-sign-out fa-3x"></i></li>
+        <li class="nav-item"><i class="fa fa-heart fa-3x"></i><span>Favorites</span></li>
+        <!-- <li class="nav-item" @click='clearSearch()'><i class="fa fa-download fa-3x"></i><span>local</span></li> -->
+        <!-- <li class="nav-item" @click='showHistory()'><i class="fa fa-history fa-3x"></i><span>history</span></li> -->
+        <!-- <li class="nav-item"><i class="fa fa-thumbs-o-up fa-3x"></i><span>popular</span></li> -->
+        <app-menu-item fa-icon='fa fa-download fa-3x' item-name='local Storage' event-name="clear" @clear='clearSearch' />
+        <app-menu-item fa-icon='fa fa-history fa-3x' item-name='history' event-name="history" @history='showHistory' />
+        <app-menu-item fa-icon='fa fa-thumbs-o-up fa-3x' item-name='popular' event-name="popular" @popular='popular' />
+        <!-- <app-menu-item fa-icon='fa fa-sign-out fa-3x' item-name='signout' event-name="signout" @signout='signOut' /> -->
+        <li class="nav-item" @click='signOut()'> <i class="fa fa-sign-out fa-3x"></i><span>signout</span></li>
         </ul>
      
     </div>
@@ -17,9 +20,10 @@
 <script>
 
  import { mapActions } from 'vuex';
+ import menuItem from './MenuItem.vue'
 
 export default {
-   
+   components: {appMenuItem: menuItem},
 methods: {
      ...mapActions([
         'clearSearchData',
@@ -28,10 +32,19 @@ methods: {
     clearSearch() {
         this.$store.commit('toggleShowHistory', false)
         this.$store.commit('clearSearchData')
+        this.$store.commit('toggleShowLocalStorage')
     },
     showHistory() {
         // this.$store.commit('clearSearchData')
         this.$store.commit('toggleShowHistory', true)
+        this.$store.commit('toggleShowLocalStorage')
+    },
+    popular() {
+        console.log('clicked popular item')
+    },
+    signOut() {
+        this.$store.dispatch('signOut')
+        .then(this.$router.push('/'))
     }
 },
 }
@@ -63,11 +76,19 @@ methods: {
 
 li i {
     outline: none;
-    margin: 20px auto;
+    margin: 30px auto;
     width: 50px;
     color: grey; 
     opacity: 0.5;
     vertical-align: middle;
+}
+
+li > span {
+    text-transform: uppercase;
+    transform:translateY(40px);
+    position: absolute;
+    color: #fff;
+    font-weight: 600;
 }
 
 li i:hover {
