@@ -73,7 +73,6 @@ const actions = {
             let download = wget.download(cdn, output, options);
             download.on('error', function(err) {
                 console.log(err);
-                // TODO mutate current file state for reading by progress bar
             });
             download.on('start', function(fileSize) {
                 console.log(fileSize);

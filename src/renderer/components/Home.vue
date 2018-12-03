@@ -3,12 +3,7 @@
     <img class="splash-logo" src=".././assets/logo2.svg">
     <p class='welcome'>Cadence CDN Saver</p>
   <div class="card">
-    
-    <!-- <div class="card-header"> 
-      <p class='card-header-title' >Login</p>
-      </div> -->
       <div class="card-content">
-
 <div class="field">
   <label class="label">Email</label>
   <p class="control has-icons-left has-icons-right">
@@ -139,6 +134,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
   width: 100%;
   position: absolute;
   text-align: center;
+  overflow: hidden;
  }
 
  #wrapper::after {
