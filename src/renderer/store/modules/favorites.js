@@ -1,50 +1,78 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
-// let database = Firebase.database();
-
-
 
 const state = {
-    favs: []
+    favs: [],
+    showFavs: false
 }
 
 const mutations = {
     loadFavs({
         state
     }, payload) {
+        console.log('PAYLOAD: ',payload)
         state.favs = payload
     },
     updateFavs(state, payload) {
         state.favs.push(payload)
     },
-    deleteFav() {
+    deleteFav(state, payload) {
+        let newFavs = []
+        for(let i=0; i< state.favs.length; i++){
+            if(state.favs[i].name !== payload) {
+                newFavs.push(state.favs[i])
+            }
+        }
+        console.log(newFavs)
+        state.favs = newFavs
 
+    },
+    showFavs(state, payload){
+        state.showFavs = payload
     }
 }
 
 const actions = {
     addFav({
         commit,
-        state
-    }, payload) {
+    state}, payload) {
         let {
-            cdnName = '', version = 'latest', cdn = '', userId
+            name = '', version = 'latest', cdn = '', userId
         } = payload
-        return new Promise((resolve, reject) => {
-            Firebase.database().ref('favs/' + uid())
-                .set({
-                    cdnName,
-                    version,
-                    cdn,
-                    userId
-                })
-                .then(response => {
-                    resolve(response)
-                    commit('setNotification', `${cdnName} Library Added to your favourites`)
-                }, error => {
-                    reject(error)
-                })
-        })
+        // TODO: check if favorite already there *********
+        let alreadyAdded = false
+        for(let i=0; i< state.favs.length; i++){
+            if(state.favs[i].name.indexOf(name) > -1) {
+                alreadyAdded = true
+            }
+        }
+        if (alreadyAdded) {
+            console.log('Already Added')
+            return
+        }
+        // ************************************************* Varify
+        if (state.loggedIn === true) {
+            return new Promise((resolve, reject) => {
+                Firebase.database().ref('favs/' + uid())
+                    .set({
+                        name,
+                        version,
+                        cdn,
+                        userId
+                    })
+                    .then(response => {
+                        resolve(response)
+                        localStorage.setItem('favCDNs', JSON.stringify(state.favs))
+                        commit('setNotification', `${name} Library Added to your favourites`)
+                    }, error => {
+                        reject(error)
+                    })
+            })
+        } else {
+            localStorage.setItem('favCDNs', JSON.stringify(state.favs))
+            commit('setNotification', `${name} Library Added to your favourites`)
+        }
+      
         // TODO: Increase total library favourited count by 1
     },
     getFavs({
@@ -54,11 +82,9 @@ const actions = {
         return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
-                const favArray = []
                 ref.orderByChild('userId').equalTo(payload).limitToFirst(1)
                 ref.on('value', (snapshot) => {
                     snapshot.forEach((data) => {
-                        // console.log(`Favourites: ${data.key} ${data.value}`)
                         commit('updateFavs', data.val())
                     })
                 })
@@ -68,12 +94,12 @@ const actions = {
             }, error => {
                 reject(error)
             })
-
-    }
+    },
 }
 
 const getters = {
-
+    favs: state => state.favs,
+    showFavs: state => state.showFavs
 }
 
 export default {

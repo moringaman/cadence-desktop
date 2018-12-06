@@ -10,7 +10,8 @@
         <!-- <div class="scroll-list"> -->
         <div class="main-logo" v-if="searchData.length == 0 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
           <br><span><p>Search for any Available CND for your project</p></span></div>
-        <template v-if='!showHistory'>
+          <app-loading-bar v-if='dataLoading===true'></app-loading-bar>
+        <template v-if='!showHistory && !showFavs'>
            <div v-if="!searchData.length == 0" class="scroll-list" v-bar="{preventParentScroll:true}">
       <app-cdn-list :searchData="searchData" :localCDNStorage="localCDNStorage"></app-cdn-list>   
         </div>
@@ -18,8 +19,13 @@
       <app-cdn-list :localCDNStorage="localCDNStorage"></app-cdn-list>   
         </div>
 </template>
+<template v-if='showFavs'>
+  <div v-if="favs.length > 0" class="scroll-list" v-bar="{preventParentScroll:true}">
+    <app-cdn-list :searchData="favs"></app-cdn-list>
+  </div>
+</template>
 
-<template v-else>
+<template v-if='showHistory && !showFavs'>
   <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true}">
     <app-cdn-list :searchData="lastSearchData"></app-cdn-list>
   </div>
@@ -53,6 +59,8 @@
   import Menu from './cdn/Menu.vue';
   import Footer from './cdn/Footer.vue';
   import Notify from './helpers/Notify.vue'
+  import loadingBar from './helpers/loading.vue'
+
   import {
     mapActions,
     mapGetters,
@@ -74,7 +82,8 @@
       appHeader: Header,
       appMenu: Menu,
       appFooter: Footer,
-      appNotify: Notify
+      appNotify: Notify,
+      appLoadingBar: loadingBar
     },
     methods: {
       ...mapActions([
@@ -121,7 +130,10 @@
         'ipAddress',
         'loggedIn',
         'basicUser',
-        'currentUser'
+        'currentUser',
+        'favs',
+        'showFavs',
+        'dataLoading'
       ])
     },
     watch: {
@@ -143,6 +155,7 @@
       // this.$store.dispatch('addFav', this.currentUser)
   
       if (this.currentUser != '' && this.loggedIn === true) {
+        // TODO: Load favourites from local storage if offline
         this.$store.dispatch('getFavs', this.currentUser)
       }
     }
@@ -151,6 +164,7 @@
 
 <style>
   @import "https://unpkg.com/vue-notifyjs/themes/default.css";
+
   html {
     /* min-height:100%;/* make sure it is at least as tall as the viewport */
     /* background: url('./assets/background.png');
@@ -237,7 +251,7 @@
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 550px;
+    height: 570px;
     width: 99%;
     z-index: 99;
   }
@@ -253,6 +267,13 @@
   
   .main-logo span {
     opacity: 1;
+  }
+
+  .loader {
+    
+    margin-top: 30%;
+    margin-left: 50%;
+    
   }
   
   .alert {

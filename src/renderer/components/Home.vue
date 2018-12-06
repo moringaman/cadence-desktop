@@ -1,11 +1,15 @@
 <template>
   <div id="wrapper">
     <img class="splash-logo" src=".././assets/logo2.svg">
-    <p class='welcome'>Cadence CDN Saver</p>
+    <p class='welcome'>Cadence</p>
   <div class="card">
       <div class="card-content">
+        <div class="card-content-heading">
+          Login
+        </div>
 <div class="field">
-  <label class="label">Email</label>
+  <hr>
+  <label class="label"></label>
   <p class="control has-icons-left has-icons-right">
     <input class="input" type="text" :class="[{'is-danger': !user.email == '' && !isValid}, {'is-success': !isValid}]" placeholder="Email address" v-model="user.email">
     <span class="icon is-small is-left">
@@ -19,7 +23,7 @@
 </div>
 
 <div class="field">
-  <label class="label">Password</label>
+  <label class="label"></label>
   <p class="control has-icons-left">
     <input class="input" type="password" placeholder="Password" v-model="user.password">
     <span class="icon is-small is-left">
@@ -27,9 +31,6 @@
     </span>
   </p>
 </div>
-
-<hr>
-
        <a class="button is-primary" :class="{'is-success': isValid}" @click.prevent="login" v-if="isValid">Login</a>
        <a class="button is-primary" @click.prevent.native="login" v-if="!isValid" disabled>Login</a>
        <a class="button is-info" @click.prevent="signUp">Sign Up</a>
@@ -40,7 +41,7 @@
       <div id="login-text">
        <p>Sign In to access your history, favourites and special features or just use the basics.</p>
        </div >
-      <div class="slogun">coding on the go</div>
+      <div class="slogun"> coding on the go</div>
   </div>
 </template>
 
@@ -135,6 +136,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
   position: absolute;
   text-align: center;
   overflow: hidden;
+  background-color:rgba(105, 104, 104, 0.2);
  }
 
  #wrapper::after {
@@ -142,9 +144,9 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
    background: url('../assets/splashBack2.jpg');
    background-size: cover;
    background-repeat: no-repeat;
-   /* filter: saturate(-3); */
-   /* background-position-y: -150px; */
-   opacity: 0.3;
+   filter: saturation(9);
+   /* background-position-y: -30px; */
+   opacity: 0.5;
    z-index: -1;
    position: absolute;
    top: 0;
@@ -155,11 +157,12 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
  .welcome {
    position: absolute;
-   top: 250px;
+   top: 223px;
    left: 50%;
    transform: translateX(-50%);
    color: blueviolet;
-   font-size: 1.5rem;
+   font-size: 2.5rem;
+   font-weight: 200;
  }
 
  .splash-logo {
@@ -173,7 +176,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
 
 .card {
-  text-align: left;
+  text-align: center;
   height: 300px;
   width: 400px;
   position: absolute;
@@ -182,7 +185,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
   margin-top:-150px; /* this is half the height of your div*/  
   margin-left:-200px; /*this is half of width of your div*/
   box-shadow: 2px 2px 6px rgba(0,0,0, .2);
-  background-color: rgba(250,250,250, .6);
+  background-color: rgba(250,250,250, .1);
  }
 
 .card-header {
@@ -195,6 +198,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
      overflow: hidden;
    }
 
+/* input { margin-top: 20px;} */
   
 
   .title {
@@ -207,10 +211,10 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
   #login-text {
     font-size: 1.2rem;
-    color: blueviolet;
+    color: white;
     font-weight: 600;
     width: 400px;
-    position: absolute;
+    position: relative;
     top: 620px;
     left: 50%;
     transform: translateX(-50%);
@@ -218,15 +222,21 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     /* margin-left: -150px; */
   }
 
+  .button {margin-top: 20px}
+
   
 
   .slogun {
     font-size: 7.5rem;
+    font-weight: bolder;
     color: rgba(250,250,250, .3);
     text-transform: uppercase;
     font-weight: bold;
     position: absolute;
-    top: 785px;
+    width: 100%;
+    top: 770px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
 </style>

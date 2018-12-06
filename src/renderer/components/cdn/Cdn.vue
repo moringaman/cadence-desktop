@@ -1,11 +1,17 @@
 <template>
     <div class="list-view">
+    <transition name="fade" appear> 
         <div class="card">
-            <div class="card-header">
+            <div class="card-header" >
                 <p class="card-content header">
                     {{Data.name}}<span> ({{Data.version}} {{Data.cdnVersion}}) </span>
                 </p>
-                <a class="card-header-icon">
+                     <a v-if='showFavs || showLocalStorage' class="card-header-icon">
+                    <span class="icon" @click="deleteFav()">
+            <i class="fa fa-trash"></i>
+          </span>
+                </a> 
+                <a v-if='showFavs===false' class="card-header-icon">
                     <span class="icon" @click="favouriteCDN()">
             <i class="fa fa-heart"></i>
           </span>
@@ -15,7 +21,7 @@
             <i class="fa fa-clipboard"></i>
           </span>
                 </a>
-                <a v-if='searchData.length > 1' class="card-header-icon tooltip" data-tooltip="download?">
+                <a v-if='searchData.length > 1' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
                     <span class="icon" @click='downloadCDN()'>
             <i  class="fa fa-download"></i>
           </span>
@@ -25,11 +31,13 @@
                 <div v-if="showProgress === true && currentFile === fileNameData" class='content'>
                     <progress class="progress is-primary" :value='progress * 100' max="100"></progress>
                 </div>
-                <div v-else class="content tooltip is-tooltip-multiline" data-tooltip='Data.description'>
-                    {{Data.latest}}<span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/</span>{{Data.file}}
+                <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
+                  <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
+                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/</span>{{Data.file}}
                 </div>
             </div>
         </div>
+    </transition>
     </div>
 </template>
 
@@ -51,8 +59,10 @@
             copyCDN(index) {
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
-                } else {
+                } else if (this.Data.file){
                     var cdn = `http://localhost:9990/${this.Data.file}`
+                } else {
+                    var cdn = this.Data.cdn
                 }
                 let clipboard = this.$clipboard,
                     notify = this.$notify
@@ -86,7 +96,7 @@
     
             },
             favouriteCDN() {
-                let cdnName = this.Data.name,
+                let name = this.Data.name,
                     version = this.Data.version,
                     cdn = this.Data.latest,
                     userId = this.currentUser
@@ -95,7 +105,7 @@
                     version = this.Data.cdnVersion
                 }
                 this.$store.dispatch('addFav', {
-                        cdnName,
+                        name,
                         version,
                         cdn,
                         userId
@@ -105,6 +115,27 @@
                             this.$store.commit('clearNotification')
                         }, 5000)
                     })
+            },
+            deleteFav() {
+                if (!this.Data.file) {
+                    let name = this.Data.name
+                    console.log(name)
+                this.$store.commit('deleteFav', name)
+                this.$store.commit('setNotification', `${name} Library removed to your favourites`)   
+                setTimeout(() => {
+                            this.$store.commit('clearNotification')
+                        }, 5000)
+                } else {
+                    // call delete locally stored CDN function
+                    let file = this.Data.file
+                    this.$store.dispatch('deleteCDN', file)
+                    .then(() => {
+                        setTimeout(() => {
+                            this.$store.commit('clearNotification')
+                        }, 5000)
+                    })
+                }
+                
             },
             ...mapMutations([
                 'clearNotification'
@@ -116,11 +147,9 @@
                 'progress',
                 'currentFile',
                 'showLocalStorage',
-                'currentUser'
+                'currentUser',
+                'showFavs'
             ]),
-            // fileNameData() {
-            //     return 
-            // },
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {
                     return true
@@ -155,14 +184,17 @@
         cursor: pointer;
         background-color: #ffffff;
         width: 800px;
+        overflow: visible !important;
     }
     
     .card-content {
-        opacity: 0.5;
+        opacity: 1;
+        overflow: visible !important
     }
     
     .content {
         overflow-wrap: break-word;
+        overflow: visible !important
     }
     
     .card-content.header {
@@ -174,6 +206,7 @@
         font-weight: bold;
         opacity: 1;
         color: grey;
+         overflow: visible;
     }
     
     .card-content.header span {
@@ -198,6 +231,11 @@
         background-color: blueviolet;
         opacity: 0.6;
     }
+
+    .tooltip {
+        z-index: 1000;
+        font-size: 1rem;
+    }
     
     .card:hover {
         /* background-color: rgba(0,0,0, 0.2);*/
@@ -210,5 +248,13 @@
     
     .list-view {
         overflow-x: hidden;
+    }
+
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .7s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
     }
 </style>

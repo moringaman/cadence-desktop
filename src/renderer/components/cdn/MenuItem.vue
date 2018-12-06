@@ -13,7 +13,7 @@
 <script>
 
 export default {
-    props: ['fa-icon', 'item-name', 'event-name'],
+    props: ['fa-icon', 'item-name', 'event-name', 'active'],
     data() {
         return {
 
@@ -26,7 +26,7 @@ export default {
         }
     },
     created() {
-        console.log('props: ', this.faIcon)
+        console.log('props: ', this.active)
     }
 }
 </script>
@@ -50,7 +50,7 @@ li > span {
     font-weight: 600;
 }
 
-li i:hover {
+li i:hover,:active {
     color: blueviolet;
 }
 

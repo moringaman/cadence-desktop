@@ -1,5 +1,6 @@
 const path = require('path')
 const find = require('find')
+const fs = require('fs')
 
 const state = {
    localCDNs: [], //localStorage.getItem('localCDNs')
@@ -36,14 +37,15 @@ const mutations = {
   },
   setCurrentFile(state, payload) {
       state.currentFile = payload
+  },
+  setRemovedCDN(state, payload) {
+      state.localCDNs = []
+    state.localCDNs = payload
   }
 }
 
 const actions = {
     downloadCDN({commit}, {cdn, cdnName, version, wget, notify}) {
-        // return new Promise((resolve, reject) => {
-            
-        // })
         const src = cdn;
         let name = cdnName
         let cdnVersion = version
@@ -106,18 +108,36 @@ const actions = {
          }
         })       
     //   console.log(ext);
+  },
+  deleteCDN({commit, state}, payload) {
+    const downloadPath = path.join(__dirname, '../..', 'public')
+    console.log('file to delete: ', payload)
+    fs.unlink(`${downloadPath}/${payload}`, (err) => {
+        if (err) throw err;
+        console.log(`${downloadPath}/${payload} was deleted`);
+        // delete local storage pointer
+        let newCDNs = []
+        for(let i=0; i<state.localCDNs.length; i++){
+            if(state.localCDNs[i].file !== payload) {
+                newCDNs.push(state.localCDNs[i])
+            }
+        } 
+        commit('setRemovedCDN', newCDNs) 
+        localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
+        commit('setNotification', `${payload} has been removed from your local storage`)
+        setTimeout(() => {
+            commit('clearNotification')
+        }, 4000)
+      });
   }
 }
 
 const getters = {
-    //  searchData: state => state.searchData
     localCDNStorage: state => state.localCDNs,
     ipAddress: state => state.ipAddress,
     progress: state => state.progress,
     currentFile: state => state.currentFile
   }
-
-
 
 export default {
   state,

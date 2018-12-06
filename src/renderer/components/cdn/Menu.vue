@@ -3,50 +3,61 @@
     <div class="logo"><img src="../../assets/logo2.svg">Cadence
     </div>
     <ul style="display: block">
-        <li class="nav-item"><i class="fa fa-heart fa-3x"></i><span>Favorites</span></li>
-        <!-- <li class="nav-item" @click='clearSearch()'><i class="fa fa-download fa-3x"></i><span>local</span></li> -->
-        <!-- <li class="nav-item" @click='showHistory()'><i class="fa fa-history fa-3x"></i><span>history</span></li> -->
-        <!-- <li class="nav-item"><i class="fa fa-thumbs-o-up fa-3x"></i><span>popular</span></li> -->
+        <app-menu-item fa-icon='fa fa-heart fa-3x' item-name='Favorites' event-name="showFavs" @showFavs='showFavs' active='showFavs' />
         <app-menu-item fa-icon='fa fa-download fa-3x' item-name='local Storage' event-name="clear" @clear='clearSearch' />
         <app-menu-item fa-icon='fa fa-history fa-3x' item-name='history' event-name="history" @history='showHistory' />
         <app-menu-item fa-icon='fa fa-thumbs-o-up fa-3x' item-name='popular' event-name="popular" @popular='popular' />
-        <!-- <app-menu-item fa-icon='fa fa-sign-out fa-3x' item-name='signout' event-name="signout" @signout='signOut' /> -->
         <li class="nav-item" @click='signOut()'> <i class="fa fa-sign-out fa-3x"></i><span>signout</span></li>
         </ul>
-     
     </div>
 </template>
 
 <script>
 
- import { mapActions } from 'vuex';
+ import { mapActions, mapGetters } from 'vuex';
  import menuItem from './MenuItem.vue'
 
 export default {
    components: {appMenuItem: menuItem},
-methods: {
-     ...mapActions([
-        'clearSearchData',
-        'signOut'
-    ]),
+//    computed: {
+//      ...mapGetters([
+//         'showFavs',
+//         'showHistory',
+//         'showLocalStorage'
+//     ])
+// },
+    methods: {
+        ...mapActions([
+            'clearSearchData',
+            'signOut'
+        ]),
+   
     clearSearch() {
         this.$store.commit('toggleShowHistory', false)
+        this.$store.commit('showFavs', false)
         this.$store.commit('clearSearchData')
-        this.$store.commit('toggleShowLocalStorage')
+        this.$store.commit('toggleShowLocalStorage', true)
     },
     showHistory() {
         // this.$store.commit('clearSearchData')
         this.$store.commit('toggleShowHistory', true)
-        this.$store.commit('toggleShowLocalStorage')
+        this.$store.commit('showFavs', false)
+        this.$store.commit('toggleShowLocalStorage', false)
     },
     popular() {
         console.log('clicked popular item')
+
+    },
+    showFavs(){
+        this.$store.commit('showFavs', true)
+         this.$store.commit('toggleShowLocalStorage', false)
+         this.$store.commit('toggleShowHistory', false)
     },
     signOut() {
         this.$store.dispatch('signOut')
         .then(this.$router.push('/'))
-    }
-},
+    },
+  },
 }
 </script>
 
