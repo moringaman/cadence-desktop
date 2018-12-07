@@ -60,10 +60,11 @@ body{
 
 .btn-search {
     position: relative;
+    max-height: 40px;
     width: 120px;
     padding: 8px 10px;
     margin-left: 65%;
-    margin-top: 15px;
+    margin-top: 17px;
     margin-bottom: 65px;
     background-color: blueviolet;
     color: white;

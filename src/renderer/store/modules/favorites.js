@@ -48,6 +48,10 @@ const actions = {
         }
         if (alreadyAdded) {
             console.log('Already Added')
+            commit('setNotification', `${name} is already in your favourites`)
+            setTimeout(()=>{
+            commit('clearNotification') 
+            }, 4000)
             return
         }
         // ************************************************* Varify
@@ -79,6 +83,7 @@ const actions = {
         commit,
     }, payload) {
         console.log("USER: ", payload)
+        // Is user logged in
         return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
@@ -94,6 +99,7 @@ const actions = {
             }, error => {
                 reject(error)
             })
+        // get favourites from local storage
     },
 }
 
