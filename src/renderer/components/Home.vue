@@ -1,5 +1,6 @@
 <template>
   <div id="wrapper">
+    <div class="btn-close" @click='closeApp'><i class="fa fa-times fa-2x"></i></div>
     <img class="splash-logo" src=".././assets/logo2.svg">
     <p class='welcome'>Cadence</p>
   <div class="card">
@@ -11,7 +12,7 @@
   <hr>
   <label class="label"></label>
   <p class="control has-icons-left has-icons-right">
-    <input class="input" type="text" :class="[{'is-danger': !user.email == '' && !isValid}, {'is-success': !isValid}]" placeholder="Email address" v-model="user.email">
+    <input class="input" type="text" :class="[{'is-danger': !user.email == '' && !isValid}, {'is-success': !isValid}]" placeholder="Email" v-model="user.email">
     <span class="icon is-small is-left">
       <i class="fa fa-envelope"></i>
     </span>
@@ -121,12 +122,16 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       loginBasic() {
         this.$store.dispatch('basicUser', true)
         .then(() => this.$router.push('/cadence'))
+      },
+      closeApp(){
+        window.close()
       }
     }
   }
 </script>
 
 <style scoped>
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
  
 
  #wrapper {
@@ -154,6 +159,30 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
    right: 0;
    bottom: 0;
  }
+
+ .btn-close {
+   background-color: white;
+   width: 50px;
+   height: 50px;
+   position: absolute;
+   left: 10px;
+   top: 10px;
+   border-radius: 50%;
+   opacity: .7;
+   cursor: pointer;
+ }
+
+.fa-times {
+  position: relative;
+  top: 7px;
+  opacity: .5;
+  z-index: 100;
+}
+
+.fa-times:hover {
+  color: blueviolet;
+  opacity: 1;
+}
 
  .welcome {
    position: absolute;

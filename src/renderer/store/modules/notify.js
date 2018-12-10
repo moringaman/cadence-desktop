@@ -1,12 +1,14 @@
 
 
 const state = {
-    notification: ' '
+    notification: ' ',
+    
 }
 
 const mutations = {
     setNotification(state, payload) {
         state.notification = payload
+        
       },
       clearNotification(state) {
         state.notification = ' '

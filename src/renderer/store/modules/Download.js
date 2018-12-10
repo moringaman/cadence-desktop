@@ -87,7 +87,7 @@ const actions = {
              // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
              let localCDNs = localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
              // console.log("LocalCDNs: ", localCDNs)
-              commit('setNotification', `Downloaded: ${file} for local use via http://localhost:9990`) 
+              commit('setNotification', {msg: `Downloaded: ${file} for local use via http://localhost:9990`, color: 'success'}) 
               setTimeout(() => {
                   commit('clearNotification')
               }, 4000)
@@ -101,7 +101,7 @@ const actions = {
             });
 
          } else {
-            commit('setNotification', `${file} has already been downloaded - check your local storage `) 
+            commit('setNotification', { msg: `${file} has already been downloaded - check your local storage`, color: 'warning'}) 
             setTimeout(() => {
                 commit('clearNotification')
             }, 4000)
@@ -124,7 +124,7 @@ const actions = {
         } 
         commit('setRemovedCDN', newCDNs) 
         localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
-        commit('setNotification', `${payload} has been removed from your local storage`)
+        commit('setNotification', { msg:`${payload} has been removed from your local storage`, color: 'success'})
         setTimeout(() => {
             commit('clearNotification')
         }, 4000)

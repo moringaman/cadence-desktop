@@ -21,8 +21,13 @@ function createWindow () {
     height: 825,
     useContentSize: true,
     width: 1090,
+    maxWidth: 1090,
+    maxHeight: 825,
    frame: false,
-   resizable: false
+   fullscreen: false,
+   maximizable: false,
+   resizable: false,
+   center: true
   })
 
   mainWindow.loadURL(winURL)

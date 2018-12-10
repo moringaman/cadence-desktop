@@ -32,7 +32,7 @@ const actions = {
             let user = auth.currentUser
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
 
-            commit('setNotification', `Welcome back`) 
+            commit('setNotification', {msg: `Welcome back`, color: 'success'}) 
             setTimeout(() => {
                 commit('clearNotification')
             }, 4000)

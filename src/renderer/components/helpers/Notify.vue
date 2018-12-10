@@ -1,7 +1,7 @@
 <template>
     <transition name="pop">
-        <div v-if="notification !== ' '" class="notify">
-          {{notification}}
+        <div v-if="notification !== ' '" class="notify" :class='notification.color'>
+          {{notification.msg}}
           <div class="icon-circle">
             <i class="fa fa-info fa-2x icon-circle__icon"></i>
           </div>
@@ -54,6 +54,33 @@ export default {
 
 .notify > .icon-circle > .icon-circle__icon {
     margin-top: 3px;
+}
+
+.warning {
+  background-color:orange;
+}
+
+.warning > .icon-circle {
+  color: orange;
+  border: 3px solid orange
+}
+
+.danger {
+  background-color: red;
+}
+
+.danger > .icon-circle {
+  color: red;
+  border: 3px solid red;
+}
+
+.success {
+  background-color: green;
+}
+
+.success > .icon-circle {
+  color: green;
+  border: 3px solid green
 }
 
 
