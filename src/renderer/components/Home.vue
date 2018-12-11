@@ -42,6 +42,7 @@
       <div id="login-text">
        <p>Sign In to access your history, favourites and special features or just use the basics.</p>
        </div >
+       <app-notify :notification='notification'/>
       <div class="slogun"> coding on the go</div>
   </div>
 </template>
@@ -51,14 +52,16 @@
   import Firebase from 'firebase'
   import Router from 'vue-router'
   import {mapGetters} from 'vuex'
+  import Notify from './helpers/Notify.vue'
 
 // Email Address validation 
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  
   export default {
     name: 'landing-page',
-    components: {},
+    components: {
+      AppNotify: Notify
+    },
     data: function (){
         return  {
        user:{
@@ -72,7 +75,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     ...mapGetters ([
       'currentUser',
       'loggedIn',
-      'basicUser'
+      'basicUser',
+      'notification'
     ]),
     validation: function () {
       return {

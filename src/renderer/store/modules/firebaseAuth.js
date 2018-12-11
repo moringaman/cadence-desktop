@@ -23,7 +23,19 @@ const mutations = {
 }
 
 const actions = {
+    registerNewUser({commit}, payload) {
+        //TODO: write code to create new user account & profile with licence key
+       auth.createUserWithEmailAndPassword(payload.email, payload.password)
+        .then(user => {
+            console.log(user)
+            //TODO: provide use with licence key
+            //TODO: Create profile in database
+            //TODO: Store users licence key, paidup status, email@address & userID 
+        })
+          .catch(e => console.log(e.message));
+    },
     authenticate({commit}, payload) {
+        //TODO: Check local storage for licence key.
         let { email , password } = payload
         console.log(email)
         auth.signInWithEmailAndPassword(email, password)
@@ -32,13 +44,18 @@ const actions = {
             let user = auth.currentUser
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
 
-            commit('setNotification', {msg: `Welcome back`, color: 'success'}) 
+            commit('setNotification', {msg: `Welcome back!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
             setTimeout(() => {
                 commit('clearNotification')
-            }, 4000)
+            }, 6000)
 
            }).catch(err=> {
                console.log(err)
+               commit('setNotification', {msg: `There was a problem authenticating you!
+                                         - Please try a different username or password`, color: 'danger'}) 
+            setTimeout(() => {
+                commit('clearNotification')
+            }, 6000)
            })
     },
     signOut({commit}) {

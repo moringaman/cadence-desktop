@@ -22,7 +22,7 @@ export default {
                 this.$emit('searchCDN', this.search );
                 this.search = '';
             } else {
-                this.$store.commit('setNotification', 'please enter a search term of over 3 letters')
+                this.$store.commit('setNotification', {msg:'please enter a search term of over 3 letters', color: 'warning'})
                 setTimeout(() => {
                     this.$store.commit('clearNotification')
                 }, 4000)

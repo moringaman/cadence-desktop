@@ -100,6 +100,7 @@
                     version = this.Data.version,
                     cdn = this.Data.latest,
                     userId = this.currentUser
+                let loggedIn = this.loggedIn
                 if (this.searchData.length < 1) {
                     cdn = `http://localhost:9990/${this.Data.file}`
                     version = this.Data.cdnVersion
@@ -108,7 +109,8 @@
                         name,
                         version,
                         cdn,
-                        userId
+                        userId,
+                        loggedIn
                     })
                     .then(() => {
                         setTimeout(() => {
@@ -148,7 +150,8 @@
                 'currentFile',
                 'showLocalStorage',
                 'currentUser',
-                'showFavs'
+                'showFavs',
+                'loggedIn'
             ]),
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {

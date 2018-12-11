@@ -10,7 +10,7 @@ const mutations = {
     loadFavs({
         state
     }, payload) {
-        console.log('PAYLOAD: ',payload)
+        console.log('PAYLOAD: ', payload)
         state.favs = payload
     },
     updateFavs(state, payload) {
@@ -18,8 +18,8 @@ const mutations = {
     },
     deleteFav(state, payload) {
         let newFavs = []
-        for(let i=0; i< state.favs.length; i++){
-            if(state.favs[i].name !== payload) {
+        for (let i = 0; i < state.favs.length; i++) {
+            if (state.favs[i].name !== payload) {
                 newFavs.push(state.favs[i])
             }
         }
@@ -27,7 +27,7 @@ const mutations = {
         state.favs = newFavs
 
     },
-    showFavs(state, payload){
+    showFavs(state, payload) {
         state.showFavs = payload
     }
 }
@@ -35,49 +35,70 @@ const mutations = {
 const actions = {
     addFav({
         commit,
-    state}, payload) {
+        state
+    }, payload) {
         let {
             name = '', version = 'latest', cdn = '', userId
         } = payload
         // TODO: check if favorite already there *********
         let alreadyAdded = false
-        for(let i=0; i< state.favs.length; i++){
-            if(state.favs[i].name.indexOf(name) > -1) {
+        for (let i = 0; i < state.favs.length; i++) {
+            if (state.favs[i].name.indexOf(name) > -1) {
                 alreadyAdded = true
             }
         }
         if (alreadyAdded) {
             console.log('Already Added')
-            commit('setNotification', `${name} is already in your favourites`)
-            setTimeout(()=>{
-            commit('clearNotification') 
+            commit('setNotification', {
+                msg: `${name} is already in your favourites`,
+                color: 'warning'
+            })
+            setTimeout(() => {
+                commit('clearNotification')
             }, 4000)
             return
         }
-        // ************************************************* Varify
-        if (state.loggedIn === true) {
-            return new Promise((resolve, reject) => {
-                Firebase.database().ref('favs/' + uid())
-                    .set({
-                        name,
-                        version,
-                        cdn,
-                        userId
+        // **** Varified not present
+        console.log('checking login status', payload.loggedIn)
+        if (payload.loggedIn == true) {
+            // return new Promise((resolve, reject) => {
+            console.log('adding to firebase ', payload)
+            Firebase.database().ref('favs/' + uid())
+                .set({
+                    name,
+                    version,
+                    cdn,
+                    userId
+                })
+                .then(response => {
+                    // resolve(response)
+                    console.log(response)
+                    localStorage.setItem('favCDNs', JSON.stringify(state.favs))
+                    commit('setNotification', {
+                        msg: `${name} Library Added to your favourites`,
+                        color: 'success'
                     })
-                    .then(response => {
-                        resolve(response)
-                        localStorage.setItem('favCDNs', JSON.stringify(state.favs))
-                        commit('setNotification', `${name} Library Added to your favourites`)
-                    }, error => {
-                        reject(error)
-                    })
-            })
+
+                })
+                .catch(error => {
+                    console.log('ther was an error ', error)
+                })
+
         } else {
             localStorage.setItem('favCDNs', JSON.stringify(state.favs))
-            commit('setNotification', `${name} Library Added to your favourites`)
+            commit('setNotification', {
+                msg: `${name} Library Added to your local favourites`,
+                color: 'success'
+            })
         }
-      
         // TODO: Increase total library favourited count by 1
+        let library = name.split('.')[0]
+        console.log(library)
+        let ref = Firebase.database().ref('library/' + library)
+        // TODO: increase value count by one
+        ref.transaction((Favcount) => {
+            return (Favcount || 0) + 1
+        })
     },
     getFavs({
         commit,
@@ -101,6 +122,12 @@ const actions = {
             })
         // get favourites from local storage
     },
+    delFav({
+        commit,
+        state
+    }, payload) {
+        // TODO: Check for favourite in users firebase storage and delete (if logged in)
+    }
 }
 
 const getters = {

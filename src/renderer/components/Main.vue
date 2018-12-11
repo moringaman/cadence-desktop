@@ -37,12 +37,13 @@
   
       <app-notify :notification='notification'/>
      
-      <div class="server-message">
+      <div v-if='loggedIn' class="server-message">
         <p>Local CDN Server running at http://localhost:9990 or http://{{ipAddress}}:9990</p>
         <i class='fa fa-cog  fa-cog__1 fa-2x'></i>
         <i class='fa fa-cog  fa-cog__2 fa-2x'></i>
         </div>
-      
+      <div v-if="!loggedIn">
+      </div>      
     </div>
      <app-footer></app-footer> 
     </div>
