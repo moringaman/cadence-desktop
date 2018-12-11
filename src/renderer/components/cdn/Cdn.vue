@@ -101,7 +101,10 @@
                     cdn = this.Data.latest,
                     userId = this.currentUser
                 let loggedIn = this.loggedIn
-                if (this.searchData.length < 1) {
+                if (!loggedIn) {
+                    this.$store.dispatch('accessRights', {check: 'logged in', action: 'add favourites'})
+                } else {
+                      if (this.searchData.length < 1) {
                     cdn = `http://localhost:9990/${this.Data.file}`
                     version = this.Data.cdnVersion
                 }
@@ -117,6 +120,8 @@
                             this.$store.commit('clearNotification')
                         }, 5000)
                     })
+                }
+              
             },
             deleteFav() {
                 if (!this.Data.file) {

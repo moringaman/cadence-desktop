@@ -65,8 +65,15 @@ const actions = {
     },
     basicUser({commit}, payload) {
         commit('basicUser', payload)
+    },
+    accessRights({commit, state}, payload) {
+        if (!state.loggedIn & payload.check === 'logged in') {
+            commit('setNotification', {msg: `You must be logged in to ${payload.action}`, color: 'warning'})
+            setTimeout(() => {
+                commit('clearNotification')
+            }, 4000)
+        }
     }
-
 }
 
 const getters = {

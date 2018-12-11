@@ -29,6 +29,9 @@ const mutations = {
     },
     showFavs(state, payload) {
         state.showFavs = payload
+    },
+    clearFavs(state) {
+        state.favs = []
     }
 }
 
@@ -85,6 +88,7 @@ const actions = {
                 })
 
         } else {
+
             localStorage.setItem('favCDNs', JSON.stringify(state.favs))
             commit('setNotification', {
                 msg: `${name} Library Added to your local favourites`,
@@ -105,7 +109,8 @@ const actions = {
     }, payload) {
         console.log("USER: ", payload)
         // Is user logged in
-        return new Promise((resolve, reject) => {
+        if (payload) {
+            return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
                 ref.orderByChild('userId').equalTo(payload).limitToFirst(1)
@@ -120,6 +125,16 @@ const actions = {
             }, error => {
                 reject(error)
             })
+        } else {
+            commit('clearFavs')
+            let localFavs = localStorage.getItem('favCDNs')
+            let parsedObj = JSON.parse(localFavs)
+            for (var obj in parsedObj){
+                commit('updateFavs', parsedObj[obj])
+            }
+            // commit('loadFavs', tmpFavArr)
+        }
+        
         // get favourites from local storage
     },
     delFav({

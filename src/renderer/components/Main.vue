@@ -156,8 +156,11 @@
       // this.$store.dispatch('addFav', this.currentUser)
   
       if (this.currentUser != '' && this.loggedIn === true) {
-        // TODO: Load favourites from local storage if offline
+        
         this.$store.dispatch('getFavs', this.currentUser)
+      } else {
+          // TODO: Load favourites from local storage if offline or not logged in
+           this.$store.dispatch('getFavs')
       }
     }
   }
