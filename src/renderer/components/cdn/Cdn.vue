@@ -133,6 +133,9 @@
                     console.log(name)
                 // this.$store.commit('deleteFav', name)
                     this.$store.dispatch('delFav', {name: name, userId: userId})
+                    .then(() => {
+                        this.$store.dispatch('delFirebaseFav', {name: name, userId: userId})
+                    })
                     .then(()=> {
                         this.$store.commit('setNotification', {msg: `${name} Library removed from your favourites`, color: 'success'})   
                             setTimeout(() => {

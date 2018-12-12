@@ -19,7 +19,12 @@ const mutations = {
     deleteFav(state, payload) {
         // FIXME: Favs not being deleted from local storage
         state.favs = []
-        state.favs = [...new Set(payload)]
+        for(let i = 0;i < payload.length; i++){
+            if(state.favs.indexOf(payload[i]) == -1){
+                state.favs.push(payload[i])
+            }
+        }
+        // state.favs = [...new Set(payload)]
 
     },
     showFavs(state, payload) {
@@ -135,17 +140,6 @@ const actions = {
         commit,
         state
     }, payload) {
-        // TODO: Check for favourite in users firebase storage and delete (if logged in)
-        // const ref = Firebase.database().ref('favs')
-        // .orderByChild('name').equalTo(payload.name)
-        // .on('child_added', snap => {
-        //     console.log(snap.val())
-        //     snap.forEach((data) => {
-        //         if (data.val().userId === 'VO94Lp1vmzNYU1J6zqA1wr83x1s1') {
-        //           data.val().remove()
-        //         }
-        //     })
-        // })
         let tmpArr = []
         let favCount = state.favs.length
         for (let i = 0; i < favCount; i++) {
@@ -154,7 +148,21 @@ const actions = {
             }
         }
         commit('deleteFav', tmpArr)
-        localStorage.setItem('favCDNs', JSON.stringify(tmpArr))
+        localStorage.setItem('favCDNs', JSON.stringify(state.favs))
+    },
+    delFirebaseFav({commit, state}, payload) {
+             // TODO: Check for favourite in users firebase storage and delete (if logged in)
+        const ref = Firebase.database().ref('favs')
+        .orderByChild('name').equalTo(payload.name)
+        .on('value', snap => {
+            snap.forEach((data) => {
+                if (data.val().userId === payload.userId) {
+                    console.log('delete value')
+                    console.log(data.key)
+                    Firebase.database().ref('favs').child(data.key).remove()
+                }
+            })
+        })
     }
 }
 
