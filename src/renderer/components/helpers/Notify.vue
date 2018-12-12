@@ -28,7 +28,7 @@ export default {
   font-weight: bold;
   font-size: 1em;
   background-color: blueviolet;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
   text-align: left;
   border-radius: 10px;
   padding: 10px 10px 10px 50px;

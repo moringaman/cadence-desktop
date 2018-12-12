@@ -76,6 +76,9 @@
                 }, 3000)
             },
             downloadCDN() {
+                if (!this.online) {
+                    this.$store.dispatch('accessRights', {check: 'online', action: 'downloading library'})
+                }
                 console.log("wget: ", wget)
                 let cdnName = this.Data.name,
                     version = this.Data.version,
@@ -128,7 +131,7 @@
                     let name = this.Data.name
                     console.log(name)
                 this.$store.commit('deleteFav', name)
-                this.$store.commit('setNotification', `${name} Library removed to your favourites`)   
+                this.$store.commit('setNotification', {msg: `${name} Library removed from your favourites`, color: 'success'})   
                 setTimeout(() => {
                             this.$store.commit('clearNotification')
                         }, 5000)
@@ -156,7 +159,8 @@
                 'showLocalStorage',
                 'currentUser',
                 'showFavs',
-                'loggedIn'
+                'loggedIn',
+                'online'
             ]),
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {

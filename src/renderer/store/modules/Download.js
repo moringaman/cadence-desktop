@@ -45,7 +45,11 @@ const mutations = {
 }
 
 const actions = {
-    downloadCDN({commit}, {cdn, cdnName, version, wget, notify}) {
+    downloadCDN({commit, state}, {cdn, cdnName, version, wget, notify}) {
+        if (state.online === false) {
+            commit('setNotification', {msg: "Download of library failed - NETWORK ERROR", color: 'danger'})
+            return
+        }
         const src = cdn;
         let name = cdnName
         let cdnVersion = version

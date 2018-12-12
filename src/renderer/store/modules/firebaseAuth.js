@@ -6,6 +6,7 @@ let auth = Firebase.auth();
 const state = {
     loggedIn: false,
     basicUser: false,
+    online: true,
     currentUser: {}
 }
 
@@ -19,6 +20,9 @@ const mutations = {
     },
     basicUser (state, payload) {
         state.basicUser = payload
+    },
+    setOnlineStatus (state, payload) {
+        state.online = payload
     }
 }
 
@@ -73,13 +77,20 @@ const actions = {
                 commit('clearNotification')
             }, 4000)
         }
+        if (!state.online) {
+            commit('setNotification', {msg: `NETWORK ERROR ${payload.action}, You appear to be offline`, color: 'danger'})
+            setTimeout(() => {
+                commit('clearNotification')
+            }, 4000)
+        }
     }
 }
 
 const getters = {
     loggedIn: state => state.loggedIn,
     currentUser: state => state.currentUser,
-    basicUser: state => state.basicUser
+    basicUser: state => state.basicUser,
+    online: state => state.online
 }
 
 export default {

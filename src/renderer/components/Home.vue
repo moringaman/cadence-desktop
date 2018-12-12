@@ -130,6 +130,16 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       closeApp(){
         window.close()
       }
+    },
+    mounted() {
+      window.addEventListener('online', () =>{
+        console.log('we are online')
+        this.$store.commit('setOnlineStatus', true)
+      })
+      window.addEventListener('offline', () =>{
+        console.log('we are offline')
+        this.$store.commit('setOnlineStatus', false)
+      })
     }
   }
 </script>
