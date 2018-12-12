@@ -17,6 +17,7 @@ const mutations = {
         state.favs.push(payload)
     },
     deleteFav(state, payload) {
+        // FIXME: Favs not being deleted from local storage
         let newFavs = []
         for (let i = 0; i < state.favs.length; i++) {
             if (state.favs[i].name !== payload) {

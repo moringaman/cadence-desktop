@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import BootstrapVue from 'bootstrap-vue';
 import Clipboard from 'v-clipboard'
-import Notify from 'vue-notifyjs'
 import VueBar from 'vuebar';
 import VueUp from'vueup';
 import Firebase from 'firebase';
@@ -12,7 +11,6 @@ import Wget from 'wget-improved';
 
 Vue.use(VueBar)
 Vue.use(Clipboard)
-Vue.use(Notify)
 Vue.use(Router)
 Vue.use(BootstrapVue)
 Vue.use(VueUp)
