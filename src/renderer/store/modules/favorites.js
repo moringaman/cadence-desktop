@@ -18,14 +18,8 @@ const mutations = {
     },
     deleteFav(state, payload) {
         // FIXME: Favs not being deleted from local storage
-        let newFavs = []
-        for (let i = 0; i < state.favs.length; i++) {
-            if (state.favs[i].name !== payload) {
-                newFavs.push(state.favs[i])
-            }
-        }
-        console.log(newFavs)
-        state.favs = newFavs
+        state.favs = []
+        state.favs = [...new Set(payload)]
 
     },
     showFavs(state, payload) {
@@ -44,7 +38,7 @@ const actions = {
         let {
             name = '', version = 'latest', cdn = '', userId
         } = payload
-        // TODO: check if favorite already there *********
+        // check if favorite already there 
         let alreadyAdded = false
         for (let i = 0; i < state.favs.length; i++) {
             if (state.favs[i].name.indexOf(name) > -1) {
@@ -96,11 +90,11 @@ const actions = {
                 color: 'success'
             })
         }
-        // TODO: Increase total library favourited count by 1
         let library = name.split('.')[0]
         console.log(library)
         let ref = Firebase.database().ref('library/' + library)
-        // TODO: increase value count by one
+        // TODO: increase value count by one 
+        //TEST:
         ref.transaction((Favcount) => {
             return (Favcount || 0) + 1
         })
@@ -133,7 +127,6 @@ const actions = {
             for (var obj in parsedObj){
                 commit('updateFavs', parsedObj[obj])
             }
-            // commit('loadFavs', tmpFavArr)
         }
         
         // get favourites from local storage
@@ -143,6 +136,25 @@ const actions = {
         state
     }, payload) {
         // TODO: Check for favourite in users firebase storage and delete (if logged in)
+        // const ref = Firebase.database().ref('favs')
+        // .orderByChild('name').equalTo(payload.name)
+        // .on('child_added', snap => {
+        //     console.log(snap.val())
+        //     snap.forEach((data) => {
+        //         if (data.val().userId === 'VO94Lp1vmzNYU1J6zqA1wr83x1s1') {
+        //           data.val().remove()
+        //         }
+        //     })
+        // })
+        let tmpArr = []
+        let favCount = state.favs.length
+        for (let i = 0; i < favCount; i++) {
+            if (state.favs[i].name !== payload.name) {
+                tmpArr.push(state.favs[i])
+            }
+        }
+        commit('deleteFav', tmpArr)
+        localStorage.setItem('favCDNs', JSON.stringify(tmpArr))
     }
 }
 

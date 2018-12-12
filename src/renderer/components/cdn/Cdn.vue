@@ -129,12 +129,17 @@
             deleteFav() {
                 if (!this.Data.file) {
                     let name = this.Data.name
+                    let userId = this.currentUser
                     console.log(name)
-                this.$store.commit('deleteFav', name)
-                this.$store.commit('setNotification', {msg: `${name} Library removed from your favourites`, color: 'success'})   
-                setTimeout(() => {
+                // this.$store.commit('deleteFav', name)
+                    this.$store.dispatch('delFav', {name: name, userId: userId})
+                    .then(()=> {
+                        this.$store.commit('setNotification', {msg: `${name} Library removed from your favourites`, color: 'success'})   
+                            setTimeout(() => {
                             this.$store.commit('clearNotification')
-                        }, 5000)
+                             }, 5000)
+                    })
+                
                 } else {
                     // call delete locally stored CDN function
                     let file = this.Data.file
