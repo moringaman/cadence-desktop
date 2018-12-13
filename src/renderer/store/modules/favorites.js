@@ -1,5 +1,6 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
+import _ from 'lodash';
 
 const state = {
     favs: [],
@@ -19,12 +20,14 @@ const mutations = {
     deleteFav(state, payload) {
         // FIXME: Favs not being deleted from local storage
         state.favs = []
-        for(let i = 0;i < payload.length; i++){
-            if(state.favs.indexOf(payload[i]) == -1){
-                state.favs.push(payload[i])
-            }
-        }
-        // state.favs = [...new Set(payload)]
+        // for(let i = 0;i < payload.length; i++){
+        //     if(state.favs.indexOf(payload[i]) == -1){
+        //         state.favs.push(payload[i])
+        //     }
+        // }
+         state.favs = [...new Set(payload)]
+
+        // state.favs = payload => [...new Set(payload.map(o => JSON.stringify(o)))].map(s => JSON.parse(s))
 
     },
     showFavs(state, payload) {
@@ -167,7 +170,7 @@ const actions = {
 }
 
 const getters = {
-    favs: state => state.favs,
+    favs: state => _.uniqBy(state.favs, 'name'),
     showFavs: state => state.showFavs
 }
 
