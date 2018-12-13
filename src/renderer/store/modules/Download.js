@@ -45,9 +45,9 @@ const mutations = {
 }
 
 const actions = {
-    downloadCDN({commit, state}, {cdn, cdnName, version, wget, notify}) {
+    downloadCDN({commit, state, dispatch}, {cdn, cdnName, version, wget, notify}) {
         if (state.online === false) {
-            commit('setNotification', {msg: "Download of library failed - NETWORK ERROR", color: 'danger'})
+            dispatch('notificationCtrl', {msg: "Download of library failed - NETWORK ERROR", color: 'danger'})
             return
         }
         const src = cdn;
@@ -89,13 +89,9 @@ const actions = {
 
              commit('setLocalCDNs', {name, cdnVersion, file})
              // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
-             let localCDNs = localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
+             localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
              // console.log("LocalCDNs: ", localCDNs)
-              commit('setNotification', {msg: `Downloaded: ${file} for local use via http://localhost:9990`, color: 'success'}) 
-              setTimeout(() => {
-                  commit('clearNotification')
-              }, 4000)
-                // commit('setCurrentFile', '')
+              dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990`, color: 'success'}) 
             });
             download.on('progress', function(progress) {
                 typeof progress === 'number'
@@ -105,15 +101,12 @@ const actions = {
             });
 
          } else {
-            commit('setNotification', { msg: `${file} has already been downloaded - check your local storage`, color: 'warning'}) 
-            setTimeout(() => {
-                commit('clearNotification')
-            }, 4000)
+            dispatch('notificationCtrl', { msg: `${file} has already been downloaded - check your local storage`, color: 'warning'}) 
          }
         })       
     //   console.log(ext);
   },
-  deleteCDN({commit, state}, payload) {
+  deleteCDN({commit, state, dispatch}, payload) {
     const downloadPath = path.join(__dirname, '../..', 'public')
     console.log('file to delete: ', payload)
     fs.unlink(`${downloadPath}/${payload}`, (err) => {
@@ -128,10 +121,7 @@ const actions = {
         } 
         commit('setRemovedCDN', newCDNs) 
         localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
-        commit('setNotification', { msg:`${payload} has been removed from your local storage`, color: 'success'})
-        setTimeout(() => {
-            commit('clearNotification')
-        }, 4000)
+        dispatch('notificationCtrl', { msg:`${payload} has been removed from your local storage`, color: 'success'})
       });
   }
 }

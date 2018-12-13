@@ -49,6 +49,7 @@ export default {
 
     },
     showFavs(){
+        this.$store.commit('clearSearchData')
         this.$store.commit('showFavs', true)
          this.$store.commit('toggleShowLocalStorage', false)
          this.$store.commit('toggleShowHistory', false)

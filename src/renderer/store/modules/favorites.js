@@ -18,17 +18,9 @@ const mutations = {
         state.favs.push(payload)
     },
     deleteFav(state, payload) {
-        // FIXME: Favs not being deleted from local storage
+        // TEST: Favs not being deleted from local storage
         state.favs = []
-        // for(let i = 0;i < payload.length; i++){
-        //     if(state.favs.indexOf(payload[i]) == -1){
-        //         state.favs.push(payload[i])
-        //     }
-        // }
          state.favs = [...new Set(payload)]
-
-        // state.favs = payload => [...new Set(payload.map(o => JSON.stringify(o)))].map(s => JSON.parse(s))
-
     },
     showFavs(state, payload) {
         state.showFavs = payload
@@ -40,8 +32,8 @@ const mutations = {
 
 const actions = {
     addFav({
-        commit,
-        state
+        state,
+        dispatch
     }, payload) {
         let {
             name = '', version = 'latest', cdn = '', userId
@@ -55,13 +47,10 @@ const actions = {
         }
         if (alreadyAdded) {
             console.log('Already Added')
-            commit('setNotification', {
+            dispatch('notificationCtrl', {
                 msg: `${name} is already in your favourites`,
                 color: 'warning'
             })
-            setTimeout(() => {
-                commit('clearNotification')
-            }, 4000)
             return
         }
         // **** Varified not present
@@ -80,7 +69,7 @@ const actions = {
                     // resolve(response)
                     console.log(response)
                     localStorage.setItem('favCDNs', JSON.stringify(state.favs))
-                    commit('setNotification', {
+                    dispatch('notificationCtrl', {
                         msg: `${name} Library Added to your favourites`,
                         color: 'success'
                     })
@@ -93,7 +82,7 @@ const actions = {
         } else {
 
             localStorage.setItem('favCDNs', JSON.stringify(state.favs))
-            commit('setNotification', {
+            dispatch('notificationCtrl', {
                 msg: `${name} Library Added to your local favourites`,
                 color: 'success'
             })

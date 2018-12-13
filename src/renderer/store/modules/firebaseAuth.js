@@ -38,7 +38,7 @@ const actions = {
         })
           .catch(e => console.log(e.message));
     },
-    authenticate({commit}, payload) {
+    authenticate({commit, dispatch}, payload) {
         //TODO: Check local storage for licence key.
         let { email , password } = payload
         console.log(email)
@@ -48,10 +48,10 @@ const actions = {
             let user = auth.currentUser
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
 
-            commit('setNotification', {msg: `Welcome back!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
-            setTimeout(() => {
-                commit('clearNotification')
-            }, 6000)
+            dispatch('notificationCtrl', {msg: `Welcome back!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
+            // setTimeout(() => {
+            //     commit('clearNotification')
+            // }, 6000)
 
            }).catch(err=> {
                console.log(err)

@@ -12,21 +12,21 @@
           <br><span><p>Search for any Available CND for your project</p></span></div>
           <app-loading-bar v-if='dataLoading===true'></app-loading-bar>
         <template v-if='!showHistory && !showFavs'>
-           <div v-if="!searchData.length == 0" class="scroll-list" v-bar="{preventParentScroll:true}">
+           <div v-if="!searchData.length == 0" class="scroll-list"  v-bar="{resizeRefresh: false, preventParentScroll:false}">
       <app-cdn-list :searchData="searchData" :localCDNStorage="localCDNStorage"></app-cdn-list>   
         </div>
-             <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true}">
+             <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{resizeRefresh: false, preventParentScroll:false}">
       <app-cdn-list :localCDNStorage="localCDNStorage"></app-cdn-list>   
         </div>
 </template>
 <template v-if='showFavs'>
-  <div v-if="favs.length > 0" class="scroll-list" v-bar="{preventParentScroll:true}">
+  <div v-if="favs.length > 0" class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
     <app-cdn-list :searchData="favs"></app-cdn-list>
   </div>
 </template>
 
 <template v-if='showHistory && !showFavs'>
-  <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true}">
+  <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
     <app-cdn-list :searchData="lastSearchData"></app-cdn-list>
   </div>
 </template>
@@ -61,6 +61,7 @@
   import Footer from './cdn/Footer.vue';
   import Notify from './helpers/Notify.vue'
   import loadingBar from './helpers/loading.vue'
+  import vuebar from 'vuebar'
 
   import {
     mapActions,

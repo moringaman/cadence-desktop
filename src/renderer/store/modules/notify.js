@@ -16,7 +16,13 @@ const mutations = {
 }
 
 const actions = {
-
+    notificationCtrl({commit}, payload) {
+        let { timeOut = 4000 } = payload
+        commit('setNotification', payload)
+            setTimeout(() => {
+                commit('clearNotification')
+            }, timeOut)
+    }
 }
 
 const getters = {

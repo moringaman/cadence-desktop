@@ -71,9 +71,6 @@
                     clipboard,
                     notify
                 })
-                setTimeout(() => {
-                    this.$store.commit('clearNotification')
-                }, 3000)
             },
             downloadCDN() {
                 if (!this.online) {
@@ -91,12 +88,6 @@
                         version,
                         notify
                     })
-                    .then(() => {
-                        setTimeout(() => {
-                            this.$store.commit('clearNotification')
-                        }, 5000)
-                    })
-    
             },
             favouriteCDN() {
                 let name = this.Data.name,
@@ -118,11 +109,6 @@
                         userId,
                         loggedIn
                     })
-                    .then(() => {
-                        setTimeout(() => {
-                            this.$store.commit('clearNotification')
-                        }, 5000)
-                    })
                 }
               
             },
@@ -137,21 +123,13 @@
                         this.$store.dispatch('delFirebaseFav', {name: name, userId: userId})
                     })
                     .then(()=> {
-                        this.$store.commit('setNotification', {msg: `${name} Library removed from your favourites`, color: 'success'})   
-                            setTimeout(() => {
-                            this.$store.commit('clearNotification')
-                             }, 5000)
+                        this.$store.dispatch('notificationCtrl', {msg: `${name} Library removed from your favourites`, color: 'success'})   
                     })
                 
                 } else {
                     // call delete locally stored CDN function
                     let file = this.Data.file
                     this.$store.dispatch('deleteCDN', file)
-                    .then(() => {
-                        setTimeout(() => {
-                            this.$store.commit('clearNotification')
-                        }, 5000)
-                    })
                 }
                 
             },
@@ -181,7 +159,6 @@
         created() {
             if (this.searchData.length > 1) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
-                console.log(this.fileNameData)
             }
         }
     }
