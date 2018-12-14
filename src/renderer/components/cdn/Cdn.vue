@@ -113,12 +113,13 @@
               
             },
             deleteFav() {
+                console.log('DELETING: ', this.Data.file)
                 if (!this.Data.file) {
                     let name = this.Data.name
                     let userId = this.currentUser
-                    console.log(name)
+                    console.log('DELETING: ', name)
                 // this.$store.commit('deleteFav', name)
-                    this.$store.dispatch('delFav', {name: name, userId: userId})
+                      this.$store.dispatch('delFav', {name: name, userId: userId})
                     .then(() => {
                         this.$store.dispatch('delFirebaseFav', {name: name, userId: userId})
                     })
@@ -128,7 +129,18 @@
                 
                 } else {
                     // call delete locally stored CDN function
+                    //TODO: refuse deletion if Library is a favourite
+                        for(let i=0; i < this.favs.length; i++){
+                            if(this.favs[i].name === this.Data.file.split('.')[0]) {
+                                this.$store.dispatch('notificationCtrl', 
+                                {msg: `${this.Data.file.split('.')[0]} is in your favourites, please delete it from favourites list first`,
+                                 color: 'warning'})
+                                 console.log("Is a favourite")
+                                 return
+                            }
+                        }
                     let file = this.Data.file
+                    console.log('delete ok')
                     this.$store.dispatch('deleteCDN', file)
                 }
                 
@@ -146,7 +158,8 @@
                 'currentUser',
                 'showFavs',
                 'loggedIn',
-                'online'
+                'online',
+                'favs'
             ]),
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {

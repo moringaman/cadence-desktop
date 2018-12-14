@@ -146,6 +146,7 @@
       }
     },
     created() {
+      //TODO: Initialize app - add localCDN & favourite vuejs
       if (localStorage.getItem('localCDNs') !== null && this.localCDNStorage.length === 0) this.$store.commit('loadStoredCNs')
       console.log(localStorage.getItem('localCDNs'))
       this.getIp()
