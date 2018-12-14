@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 
 li i {
     outline: none;
@@ -40,6 +40,7 @@ li i {
     color: grey; 
     opacity: 0.5;
     vertical-align: middle;
+    color: inherit;
 }
 
 li > span {
@@ -50,7 +51,7 @@ li > span {
     font-weight: 600;
 }
 
-li i:hover,:active {
+li i:hover,i:active {
     color: blueviolet;
 }
 

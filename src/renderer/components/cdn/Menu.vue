@@ -3,11 +3,11 @@
     <div class="logo"><img src="../../assets/logo2.svg">Cadence
     </div>
     <ul style="display: block">
-        <app-menu-item fa-icon='fa fa-heart fa-3x' item-name='Favorites' event-name="showFavs" @showFavs='showFavs' active='showFavs' />
-        <app-menu-item fa-icon='fa fa-download fa-3x' item-name='local Storage' event-name="clear" @clear='clearSearch' />
-        <app-menu-item fa-icon='fa fa-history fa-3x' item-name='history' event-name="history" @history='showHistory' />
+        <app-menu-item fa-icon='fa fa-heart fa-3x' item-name='Favorites' event-name="showFavs" @showFavs='showFav' :class="{active:showFavs}" />
+        <app-menu-item fa-icon='fa fa-download fa-3x' item-name='local Storage' event-name="clear" @clear='clearSearch' :class="{active:showLocalStorage}"/>
+        <app-menu-item fa-icon='fa fa-history fa-3x' item-name='history' event-name="history" @history='shoHistory' :class="{active:showHistory}"/>
         <app-menu-item fa-icon='fa fa-thumbs-o-up fa-3x' item-name='popular' event-name="popular" @popular='popular' />
-        <li class="nav-item" @click='signOut()'> <i class="fa fa-sign-out fa-3x"></i><span>signout</span></li>
+        <li class="nav-item" @click='signOut()'> <i class="fa fa-sign-out fa-3x"></i><span>LEAVE</span></li>
         </ul>
     </div>
 </template>
@@ -19,13 +19,18 @@
 
 export default {
    components: {appMenuItem: menuItem},
-//    computed: {
-//      ...mapGetters([
-//         'showFavs',
-//         'showHistory',
-//         'showLocalStorage'
-//     ])
-// },
+   data() {
+       return {
+        //    showFavs: false
+       }
+   },
+   computed: {
+     ...mapGetters([
+        'showFavs',
+        'showHistory',
+        'showLocalStorage'
+    ])
+},
     methods: {
         ...mapActions([
             'clearSearchData',
@@ -38,8 +43,8 @@ export default {
         this.$store.commit('clearSearchData')
         this.$store.commit('toggleShowLocalStorage', true)
     },
-    showHistory() {
-        // this.$store.commit('clearSearchData')
+    shoHistory() {
+         this.$store.commit('clearSearchData')
         this.$store.commit('toggleShowHistory', true)
         this.$store.commit('showFavs', false)
         this.$store.commit('toggleShowLocalStorage', false)
@@ -48,11 +53,12 @@ export default {
         console.log('clicked popular item')
 
     },
-    showFavs(){
+    showFav(){
         this.$store.commit('clearSearchData')
         this.$store.commit('showFavs', true)
          this.$store.commit('toggleShowLocalStorage', false)
          this.$store.commit('toggleShowHistory', false)
+        //  this.showFavs = this.$store.getters.showFavs
     },
     signOut() {
         this.$store.dispatch('signOut')
@@ -84,7 +90,10 @@ export default {
     width: 50%;
 }
 
-
+.active {
+    color: blueviolet;
+    opacity: .9;
+}
 
 li i {
     outline: none;

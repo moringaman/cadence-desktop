@@ -15,7 +15,7 @@ const mutations = {
     state.lastSearchData = payload
   },
   clearSearchData (state) {
-    if (state.searchData < 0) {
+    if (state.searchData > 0) {
       state.lastSearchData = state.searchData
     }
     state.searchData = []
