@@ -12,8 +12,8 @@
           <br><span><p>Search for any Available CND for your project</p></span></div>
           <app-loading-bar v-if='dataLoading===true'></app-loading-bar>
         <template v-if='!showHistory && !showFavs'>
-           <div v-if="!searchData.length == 0" class="scroll-list"  v-bar="{resizeRefresh: false, preventParentScroll:false}">
-      <app-cdn-list :searchData="searchData" :localCDNStorage="localCDNStorage"></app-cdn-list>   
+           <div v-if="!searchData.length == 0" class="scroll-list"  v-bar="{resizeRefresh:true, preventParentScroll:true}">
+      <app-cdn-list :searchData="searchData" :localCDNStorage="localCDNStorage"/> 
         </div>
              <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{resizeRefresh: false, preventParentScroll:false}">
       <app-cdn-list :localCDNStorage="localCDNStorage"></app-cdn-list>   

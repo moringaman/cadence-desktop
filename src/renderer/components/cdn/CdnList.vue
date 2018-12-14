@@ -1,5 +1,8 @@
 <template>
 <div> 
+    <p class='result-count' v-if='searchData'>{{searchData.length}} results found 
+        <span v-if='searchData.length > 4'>Scroll down for more</span>
+    </p>
        <div  class="list" >       
     <app-cdn  v-for=" (search,index) in searchData" :key="search.name"
       @click.native="copyCDN(index)" :Data='search'>
@@ -19,7 +22,7 @@ export default {
     props: ['searchData', 'localCDNStorage'],
     data: function (){
         return {
-            
+            refresh: false
         }
     },
     components: {
@@ -37,6 +40,12 @@ export default {
         ...mapGetters([
             'showLocalStorage'
         ])
+    },
+    watch: {
+        searchData() {
+            console.log('new data sent')
+            this.refresh = true
+        }
     }
 }
 </script>

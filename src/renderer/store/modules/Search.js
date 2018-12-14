@@ -48,7 +48,10 @@ const actions = {
       commit('toggleShowHistory' ,false)
       commit('showFavs' ,false)
       commit('toggleDataLoading')
-      commit('loadSearchData', searchData )
+      setTimeout(()=>{
+        commit('loadSearchData', searchData )
+      }, 500)
+      
       //  console.log(response);
     })
     
