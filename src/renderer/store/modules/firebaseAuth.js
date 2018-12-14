@@ -7,7 +7,8 @@ const state = {
     loggedIn: false,
     basicUser: false,
     online: true,
-    currentUser: {}
+    currentUser: {},
+    authenticating: false
 }
 
 const mutations = {
@@ -23,6 +24,9 @@ const mutations = {
     },
     setOnlineStatus (state, payload) {
         state.online = payload
+    },
+    isAuthenticating(state, payload) {
+        state.authenticating = payload
     }
 }
 
@@ -40,6 +44,7 @@ const actions = {
     },
     authenticate({commit, dispatch}, payload) {
         //TODO: Check local storage for licence key.
+        commit('isAuthenticating', true)
         let { email , password } = payload
         console.log(email)
         auth.signInWithEmailAndPassword(email, password)
@@ -47,6 +52,7 @@ const actions = {
                console.log('DATA:', data)
             let user = auth.currentUser
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
+            commit('isAuthenticating', false)
 
             dispatch('notificationCtrl', {msg: `Welcome back!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
             // setTimeout(() => {
@@ -55,12 +61,11 @@ const actions = {
 
            }).catch(err=> {
                console.log(err)
-               commit('setNotification', {msg: `There was a problem authenticating you!
+               dispatch('notificationCtrl', {msg: `There was a problem authenticating you!
                                          - Please try a different username or password`, color: 'danger'}) 
-            setTimeout(() => {
-                commit('clearNotification')
-            }, 6000)
+                commit('isAuthenticating', false)
            })
+           
     },
     signOut({commit}) {
         auth.signOut();
@@ -90,7 +95,8 @@ const getters = {
     loggedIn: state => state.loggedIn,
     currentUser: state => state.currentUser,
     basicUser: state => state.basicUser,
-    online: state => state.online
+    online: state => state.online,
+    authenticating: state => state.authenticating
 }
 
 export default {

@@ -32,7 +32,7 @@
     </span>
   </p>
 </div>
-       <a class="button is-primary" :class="{'is-success': isValid}" @click.prevent="login" v-if="isValid">Login</a>
+       <a class="button is-primary" :class="{'is-success': isValid, 'is-loading': authenticating}" @click.prevent="login" v-if="isValid">Login</a>
        <a class="button is-primary" @click.prevent.native="login" v-if="!isValid" disabled>Login</a>
        <a class="button is-info" @click.prevent="signUp">Sign Up</a>
        <a class="button" @click.prevent="loginBasic">Just Use</a>
@@ -76,7 +76,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       'currentUser',
       'loggedIn',
       'basicUser',
-      'notification'
+      'notification',
+      'authenticating'
     ]),
     validation: function () {
       return {
