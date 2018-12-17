@@ -31,11 +31,14 @@ const mutations = {
   },
   toggleDataLoading(state) {
     state.dataLoading = !state.dataLoading
+  },
+  loadSearchHistory(state) {
+    state.lastSearchData = payload
   }
 }
 
 const actions = {
-  fetchSearchData ({ commit }, search) {
+  fetchSearchData ({ commit, dispatch }, search) {
     // do something async
     commit('toggleShowLocalStorage', false)
     commit('loadSearchData', [])
@@ -43,6 +46,10 @@ const actions = {
     const URL = `https://api.cdnjs.com/libraries?search=`;
     axios.get(URL + search +'&fields=version,description')
     .then( (response) => {
+      if (response.data.results.length < 1){
+        console.log('no results found')
+        dispatch('notificationCtrl', {msg: 'No results were found using that search term, please try another', color: 'danger'})
+      }
       let searchData = response.data.results;
       commit('clearSearchData')
       commit('toggleShowHistory' ,false)
@@ -51,8 +58,12 @@ const actions = {
       setTimeout(()=>{
         commit('loadSearchData', searchData )
       }, 500)
-      
+      // localStorage.setItem('searchHistory', JSON.stringify(searchData))
       //  console.log(response);
+      // commit('loadSearchHistory', localStorage.getItem('searchHistory'))
+    })
+    .catch(err =>{
+      console.log('ERR: ', err)
     })
     
   }

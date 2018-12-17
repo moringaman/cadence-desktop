@@ -1,6 +1,7 @@
 
 
 import Firebase from '../../helpers/firebase'
+import licenceKey from '../../helpers/licence'
 let auth = Firebase.auth();
 
 const state = {
@@ -31,14 +32,26 @@ const mutations = {
 }
 
 const actions = {
-    registerNewUser({commit}, payload) {
+    registerNewUser({commit, dispatch}, payload) {
         //TODO: write code to create new user account & profile with licence key
        auth.createUserWithEmailAndPassword(payload.email, payload.password)
         .then(user => {
             console.log(user)
-            //TODO: provide use with licence key
-            //TODO: Create profile in database
-            //TODO: Store users licence key, paidup status, email@address & userID 
+            const Licence = licenceKey()
+            const dbRef = Firebase.database().ref('user/' + user.uid)
+            dbRef.set({
+                licence: licenceKey(),
+                email: payload.email,
+                paid: false
+            })
+            .then(() => {
+            commit('setLoggedIn', {loggedIn:true, user: user.uid})
+            dispatch('notificationCtrl', {msg: `Welcome!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
+            })
+            //TEST: provide use with licence key
+            //TEST: Create profile in database
+            //TEST: Store users licence key, paidup status, email@address & userID 
+        
         })
           .catch(e => console.log(e.message));
     },

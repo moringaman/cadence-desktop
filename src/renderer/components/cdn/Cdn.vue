@@ -21,7 +21,7 @@
             <i class="fa fa-clipboard"></i>
           </span>
                 </a>
-                <a v-if='searchData.length > 1' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
+                <a v-if='searchData.length > 1 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
                     <span class="icon" @click='downloadCDN()'>
             <i  class="fa fa-download"></i>
           </span>
@@ -159,7 +159,8 @@
                 'showFavs',
                 'loggedIn',
                 'online',
-                'favs'
+                'favs',
+                'showHistory'
             ]),
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {
@@ -170,7 +171,7 @@
             }
         },
         created() {
-            if (this.searchData.length > 1) {
+            if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
         }

@@ -8,7 +8,7 @@
       <div class="column">
         <app-header @searchCDN="fetchData"></app-header>
         <!-- <div class="scroll-list"> -->
-        <div class="main-logo" v-if="searchData.length == 0 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
+        <div class="main-logo" v-if="searchData.length < 1 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
           <br><span><p>Search for any Available CND for your project</p></span></div>
           <app-loading-bar v-if='dataLoading===true'></app-loading-bar>
         <template v-if='!showHistory && !showFavs'>
@@ -163,6 +163,7 @@
       } else {
           // TODO: Load favourites from local storage if offline or not logged in
            this.$store.dispatch('getFavs')
+          // this.$store.commit('loadSearchHistory')
       }
     }
   }

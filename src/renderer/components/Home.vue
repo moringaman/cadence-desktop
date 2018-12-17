@@ -115,9 +115,10 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
           this.$store.dispatch('authenticate', {email:this.user.email, password: this.user.password})
       },
       signUp () {
-       const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
-        .then(user => console.log(user))
-          .catch(e => console.log(e.message));
+      //  const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
+      //   .then(user => console.log(user))
+      //     .catch(e => console.log(e.message));
+      this.$store.dispatch('registerNewUser', {email: this.user.email, password: this.user.password})
       },
       logOut () {
       //  auth.signOut();

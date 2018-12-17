@@ -18,7 +18,7 @@ const mutations = {
         state.localCDNs.push(payload)
   },
   loadStoredCNs(state) {
-      let localCDNStorage = localStorage.getItem('localCDNs') //.split(',')
+      let localCDNStorage = localStorage.getItem('localCDNs') //FIXME: 'localCDNs' + UID
     //   console.log('localStorage', JSON.parse(localCDNStorage))
     console.log(JSON.parse(localCDNStorage))
     // if (state.localCNDs.length > 0) {
@@ -87,9 +87,9 @@ const actions = {
             download.on('end', function(output) {
                 console.log(output);
 
-             commit('setLocalCDNs', {name, cdnVersion, file})
+             commit('setLocalCDNs', {name, cdnVersion, file}) 
              // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
-             localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
+             localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
              // console.log("LocalCDNs: ", localCDNs)
               dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990`, color: 'success'}) 
             });
@@ -120,7 +120,7 @@ const actions = {
             }
         } 
         commit('setRemovedCDN', newCDNs) 
-        localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs))
+        localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
         dispatch('notificationCtrl', { msg:`${payload} has been removed from your local storage`, color: 'success'})
       });
   }

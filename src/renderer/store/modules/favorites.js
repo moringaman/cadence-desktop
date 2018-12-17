@@ -68,6 +68,7 @@ const actions = {
                 .then(response => {
                     // resolve(response)
                     console.log(response)
+                    //FIXME: 'favCDNs' + UID
                     localStorage.setItem('favCDNs', JSON.stringify(state.favs))
                     dispatch('notificationCtrl', {
                         msg: `${name} Library Added to your favourites`,
@@ -80,7 +81,7 @@ const actions = {
                 })
 
         } else {
-
+            //FIXME: 'favCDNs' + UID
             localStorage.setItem('favCDNs', JSON.stringify(state.favs))
             dispatch('notificationCtrl', {
                 msg: `${name} Library Added to your local favourites`,
@@ -119,7 +120,7 @@ const actions = {
             })
         } else {
             commit('clearFavs')
-            let localFavs = localStorage.getItem('favCDNs')
+            let localFavs = localStorage.getItem('favCDNs') //FIXME: 'favCDNs' + UID
             let parsedObj = JSON.parse(localFavs)
             for (var obj in parsedObj){
                 commit('updateFavs', parsedObj[obj])
@@ -140,6 +141,7 @@ const actions = {
             }
         }
         commit('deleteFav', tmpArr)
+        //FIXME: 'favCDNs' + UID
         localStorage.setItem('favCDNs', JSON.stringify(state.favs))
     },
     delFirebaseFav({commit, state}, payload) {
