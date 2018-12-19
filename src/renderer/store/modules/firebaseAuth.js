@@ -46,6 +46,20 @@ const actions = {
             })
             .then(() => {
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
+            // check for local user register
+            let userData = JSON.stringify({uid: user.uid, email: payload.email})
+            if (localStorage.hasOwnProperty('cadenceUsers')) {
+                let localUserArr = []
+                localUserArr.push(userData)
+                let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
+                for(var obj in parsedObj) {
+                    localUserArr.push(JSON.stringify(parsedObj[obj]))
+                }
+                localStorage.setItem('cadenceUsers', `[${localUserArr}]`)
+            } else {
+               localStorage.setItem('cadenceUsers', `[${userData}]`)
+            }
+            
             dispatch('notificationCtrl', {msg: `Welcome!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
             })
             //TEST: provide use with licence key
@@ -100,6 +114,14 @@ const actions = {
             setTimeout(() => {
                 commit('clearNotification')
             }, 4000)
+        }
+    },
+    loggedInStatusCheck () {
+        var user = Firebase.auth().currentUser
+        if (user) {
+            console.log("Logged in as: ", user)
+        } else {
+            console.log('No user logged in')
         }
     }
 }

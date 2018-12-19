@@ -69,7 +69,7 @@ const actions = {
                     // resolve(response)
                     console.log(response)
                     //FIXME: 'favCDNs' + UID
-                    localStorage.setItem('favCDNs', JSON.stringify(state.favs))
+                    localStorage.setItem(`favCDNs-${payload.userCode}`, JSON.stringify(state.favs))
                     dispatch('notificationCtrl', {
                         msg: `${name} Library Added to your favourites`,
                         color: 'success'
@@ -89,24 +89,24 @@ const actions = {
             })
         }
         let library = name.split('.')[0]
-        console.log(library)
+        console.log(library) 
         let ref = Firebase.database().ref('library/' + library)
-        // TODO: increase value count by one 
-        //TEST:
+        // TODO: Add full library info to use in popularity list
         ref.transaction((Favcount) => {
             return (Favcount || 0) + 1
         })
     },
     getFavs({
         commit,
+        state
     }, payload) {
-        console.log("USER: ", payload)
+        console.log("USER: ", payload.uid)
         // Is user logged in
-        if (payload) {
+        if (payload.uid) {
             return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
-                ref.orderByChild('userId').equalTo(payload).limitToFirst(1)
+                ref.orderByChild('userId').equalTo(payload.uid).limitToFirst(1)
                 ref.on('value', (snapshot) => {
                     snapshot.forEach((data) => {
                         commit('updateFavs', data.val())
@@ -120,7 +120,8 @@ const actions = {
             })
         } else {
             commit('clearFavs')
-            let localFavs = localStorage.getItem('favCDNs') //FIXME: 'favCDNs' + UID
+            console.log("User Code: ", payload.userCode)
+            let localFavs = localStorage.getItem(`favCDNs-${payload.userCode}`) //FIXME: 'favCDNs' + UID fisrt 9 chars
             let parsedObj = JSON.parse(localFavs)
             for (var obj in parsedObj){
                 commit('updateFavs', parsedObj[obj])

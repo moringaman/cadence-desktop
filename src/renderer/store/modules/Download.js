@@ -6,7 +6,8 @@ const state = {
    localCDNs: [], //localStorage.getItem('localCDNs')
    ipAddress: '127.0.0.1',
    progress: 0,
-   currentFile: ''
+   currentFile: '',
+   userCode: ''
 }
 
 const mutations = {
@@ -18,7 +19,9 @@ const mutations = {
         state.localCDNs.push(payload)
   },
   loadStoredCNs(state) {
-      let localCDNStorage = localStorage.getItem('localCDNs') //FIXME: 'localCDNs' + UID
+
+      let localCDNStorage = localStorage.getItem(`localCDNs-${state.userCode}`)
+    //FIXME: 'localCDNs' + UID if user exists
     //   console.log('localStorage', JSON.parse(localCDNStorage))
     console.log(JSON.parse(localCDNStorage))
     // if (state.localCNDs.length > 0) {
@@ -41,11 +44,14 @@ const mutations = {
   setRemovedCDN(state, payload) {
       state.localCDNs = []
     state.localCDNs = payload
+  },
+  setUserCode(state, payload){
+      state.userCode = payload
   }
 }
 
 const actions = {
-    downloadCDN({commit, state, dispatch}, {cdn, cdnName, version, wget, notify}) {
+    downloadCDN({commit, state, dispatch}, {cdn, cdnName, version, wget, currentUser}) {
         if (state.online === false) {
             dispatch('notificationCtrl', {msg: "Download of library failed - NETWORK ERROR", color: 'danger'})
             return
@@ -53,19 +59,26 @@ const actions = {
         const src = cdn;
         let name = cdnName
         let cdnVersion = version
+        let userCode = currentUser.split("").splice(0,9).join("")
         const file = cdn.split('/').splice('-1' )[0]
         console.log('FILE: ',file);
-        const downloadPath = path.join(__dirname, '../..', 'public')
-        console.log(path.join(__dirname, '../..', 'public') )
-        const output = downloadPath + '/' + file;
+        const userPath = path.join(__dirname, '../..', `public/${userCode}`) 
+        if (!fs.existsSync(userPath)) {
+            console.log('creating Folder')
+            fs.mkdirSync(userPath)
+        }
+        // const downloadPath = path.join(__dirname, '../..', 'public')
+        console.log(path.join(__dirname, '../..', `public/${userCode}`) )
+        const output = userPath + '/' + file;
         const options = {
             // see options below
          };
         let fileExists = false
-         find.file(/\.js$/, downloadPath, (files) => {
+         find.file(/\.js$/, userPath, (files) => {
              console.log(files)
              for (let i=0; i<files.length; i++){
-                if (files[i] === `src/renderer/public/${file}`) {
+                // if (files[i] === `src/renderer/public/${file}`) {
+                if (files[i] === `${userPath}/${file}`) {  // <-- new path
                     fileExists = true
                 }
             } 
@@ -89,9 +102,9 @@ const actions = {
 
              commit('setLocalCDNs', {name, cdnVersion, file}) 
              // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
-             localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
+             localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
              // console.log("LocalCDNs: ", localCDNs)
-              dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990`, color: 'success'}) 
+              dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990/${userCode}`, color: 'success'}) 
             });
             download.on('progress', function(progress) {
                 typeof progress === 'number'

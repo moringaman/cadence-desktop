@@ -76,7 +76,8 @@
   
     data: function() {
       return {
-        // ipAddress: ''
+        // ipAddress: '',
+        userCode: ''
       }
     },
     components: {
@@ -147,8 +148,7 @@
     },
     created() {
       //TODO: Initialize app - add localCDN & favourite vuejs
-      if (localStorage.getItem('localCDNs') !== null && this.localCDNStorage.length === 0) this.$store.commit('loadStoredCNs')
-      console.log(localStorage.getItem('localCDNs'))
+      
       this.getIp()
       if (this.loggedIn === false && this.basicUser === false) {
         this.$router.push('/')
@@ -158,8 +158,14 @@
       // this.$store.dispatch('addFav', this.currentUser)
   
       if (this.currentUser != '' && this.loggedIn === true) {
-        
-        this.$store.dispatch('getFavs', this.currentUser)
+        this.userCode = this.currentUser.split('').splice(0,9).join('')
+        this.$store.commit('setUserCode', this.userCode )
+        if ( localStorage.getItem(`localCDNs-${this.userCode}`) !== null && this.localCDNStorage.length === 0) {
+          this.$store.commit('loadStoredCNs')
+        } 
+         console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
+        // this.$store.dispatch('getFavs', this.currentUser)
+        this.$store.dispatch('getFavs', {uid:this.currentUser, userCode: this.userCode})
       } else {
           // TODO: Load favourites from local storage if offline or not logged in
            this.$store.dispatch('getFavs')

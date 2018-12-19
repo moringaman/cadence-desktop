@@ -142,6 +142,10 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
         console.log('we are offline')
         this.$store.commit('setOnlineStatus', false)
       })
+    },
+    created() {
+      // TODO: do check for user in local storage and see if logged in to firebase
+      this.$store.dispatch('loggedInStatusCheck')
     }
   }
 </script>

@@ -33,7 +33,7 @@
                 </div>
                 <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
                   <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
-                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/</span>{{Data.file}}
+                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/{{userCode}}/</span>{{Data.file}}
                 </div>
             </div>
         </div>
@@ -52,7 +52,8 @@
         props: ['Data'],
         data() {
             return {
-                fileNameData: '/this/file/is/nonexistent'
+                fileNameData: '/this/file/is/nonexistent',
+                userCode: ''
             }
         },
         methods: {
@@ -60,7 +61,7 @@
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
                 } else if (this.Data.file){
-                    var cdn = `http://localhost:9990/${this.Data.file}`
+                    var cdn = `http://localhost:9990/${this.userCode}/${this.Data.file}`
                 } else {
                     var cdn = this.Data.cdn
                 }
@@ -80,13 +81,13 @@
                 let cdnName = this.Data.name,
                     version = this.Data.version,
                     cdn = this.Data.latest,
-                    notify = this.$notify
+                    currentUser = this.currentUser
                 this.$store.dispatch('downloadCDN', {
                         wget,
                         cdn,
                         cdnName,
                         version,
-                        notify
+                        currentUser
                     })
             },
             favouriteCDN() {
@@ -94,20 +95,23 @@
                     version = this.Data.version,
                     cdn = this.Data.latest,
                     userId = this.currentUser
+                  this.userCode = userId.split("").splice(0,9).join("")
                 let loggedIn = this.loggedIn
                 if (!loggedIn) {
                     this.$store.dispatch('accessRights', {check: 'logged in', action: 'add favourites'})
                 } else {
                       if (this.searchData.length < 1) {
-                    cdn = `http://localhost:9990/${this.Data.file}`
+                    cdn = `http://localhost:9990/${this.userCode}/${this.Data.file}`
                     version = this.Data.cdnVersion
                 }
+                let userCode = this.userCode
                 this.$store.dispatch('addFav', {
                         name,
                         version,
                         cdn,
                         userId,
-                        loggedIn
+                        loggedIn,
+                        userCode
                     })
                 }
               
@@ -174,6 +178,7 @@
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
+            this.userCode = this.currentUser.split("").splice(0,9).join("")
         }
     }
 </script>
