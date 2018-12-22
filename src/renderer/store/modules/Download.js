@@ -143,7 +143,8 @@ const getters = {
     localCDNStorage: state => state.localCDNs,
     ipAddress: state => state.ipAddress,
     progress: state => state.progress,
-    currentFile: state => state.currentFile
+    currentFile: state => state.currentFile,
+    userCode: state => state.userCode
   }
 
 export default {

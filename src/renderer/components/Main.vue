@@ -36,13 +36,8 @@
 
   
       <app-notify :notification='notification'/>
-     
-      <div v-if='loggedIn' class="server-message">
-        <p>Local CDN Server running at http://localhost:9990 or http://{{ipAddress}}:9990</p>
-        <i class='fa fa-cog  fa-cog__1 fa-2x'></i>
-        <i class='fa fa-cog  fa-cog__2 fa-2x'></i>
-        </div>
-      <div v-if="!loggedIn">
+    <div class='ad-space' v-if="!loggedIn"><h3>YOUR AD HERE</h3></div>
+    <p class="ad-msg" v-if="!loggedIn">Please <a linkTo='#'>Donate</a> to remove ads and unlock new features</p>
       </div>      
     </div>
      <app-footer></app-footer> 
@@ -147,16 +142,13 @@
       }
     },
     created() {
-      //TODO: Initialize app - add localCDN & favourite vuejs
+      //TODO: Initialize app - add localCDN & favourite (vuejs)
       
       this.getIp()
       if (this.loggedIn === false && this.basicUser === false) {
         this.$router.push('/')
       }
       console.log('fetching favourites')
-  
-      // this.$store.dispatch('addFav', this.currentUser)
-  
       if (this.currentUser != '' && this.loggedIn === true) {
         this.userCode = this.currentUser.split('').splice(0,9).join('')
         this.$store.commit('setUserCode', this.userCode )
@@ -205,6 +197,25 @@
     overflow: hidden;
     font-family: 'Roboto Mono', monospace;
   }
+
+  .ad-msg {
+    transform: translateX(-27px);
+    font-size: .95rem;
+    margin-top: 10px;
+  }
+
+  .ad-space {
+    height: 90px;
+    width: 500px;
+    /* border: 1px solid gray; */
+    background-color: white;
+    margin: 0px auto;
+    transform: translateX(-31px);
+  }
+
+  .ad-space > h3 {
+    
+  }
   
   .server-message>p {
     position: absolute;
@@ -250,7 +261,7 @@
     width: 60%;
     margin-right: 30px;
     z-index: 50;
-    height: 99.25vh;
+    height: 99.10vh;
   }
   
   div {

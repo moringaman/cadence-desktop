@@ -8,7 +8,7 @@
         <div class="card-content-heading">
           Login
         </div>
-<div class="field">
+<div  v-if="online" class="field">
   <hr>
   <label class="label"></label>
   <p class="control has-icons-left has-icons-right">
@@ -23,7 +23,24 @@
   <p class="help is-danger" v-if="!user.email == '' && !isValid">This email is invalid</p>
 </div>
 
-<div class="field">
+<div v-if="!online" class="field">
+  <hr>
+  <label class="label">Select User Profile</label>
+  <div class="control has-icons-left">
+  <div class="select">
+    <select>
+      <option selected>Select User Profile from Email Address</option>
+      <option v-for="user in localUserInfo" :key="user.email" :value="user.email">{{user.email}}</option>
+    </select>
+    <span class="icon is-small is-left">
+      <i class="fa fa-envelope"></i>
+    </span>
+  </div>
+  </div>
+</div>
+
+
+<div v-if="online" class="field">
   <label class="label"></label>
   <p class="control has-icons-left">
     <input class="input" type="password" placeholder="Password" v-model="user.password">
@@ -77,7 +94,9 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       'loggedIn',
       'basicUser',
       'notification',
-      'authenticating'
+      'authenticating',
+      'localUserInfo',
+      'online'
     ]),
     validation: function () {
       return {
@@ -146,6 +165,9 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     created() {
       // TODO: do check for user in local storage and see if logged in to firebase
       this.$store.dispatch('loggedInStatusCheck')
+      // TODO: Check for network status and update state variable
+      this.$store.dispatch('networkStatus')
+      this.$store.dispatch('getLocalUserInfo')
     }
   }
 </script>
@@ -179,6 +201,10 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
    right: 0;
    bottom: 0;
  }
+
+  /* .select {
+    width: 300px;
+  } */
 
  .btn-close {
    background-color: white;

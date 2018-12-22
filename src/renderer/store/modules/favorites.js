@@ -121,7 +121,8 @@ const actions = {
         } else {
             commit('clearFavs')
             console.log("User Code: ", payload.userCode)
-            let localFavs = localStorage.getItem(`favCDNs-${payload.userCode}`) //FIXME: 'favCDNs' + UID fisrt 9 chars
+            //IDEA: Maybe load generic favourites from local storage
+            let localFavs = localStorage.getItem(`favCDNs-${payload.userCode}`) //TEST: load favourites from local storage 
             let parsedObj = JSON.parse(localFavs)
             for (var obj in parsedObj){
                 commit('updateFavs', parsedObj[obj])

@@ -75,7 +75,16 @@
             },
             downloadCDN() {
                 if (!this.online) {
-                    this.$store.dispatch('accessRights', {check: 'online', action: 'downloading library'})
+                    // this.$store.dispatch('accessRights', {check: 'online', action: 'downloading library'})
+                    // .then(res => {
+                    //     if (res === fasle) {
+                    //         return
+                    //     }
+                    // })
+                    this.$store.dispatch('notificationCtrl',
+                     {msg: 'NETWORK ERROR: No downloads cannot be performed at this time',
+                     color: 'danger'})
+                     return
                 }
                 console.log("wget: ", wget)
                 let cdnName = this.Data.name,

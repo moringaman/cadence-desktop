@@ -8,6 +8,5 @@ var config = {
 }
 
 export default Firebase.initializeApp(config);
-        // let auth = Firebase.auth();
 
         

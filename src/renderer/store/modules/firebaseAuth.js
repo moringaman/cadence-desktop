@@ -9,7 +9,8 @@ const state = {
     basicUser: false,
     online: true,
     currentUser: {},
-    authenticating: false
+    authenticating: false,
+    localUserInfo: []
 }
 
 const mutations = {
@@ -28,6 +29,9 @@ const mutations = {
     },
     isAuthenticating(state, payload) {
         state.authenticating = payload
+    },
+    loadLocalUsers(state, payload) {
+        state.localUserInfo = payload
     }
 }
 
@@ -71,6 +75,7 @@ const actions = {
     },
     authenticate({commit, dispatch}, payload) {
         //TODO: Check local storage for licence key.
+        // If online authenticate with firebase if not log user in locally and load localStorageData
         commit('isAuthenticating', true)
         let { email , password } = payload
         console.log(email)
@@ -81,15 +86,16 @@ const actions = {
             commit('setLoggedIn', {loggedIn:true, user: user.uid})
             commit('isAuthenticating', false)
 
-            dispatch('notificationCtrl', {msg: `Welcome back!, Your local dev server is running at http://localhost:9990`, color: 'success'}) 
-            // setTimeout(() => {
-            //     commit('clearNotification')
-            // }, 6000)
-
+            dispatch('notificationCtrl',{
+                msg: `Welcome back!, Your local dev server is running at http://localhost:9990`,
+                color: 'success'
+            }) 
            }).catch(err=> {
                console.log(err)
-               dispatch('notificationCtrl', {msg: `There was a problem authenticating you!
-                                         - Please try a different username or password`, color: 'danger'}) 
+               dispatch('notificationCtrl', 
+               {msg: `There was a problem authenticating you!
+                 - Please try a different username or password`,
+                  color: 'danger'}) 
                 commit('isAuthenticating', false)
            })
            
@@ -108,12 +114,14 @@ const actions = {
             setTimeout(() => {
                 commit('clearNotification')
             }, 4000)
+            return false
         }
         if (!state.online) {
             commit('setNotification', {msg: `NETWORK ERROR ${payload.action}, You appear to be offline`, color: 'danger'})
             setTimeout(() => {
                 commit('clearNotification')
             }, 4000)
+            return false
         }
     },
     loggedInStatusCheck () {
@@ -123,6 +131,26 @@ const actions = {
         } else {
             console.log('No user logged in')
         }
+    },
+    networkStatus({commit}){
+        require('dns').resolve('www.google.com', function(err) {
+            if (err) {
+               console.log("No connection");
+               commit('setOnlineStatus', false)
+            } else {
+               console.log("Connected");
+               commit('setOnlineStatus', true)
+
+            }
+          });
+    },
+    getLocalUserInfo({commit}) {
+        let localUserArr = []
+        let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
+                for(var obj in parsedObj) {
+                    localUserArr.push(parsedObj[obj])
+                }
+        commit('loadLocalUsers', localUserArr)
     }
 }
 
@@ -131,7 +159,8 @@ const getters = {
     currentUser: state => state.currentUser,
     basicUser: state => state.basicUser,
     online: state => state.online,
-    authenticating: state => state.authenticating
+    authenticating: state => state.authenticating,
+    localUserInfo: state => state.localUserInfo
 }
 
 export default {
