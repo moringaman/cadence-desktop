@@ -109,6 +109,8 @@ const actions = {
                 ref.orderByChild('userId').equalTo(payload.uid).limitToFirst(1)
                 ref.on('value', (snapshot) => {
                     snapshot.forEach((data) => {
+                        //TODO: Check if file is local if not download it
+                        //TODO: create local storage matching firebase data
                         commit('updateFavs', data.val())
                     })
                 })
