@@ -53,7 +53,7 @@ const actions = {
             // check for local user register
             let userData = JSON.stringify({uid: user.uid, email: payload.email})
             if (localStorage.hasOwnProperty('cadenceUsers')) {
-                let localUserArr = []
+                let localUserArr = [] // load dropdown default
                 localUserArr.push(userData)
                 let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
                 for(var obj in parsedObj) {

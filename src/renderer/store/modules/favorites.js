@@ -102,7 +102,7 @@ const actions = {
     }, payload) {
         console.log("USER: ", payload.uid)
         // Is user logged in
-        if (payload.uid) {
+        if (payload.uid) {  // And payload.online
             return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");

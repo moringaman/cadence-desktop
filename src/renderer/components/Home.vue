@@ -12,24 +12,29 @@
   <hr>
   <label class="label"></label>
   <p class="control has-icons-left has-icons-right">
-    <input class="input" type="text" :class="[{'is-danger': !user.email == '' && !isValid}, {'is-success': !isValid}]" placeholder="Email" v-model="user.email">
+    <input class="input" 
+    key="email-input" 
+    type="text" 
+    v-validate="'email'"
+     name="email"
+     placeholder="Email" v-model="user.email">
     <span class="icon is-small is-left">
       <i class="fa fa-envelope"></i>
     </span>
-    <span v-if="!user.email == '' && !isValid" class="icon is-small is-right">
+    <span v-if="errors.first('email')" class="icon is-small is-right">
       <i class="fa fa-warning"></i>
     </span>
   </p>
-  <p class="help is-danger" v-if="!user.email == '' && !isValid">This email is invalid</p>
+  <p class="help is-danger" v-if="errors.first('email')">This email is invalid</p>
 </div>
 
 <div v-if="!online" class="field">
   <hr>
-  <label class="label">Select User Profile</label>
+  <label class="label"></label>
   <div class="control has-icons-left">
   <div class="select">
-    <select>
-      <option selected>Select User Profile from Email Address</option>
+    <select v-model="user.selectedEmail">
+      <option selected>{{user.selectedEmail}}</option> 
       <option v-for="user in localUserInfo" :key="user.email" :value="user.email">{{user.email}}</option>
     </select>
     <span class="icon is-small is-left">
@@ -43,16 +48,22 @@
 <div v-if="online" class="field">
   <label class="label"></label>
   <p class="control has-icons-left">
-    <input class="input" type="password" placeholder="Password" v-model="user.password">
+    <input class="input" key="password-input"
+     v-validate="'required|min:6'" type="password" 
+     placeholder="Password" 
+     name="password"
+     v-model="user.password">
     <span class="icon is-small is-left">
       <i class="fa fa-lock"></i>
     </span>
   </p>
 </div>
-       <a class="button is-primary" :class="{'is-success': isValid, 'is-loading': authenticating}" @click.prevent="login" v-if="isValid">Login</a>
-       <a class="button is-primary" @click.prevent.native="login" v-if="!isValid" disabled>Login</a>
+       <a class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="login">Login</a>
+       <!-- <a class="button is-primary" @click.prevent.native="login" v-if="errors" disabled>Login</a> -->
        <a class="button is-info" @click.prevent="signUp">Sign Up</a>
-       <a class="button" @click.prevent="loginBasic">Just Use</a>
+       <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
+       <a class="button" @click.prevent="login">Just Use</a>
+
       <!--  <a class="button is-danger" @click="close">Exit</a> -->
        </div>
        </div>
@@ -65,6 +76,12 @@
 </template>
 
 <script>
+
+window.__FORM__ = {
+  user: {
+  selectedEmail: 'Select email address from below'
+  }
+}
   
   import Firebase from 'firebase'
   import Router from 'vue-router'
@@ -80,13 +97,14 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       AppNotify: Notify
     },
     data: function (){
-        return  {
+        return window.__FORM__ || {
        user:{
           email: '',
-          password: ''
+          password: '',
+          selectedEmail: '',
        },
        emailValid: false
-      }
+        }
     },
   computed: {
     ...mapGetters ([
@@ -104,6 +122,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       }
     },
     isValid: function () {
+      
       var validation = this.validation
       return Object.keys(validation).every(function (key) {
         return validation[key]
@@ -126,12 +145,36 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
        this.$electron.shell.win.close();
       },
       login () {
-        if (!this.isValid) {
-               //TODO: set validEmail to false disabling the submit button
-        return  alert("please enter a valid email address!")
-        }
-          this.emailValid = true;
-          this.$store.dispatch('authenticate', {email:this.user.email, password: this.user.password})
+        this.$validator.validate().then((result) => {
+          if(!result) {
+            this.$store.dispatch('notificationCtrl', {msg: "Please correct form errors", color: "danger"})
+             return 
+          } else {
+              if (this.online) {
+            this.$store.dispatch('authenticate', {email:this.user.email, password: this.user.password})
+          } else {
+              let userObj = {}
+              let parsedUserData =  JSON.parse(localStorage.getItem('cadenceUsers'))
+            
+                  for (let i = 0; i < parsedUserData.length; i++){
+                    if (parsedUserData[i].email === this.user.selectedEmail) {
+                      userObj.email = this.user.selectedEmail
+                      userObj.uid = parsedUserData[i].uid
+                    }
+                  }
+                  console.log( userObj) // uid and email
+                  // TODO: set logged in to true and load userdata associated with email selectedEmail in userObj
+                  // load favs
+                  // set loggedIn to true
+                  this.$store.commit('setLoggedIn', {loggedIn: true, user: userObj.uid})
+                  // load localCDNs from storage
+              }
+          }
+        })
+       
+          
+          
+      
       },
       signUp () {
       //  const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
@@ -140,7 +183,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       this.$store.dispatch('registerNewUser', {email: this.user.email, password: this.user.password})
       },
       logOut () {
-      //  auth.signOut();
+      //  auth.signOut(); //TEST: Do we need to logout here?
       //  this.$router.push('/');
       this.$store.dispatch('setLoggedOut')
       },
@@ -249,7 +292,9 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     -webkit-app-region: drag;
  }
 
-
+.label {
+  color: white;
+}
 .card {
   text-align: center;
   height: 300px;

@@ -1,6 +1,6 @@
 <template>
     <transition name="pop">
-        <div v-if="notification !== ' '" class="notify" :class='notification.color'>
+        <div v-show="notification !== ' '" class="notify" :class='notification.color'>
           {{notification.msg}}
           <div class="icon-circle">
             <i class="fa fa-info fa-2x icon-circle__icon"></i>
@@ -83,7 +83,10 @@ export default {
   border: 3px solid green
 }
 
-
+.fa {
+  position: relative;
+  margin: auto auto;
+}
 
 .pop-enter-active, .pop-leave-active {
   transition: all .7s ease-out /*cubic-bezier(1.0, 0.5, 0.8, 1.0);
@@ -95,6 +98,7 @@ export default {
    opacity: 0;
    transform: translateY(250px)
 }
+
 
 
 </style>

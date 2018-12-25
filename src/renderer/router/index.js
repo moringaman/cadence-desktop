@@ -6,7 +6,7 @@ import VueBar from 'vuebar';
 import VueUp from'vueup';
 import Firebase from 'firebase';
 import Vuex from 'vuex';
-import VueFire from'vuefire';
+import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';
 
 Vue.use(VueBar)
@@ -17,6 +17,14 @@ Vue.use(VueUp)
 Vue.use(Firebase)
 Vue.use(Vuex)
 Vue.use(Wget)
+Vue.use(VeeValidate,
+  {
+    classes: true,
+    classNames: {
+      valid: 'is-success',
+      invalid: 'is-danger'
+    }
+  })
 
 
 export default new Router({
