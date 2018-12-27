@@ -49,6 +49,7 @@
 <script>
   const URL = `https://api.cdnjs.com/libraries?search=`;
   import axios from 'axios';
+  import wget from 'wget-improved';
   import os from 'os';
   import Header from './cdn/Header.vue';
   import CdnList from './cdn/CdnList.vue';
@@ -131,7 +132,9 @@
         'currentUser',
         'favs',
         'showFavs',
-        'dataLoading'
+        'dataLoading',
+        'online'
+        
       ])
     },
     watch: {
@@ -143,21 +146,22 @@
     },
     created() {
       //TODO: Initialize app - add localCDN & favourite (vuejs)
-      
+      const userId = this.currentUser
       this.getIp()
       if (this.loggedIn === false && this.basicUser === false) {
         this.$router.push('/')
       }
       console.log('fetching favourites')
       if (this.currentUser != '' && this.loggedIn === true) {
-        this.userCode = this.currentUser.split('').splice(0,9).join('')
+        this.userCode = userId.split('').splice(0,9).join('')
         this.$store.commit('setUserCode', this.userCode )
         if ( localStorage.getItem(`localCDNs-${this.userCode}`) !== null && this.localCDNStorage.length === 0) {
-          this.$store.commit('loadStoredCNs')
+          // this.$store.commit('loadStoredCDNs')
+          this.$store.dispatch('getCDNs', {wget, userId})
         } 
          console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
         // this.$store.dispatch('getFavs', this.currentUser)
-        this.$store.dispatch('getFavs', {uid:this.currentUser, userCode: this.userCode})
+        this.$store.dispatch('getFavs', {uid: userId, userCode: this.userCode, online: this.online})
       } else {
           // TODO: Load favourites from local storage if offline or not logged in
            this.$store.dispatch('getFavs')

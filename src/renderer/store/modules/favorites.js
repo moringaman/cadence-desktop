@@ -2,6 +2,10 @@ import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
 import _ from 'lodash';
 
+const path = require('path')
+const find = require('find')
+const fs = require('fs')
+
 const state = {
     favs: [],
     showFavs: false
@@ -36,8 +40,12 @@ const actions = {
         dispatch
     }, payload) {
         let {
-            name = '', version = 'latest', cdn = '', userId
+            name = '', version = 'latest', cdn = '', userId, online
         } = payload
+        if(online === false) {
+            dispatch('notificationCtrl', {msg: 'Sorry but you cant create favourites while you are offline', color: 'danger'})
+            return
+        }
         // check if favorite already there 
         let alreadyAdded = false
         for (let i = 0; i < state.favs.length; i++) {
@@ -55,6 +63,8 @@ const actions = {
         }
         // **** Varified not present
         console.log('checking login status', payload.loggedIn)
+
+        //TODO: check loggedin status 
         if (payload.loggedIn == true) {
             // return new Promise((resolve, reject) => {
             console.log('adding to firebase ', payload)
@@ -101,22 +111,49 @@ const actions = {
         state
     }, payload) {
         console.log("USER: ", payload.uid)
+        var localFavArray = []
+       
+        let userCode = payload.uid.split('').splice(0,9).join('')
+        const userPath = path.join(__dirname, '../..', `public/${userCode}`) 
         // Is user logged in
-        if (payload.uid) {  // And payload.online
+        if (payload.uid && payload.online === true) {  // And payload.online
             return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
                 ref.orderByChild('userId').equalTo(payload.uid).limitToFirst(1)
                 ref.on('value', (snapshot) => {
                     snapshot.forEach((data) => {
-                        //TODO: Check if file is local if not download it
+                        // let fileExists = false
+                        // let fileName = data.val().cdn.split('/').splice(-1)
+                        // //TODO: Check if file is local if not download it
+                        // find.file(/\.js$/, userPath, (files) => {
+                        //     console.log(files)
+                        //     for (let i=0; i<files.length; i++){
+                        //        if (files[i] === `${userPath}/${fileName}`) {  // <-- new path
+                        //           return fileExists = true
+                        //        }    // call download cdn action
+                        //    } 
+                        //    if (!fileExists) {
+                        //        // if localCDN download
+                        //     console.log('need to download: ', fileName) 
+                        //    }
+                        // })
                         //TODO: create local storage matching firebase data
+                       if (data.val().userId === payload.uid) {
                         commit('updateFavs', data.val())
+                        // console.log('dataVal ', fileName)
+                        localFavArray.push(data.val())
+                       }
+                      
                     })
+                    console.log('LocalStoragecreation: ', JSON.stringify(localFavArray))
+                    localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
                 })
             })
             .then(response => {
+                console.log('I got favs', response)
                 resolve(response)
+                
             }, error => {
                 reject(error)
             })

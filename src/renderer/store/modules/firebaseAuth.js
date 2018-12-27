@@ -23,6 +23,7 @@ const mutations = {
     },
     basicUser (state, payload) {
         state.basicUser = payload
+        state.currentUser = {}
     },
     setOnlineStatus (state, payload) {
         state.online = payload

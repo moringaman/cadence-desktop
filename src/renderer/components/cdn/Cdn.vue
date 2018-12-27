@@ -74,7 +74,7 @@
                 })
             },
             downloadCDN() {
-                if (!this.online) {
+                if (this.online === false) {
                     // this.$store.dispatch('accessRights', {check: 'online', action: 'downloading library'})
                     // .then(res => {
                     //     if (res === fasle) {
@@ -103,7 +103,8 @@
                 let name = this.Data.name,
                     version = this.Data.version,
                     cdn = this.Data.latest,
-                    userId = this.currentUser
+                    userId = this.currentUser,
+                    online = this.online
                   this.userCode = userId.split("").splice(0,9).join("")
                 let loggedIn = this.loggedIn
                 if (!loggedIn) {
@@ -120,7 +121,8 @@
                         cdn,
                         userId,
                         loggedIn,
-                        userCode
+                        userCode,
+                        online
                     })
                 }
               
