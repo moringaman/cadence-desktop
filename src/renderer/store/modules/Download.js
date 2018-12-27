@@ -2,6 +2,7 @@ import Firebase from '../../helpers/firebase';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
+const PouchDB = require('pouchdb-browser');
 
 const state = {
    localCDNs: [], //localStorage.getItem('localCDNs')
@@ -102,8 +103,50 @@ const actions = {
 
              commit('setLocalCDNs', {name, cdnVersion, file}) 
              // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
-             localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
-             // console.log("LocalCDNs: ", localCDNs)
+             localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs))
+             // *******  PouchDb create download for user 
+            //  let pouchdb = PouchDB.default.defaults();
+            //  let db = new PouchDB("http://192.168.1.155:5984/downloads")
+            //  PouchDB.debug.enable('*');
+             let db = new PouchDB('https://couchdb-58683d.smileupps.com/downloads',
+              {'auth.username': 'admin', 'auth.password': '739d418d1154', 'skip_setup': true })
+             let localDB = new PouchDB('cadenceData')
+             let userDoc = {
+                 '_id' : currentUser,
+                 'downloads' : [state.localCDNs]
+             }
+
+             db.get(currentUser).then(function (doc) {
+                if (doc) {
+                    doc.downloads = state.localCDNs;
+                    return db.put(doc);
+                } else {
+                    db.put(userDoc)
+                    return
+                }
+              
+              }).then(function () {
+                return db.get(currentUser);
+              }).then(function (doc) {
+                console.log(doc);
+                localDB.replicate.from(db).on('complete', function () {
+                    console.log('replication complete')
+                  })
+                  .on('error', function (err) {
+                    // boo, something went wrong!
+                  });
+              }).catch((error) => {
+                    if (error.name === 'not_found') {
+                        db.put(userDoc)
+                    }
+              });
+
+              localDB.get(currentUser)
+              .then(doc=>{
+                  console.log('LocalPouchDb: ', doc.downloads)
+              })
+
+             //*************   Pouchdb End      */
               dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990/${userCode}`, color: 'success'}) 
             });
             download.on('progress', function(progress) {
@@ -184,7 +227,9 @@ const actions = {
           if (localCDNStorage.length > 0) {
             commit('loadStoredCDNs', localCDNStorage )
           } else {
-              seedData = [{"name":"Locally Stored Library's","cdnVersion":"Notes","file":"This is where all the libraries that you have downloaded are stored"}]
+              seedData = [{"name":"Locally Stored Library's",
+              "cdnVersion":"Notes",
+              "file":"This is where all the libraries that you have downloaded are stored"}]
           }
       }
   }
