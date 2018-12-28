@@ -1,5 +1,6 @@
 <template>
   <div id="wrapper">
+    <div class="overlay"></div>
     <div class="btn-close" @click='closeApp'><i class="fa fa-times fa-2x"></i></div>
     <img class="splash-logo" src=".././assets/logo2.svg">
     <p class='welcome'>Cadence</p>
@@ -8,6 +9,7 @@
         <div class="card-content-heading">
           Login
         </div>
+        <form  v-on:submit.prevent>
 <div  v-if="online" class="field">
   <hr>
   <label class="label"></label>
@@ -63,7 +65,7 @@
        <a class="button is-info" @click.prevent="signUp">Sign Up</a>
        <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
        <a class="button" @click.prevent="login">Just Use</a>
-
+</form>
       <!--  <a class="button is-danger" @click="close">Exit</a> -->
        </div>
        </div>
@@ -226,7 +228,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
   position: absolute;
   text-align: center;
   overflow: hidden;
-  background-color:rgba(105, 104, 104, 0.2);
+  /* background-color:rgba(105, 104, 104, 0.2); */
+  background-color: rgba(185, 185, 92, 0.1);
  }
 
  #wrapper::after {
@@ -244,6 +247,16 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
    right: 0;
    bottom: 0;
  }
+
+ /* .overlay {
+   z-index: 1000;
+   color: yellow;
+   position: absolute;
+   height: 100vh;
+   width: 100vw;
+   top: 0;
+   left: 0;
+ } */
 
   /* .select {
     width: 300px;

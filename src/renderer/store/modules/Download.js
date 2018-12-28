@@ -1,4 +1,5 @@
 import Firebase from '../../helpers/firebase';
+import uid from '../../helpers/uid';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
@@ -101,10 +102,25 @@ const actions = {
                 console.log(output);
 
              commit('setLocalCDNs', {name, cdnVersion, file}) 
-             // commit('setLocalCDNs', `${name} ${cdnVersion} http://localhost:9990/${file}` )
-             localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
-             // console.log("LocalCDNs: ", localCDNs)
-              dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990/${userCode}`, color: 'success'}) 
+             //TODO: Store download in firebase
+             let userId = currentUser
+              Firebase.database()
+                .ref('downloads/' + uid())
+                .set({
+                    cdn,
+                    name,
+                    version,
+                    userId
+                })
+                .then( response=> {
+                    localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
+                    // console.log("LocalCDNs: ", localCDNs)
+                     dispatch('notificationCtrl', {msg: `Downloaded: ${file} for local use via http://localhost:9990/${userCode}`, color: 'success'}) 
+                })
+                .catch(error=>{
+                    console.log('An error occured')
+                })
+
             });
             download.on('progress', function(progress) {
                 typeof progress === 'number'

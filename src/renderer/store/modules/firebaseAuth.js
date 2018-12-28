@@ -20,6 +20,7 @@ const mutations = {
     },
     setLoggedOut (state) {
         state.loggedIn = false
+        state.currentUser = {}
     },
     basicUser (state, payload) {
         state.basicUser = payload
