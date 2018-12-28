@@ -136,7 +136,7 @@ const actions = {
     //   console.log(ext);
   },
   deleteCDN({commit, state, dispatch}, payload) {
-    const downloadPath = path.join(__dirname, '../..', 'public')
+    const downloadPath = path.join(__dirname, '../..', `public/${state.userCode}`)
     console.log('file to delete: ', payload)
     fs.unlink(`${downloadPath}/${payload}`, (err) => {
         if (err) throw err;
@@ -152,6 +152,19 @@ const actions = {
         localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
         dispatch('notificationCtrl', { msg:`${payload} has been removed from your local storage`, color: 'success'})
       });
+      //  Remove from firebase if Online
+      // TODO: Do online check my passing online state
+      Firebase.database()
+        .ref('downloads')
+        .orderByChild('file').equalTo(payload)
+        .on('value', snap => {
+            snap.forEach(data => {
+                let first9Chars = data.val().userId.split("").splice(0,9).join('')
+                if( first9Chars === state.userCode ) {
+                    Firebase.database().ref('downloads').child(data.key).remove()
+                }
+            })
+        })
   },
   getCDNs({commit, state}, payload) {
     let localCDNArray = []

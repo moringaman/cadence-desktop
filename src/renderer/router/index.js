@@ -17,6 +17,8 @@ Vue.use(VueUp)
 Vue.use(Firebase)
 Vue.use(Vuex)
 Vue.use(Wget)
+// import Menu from './cdn/Menu.vue';
+// import Footer from './cdn/Footer.vue';
 Vue.use(VeeValidate,
   {
     classes: true,
@@ -39,6 +41,11 @@ export default new Router({
        name: 'cadence',
        component: require('@/components/Main')
     },
+     {
+      path: '/cdn-detail',
+      name: 'cdn-detail',
+      component: require('@/components/cdn/CdnNotes')
+     },
     {
       path: '*',
       redirect: '/'

@@ -128,7 +128,8 @@
               
             },
             deleteFav() {
-                console.log('DELETING: ', this.Data.file)
+                if (this.online === true) {
+                         console.log('DELETING: ', this.Data.file)
                 if (!this.Data.file) {
                     let name = this.Data.name
                     let userId = this.currentUser
@@ -148,17 +149,22 @@
                         for(let i=0; i < this.favs.length; i++){
                             if(this.favs[i].name === this.Data.file.split('.')[0]) {
                                 this.$store.dispatch('notificationCtrl', 
-                                {msg: `${this.Data.file.split('.')[0]} is in your favourites, please delete it from favourites list first`,
+                                {msg: `${this.Data.file.split('.')[0]} is in your favourites, please delete it from your favourites list first`,
                                  color: 'warning'})
                                  console.log("Is a favourite")
                                  return
                             }
                         }
                     let file = this.Data.file
+                    let online = this.online
                     console.log('delete ok')
                     this.$store.dispatch('deleteCDN', file)
                 }
-                
+            } else {
+                this.$store.dispatch('notificationCtrl',
+                {msg: 'You are currently offline deletions cannot be done when offline',
+                 color: 'danger'})
+            }   
             },
             ...mapMutations([
                 'clearNotification'
