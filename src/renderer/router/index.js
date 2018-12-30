@@ -6,8 +6,11 @@ import VueBar from 'vuebar';
 import VueUp from'vueup';
 import Firebase from 'firebase';
 import Vuex from 'vuex';
-import VueFire from'vuefire';
+import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';
+import Prism from 'prismjs';
+import electron from 'electron'
+
 
 Vue.use(VueBar)
 Vue.use(Clipboard)
@@ -17,6 +20,16 @@ Vue.use(VueUp)
 Vue.use(Firebase)
 Vue.use(Vuex)
 Vue.use(Wget)
+Vue.use(Prism)
+Vue.use(electron)
+Vue.use(VeeValidate,
+  {
+    classes: true,
+    classNames: {
+      valid: 'is-success',
+      invalid: 'is-danger'
+    }
+  })
 
 
 export default new Router({
@@ -31,6 +44,11 @@ export default new Router({
        name: 'cadence',
        component: require('@/components/Main')
     },
+     {
+      path: '/cdn-detail',
+      name: 'cdn-detail',
+      component: require('@/components/cdn/CdnNotes')
+     },
     {
       path: '*',
       redirect: '/'

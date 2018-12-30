@@ -1,13 +1,52 @@
 <template>
 <div>
-   <p >Cadence v0.01 - by Leon Duffus - copyright 2017 - Webnostix Web Development - info@webnostix.co.uk </p>
+    <div v-if='loggedIn'>
+        <p>Local CDN server running on: http://localhost:9990, LAN address: http://{{ipAddress}}:9990</p>
+    </div>
+   <div class="network-status" :style="{backgroundColor: Label}">
+       <span v-if="online" :class='{online: online}'>ONLINE</span>
+       <span v-if="!online" :class='{offline: !online}'>OFFLINE</span>
+   </div>
 </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
-    
-}
+    data: function () {
+        return {
+            Label: ""
+        }      
+    },
+    computed: {
+        ...mapGetters([
+            'online',
+            'ipAddress',
+            'loggedIn'
+        ])
+    },
+    watch: {
+        online (val) {
+            if (val) {
+                this.Label = "rgb(168, 101, 231)"
+                console.log('netStat ', val)
+                console.log(this.label)
+                this.$store.dispatch('notificationCtrl',
+                 {msg: 'You are back online, Yaaay!! You can search for & Download Libraries now',
+                  color: 'success'} )
+            } else {
+                this.Label = "gray"
+                console.log('netStat ', val)
+                this.$store.dispatch('notificationCtrl', 
+                {msg: 'Oops looks like your network is down, Only your local CDN links will work',
+                 color: 'danger'
+                 })
+
+            }
+            
+        }
+    }
+    }
 </script>
 
 <style scoped>
@@ -17,7 +56,7 @@ body {
 }
 
 div {
-    height: 30px;
+    height: 32px;
     width: 100vw;
     position: absolute;
     bottom: 0px;
@@ -31,9 +70,42 @@ div {
 }
 
 div p {
-    color: rgb(150, 148, 148);
+    color: blueviolet;
     line-height: 10px;
     font-size: 14px;
+    margin: 3px -10px;
+    /* float: left; */
+    font-weight: 300;
+     margin-left: -70px;
+}
+
+.network-status {
+    display: grid;
+    position: absolute;
+    background-color: rgb(168, 101, 231);
+    width: 100px;
+    height: 120%;
+    margin: 0px 81%;
+    bottom: 5px;
+    padding: 8px 10px;
+    grid-template-rows: 1fr;
+    transition: all .3s ease;
+    letter-spacing: 1px;
+}
+
+.network-status > span {
+ /* font-weight: bold; */
+    grid-row: 1 / 1;
+
+}
+
+.online {
+    color: lightgreen;
+}
+
+.offline {
+    color: white;
+    /* background-color: #333; */
 }
 
 </style>

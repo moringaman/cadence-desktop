@@ -1,14 +1,21 @@
 <template>
   <div>
-    
     <div class="row">
-      <input type="text" class="input" v-model="search" placeholder="search for a CDN here and press ENTER"
-       @keyup.enter="searchCDN"/><div class='btn-search' :class='{active: searchEnabled}' @click="searchCDN">SEARCH<i class="fa fa-search"></i></div>
+      <input v-if="online === true" type="text" class="input" v-model="search" 
+      placeholder="search for a CDN here and press ENTER"
+       @keyup.enter="searchCDN"/>
+       <input v-if="online === false" type="text" class="input" v-model="search" 
+      placeholder="search is currently disabled: OFFLINE"
+       @keyup.enter="searchCDN" disabled/>
+       <div class='btn-search' :class='{active: searchEnabled}' 
+       @click="searchCDN">SEARCH<i class="fa fa-search"></i>
+       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     data: function () {
         return {
@@ -33,6 +40,11 @@ export default {
         search(val) {
             val.length > 2? this.searchEnabled = true: this.searchEnabled = false
         }
+    },
+    computed: {
+        ...mapGetters(
+            [ 'online' ]
+        )
     }
 }
 </script>

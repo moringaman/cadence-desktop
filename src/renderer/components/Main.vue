@@ -36,13 +36,8 @@
 
   
       <app-notify :notification='notification'/>
-     
-      <div v-if='loggedIn' class="server-message">
-        <p>Local CDN Server running at http://localhost:9990 or http://{{ipAddress}}:9990</p>
-        <i class='fa fa-cog  fa-cog__1 fa-2x'></i>
-        <i class='fa fa-cog  fa-cog__2 fa-2x'></i>
-        </div>
-      <div v-if="!loggedIn">
+    <div class='ad-space' v-if="!loggedIn"><h3>YOUR AD HERE</h3></div>
+    <p class="ad-msg" v-if="!loggedIn">Please <a linkTo='#'>Donate</a> to remove ads and unlock new features</p>
       </div>      
     </div>
      <app-footer></app-footer> 
@@ -54,6 +49,7 @@
 <script>
   const URL = `https://api.cdnjs.com/libraries?search=`;
   import axios from 'axios';
+  import wget from 'wget-improved';
   import os from 'os';
   import Header from './cdn/Header.vue';
   import CdnList from './cdn/CdnList.vue';
@@ -76,7 +72,8 @@
   
     data: function() {
       return {
-        // ipAddress: ''
+        // ipAddress: '',
+        userCode: ''
       }
     },
     components: {
@@ -135,7 +132,9 @@
         'currentUser',
         'favs',
         'showFavs',
-        'dataLoading'
+        'dataLoading',
+        'online'
+        
       ])
     },
     watch: {
@@ -146,20 +145,23 @@
       }
     },
     created() {
-      //TODO: Initialize app - add localCDN & favourite vuejs
-      if (localStorage.getItem('localCDNs') !== null && this.localCDNStorage.length === 0) this.$store.commit('loadStoredCNs')
-      console.log(localStorage.getItem('localCDNs'))
+      //TODO: Initialize app - add localCDN & favourite (vuejs)
+      const userId = this.currentUser
       this.getIp()
       if (this.loggedIn === false && this.basicUser === false) {
         this.$router.push('/')
       }
       console.log('fetching favourites')
-  
-      // this.$store.dispatch('addFav', this.currentUser)
-  
       if (this.currentUser != '' && this.loggedIn === true) {
-        
-        this.$store.dispatch('getFavs', this.currentUser)
+        this.userCode = userId.split('').splice(0,9).join('')
+        this.$store.commit('setUserCode', this.userCode )
+        if ( localStorage.getItem(`localCDNs-${this.userCode}`) !== null && this.localCDNStorage.length === 0) {
+          // this.$store.commit('loadStoredCDNs')
+          this.$store.dispatch('getCDNs', {wget, userId})
+        } 
+         console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
+        // this.$store.dispatch('getFavs', this.currentUser)
+        this.$store.dispatch('getFavs', {uid: userId, userCode: this.userCode, online: this.online})
       } else {
           // TODO: Load favourites from local storage if offline or not logged in
            this.$store.dispatch('getFavs')
@@ -199,6 +201,25 @@
     overflow: hidden;
     font-family: 'Roboto Mono', monospace;
   }
+
+  .ad-msg {
+    transform: translateX(-27px);
+    font-size: .95rem;
+    margin-top: 10px;
+  }
+
+  .ad-space {
+    height: 90px;
+    width: 500px;
+    /* border: 1px solid gray; */
+    background-color: white;
+    margin: 0px auto;
+    transform: translateX(-31px);
+  }
+
+  .ad-space > h3 {
+    
+  }
   
   .server-message>p {
     position: absolute;
@@ -233,7 +254,7 @@
     position: absolute;
     ;
     color: blueviolet;
-    bottom: 150px;
+    bottom: 50px;
     left: 55%;
     transform: translateX(-45%);
   }
@@ -244,7 +265,7 @@
     width: 60%;
     margin-right: 30px;
     z-index: 50;
-    height: 99.25vh;
+    height: 99.10vh;
   }
   
   div {
@@ -258,7 +279,7 @@
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 570px;
+    height: 670px;
     width: 99%;
     z-index: 99;
   }
