@@ -254,7 +254,7 @@
     position: absolute;
     ;
     color: blueviolet;
-    bottom: 150px;
+    bottom: 50px;
     left: 55%;
     transform: translateX(-45%);
   }
@@ -279,7 +279,7 @@
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 570px;
+    height: 670px;
     width: 99%;
     z-index: 99;
   }

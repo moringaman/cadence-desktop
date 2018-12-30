@@ -1,8 +1,13 @@
 <template>
     <div>
-        <div class="column is-2 side-bar">
+        <div class="columns">
+               <div class="column is-2 side-bar">
         <app-menu></app-menu>
       </div>
+      <div class="column">
+      <editor  class="editor" v-model="content" @init="editorInit" lang="javascript" :options="myoptions" theme="twilight" width="850" height="750"></editor>
+      </div>
+        </div>
         <app-footer></app-footer>
     </div>
 </template>
@@ -15,17 +20,33 @@ export default {
     components: 
         {
       appMenu: Menu,
-      appFooter: Footer
+      appFooter: Footer,
+      editor: require('vue2-ace-editor')
       } ,
     data () {
         return {
-
+            content: 'Hello how are you',
+            myoptions: { showPrintMargin: false }
         }
     },
     computed: {},
     watch: {},
-    methods:{},
-    created(){}
+    methods:{
+              editorInit: function (editor) {
+            require('brace/ext/language_tools') //language extension prerequsite...
+            require('brace/mode/html')                
+            require('brace/mode/javascript')    //language
+            require('brace/mode/less')
+            require('brace/theme/chrome')
+            require('brace/snippets/javascript')
+              }
+    },
+    created(){
+       
+    },
+    mounted () {
+       
+    }
 }
 </script>
 
@@ -59,6 +80,11 @@ export default {
 .active {
     color: blueviolet;
     opacity: .9;
+}
+
+.editor {
+    margin: 50px 50px;
+    font-size: 1.6rem;
 }
 
 li i {

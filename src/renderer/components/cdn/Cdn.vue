@@ -15,6 +15,11 @@
                     <span class="icon" @click="favouriteCDN()">
             <i class="fa fa-heart"></i>
           </span>
+          </a>
+          <a v-if='showFavs===true' class="card-header-icon">
+                    <span class="icon" @click="editCDN(Data.name)">
+            <i class="fa fa-sticky-note"></i>
+          </span>
                 </a>
                 <a class="card-header-icon tooltip" data-tooltip="copy to clipboard">
                     <span class="icon" @click="copyCDN()">
@@ -35,14 +40,29 @@
                   <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
                   <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/{{userCode}}/</span>{{Data.file}}
                 </div>
-            </div>
+                <footer v-if='showFavs' class="card-footer">
+                    <textarea v-if='edit && editing === Data.name' v-model="contentNote"
+             class="textarea is-medium" style="height: 400px"
+              placeholder="You can put your notes for using this Library here (Supports code blocks)" rows="40">
+              </textarea>
+                    <button id="save-note-btn" class="button is-primary" 
+                    v-if='edit && editing === Data.name'
+                    @click="updateFav">Save Note</button>
+            <vue-markdown id="markdown" class="content"  v-show='!edit && editing === Data.name' :source="Data.Notes">
+            </vue-markdown>
+                </footer>
+            
+
+            </div> 
         </div>
     </transition>
     </div>
 </template>
 
 <script>
+    import marked from 'marked';
     import wget from 'wget-improved';
+    import VueMarkdown from 'vue-markdown'
     import {
         mapGetters,
         mapMutations
@@ -50,13 +70,30 @@
     
     export default {
         props: ['Data'],
+        components: {
+          VueMarkdown
+        },
         data() {
             return {
                 fileNameData: '/this/file/is/nonexistent',
-                userCode: ''
+                userCode: '',
+                contentNote: this.Data.Notes,
+                edit: false,
+                showNote: false,
+                edited: true,
+                key: 0,
+                editing: ''
             }
         },
         methods: {
+            editCDN(file){
+                this.key++
+               this.edit===true?this.edit=false:this.edit=true
+               console.log('editing file', this.edit)
+                this.editing = file
+                let editor = this.editor
+                
+            },
             copyCDN(index) {
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
@@ -75,12 +112,6 @@
             },
             downloadCDN() {
                 if (this.online === false) {
-                    // this.$store.dispatch('accessRights', {check: 'online', action: 'downloading library'})
-                    // .then(res => {
-                    //     if (res === fasle) {
-                    //         return
-                    //     }
-                    // })
                     this.$store.dispatch('notificationCtrl',
                      {msg: 'NETWORK ERROR: No downloads cannot be performed at this time',
                      color: 'danger'})
@@ -126,6 +157,15 @@
                     })
                 }
               
+            },
+            updateFav(){
+                if(this.online === true){
+                    console.log('updating')
+                    this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown})
+                    this.edit = false
+                } else {
+                    this.$store.dispatch('notificationCtrl', {msg: 'You need to be online to update Library notes', color: 'warning'})
+                }
             },
             deleteFav() {
                 if (this.online === true) {
@@ -183,6 +223,13 @@
                 'favs',
                 'showHistory'
             ]),
+             compiledMarkdown: function () {
+                 console.log('compiled')
+               return  this.contentNote
+            },
+            syntaxedNote(){
+                return Prism.highlight(this.Data.Notes, Prism.languages.javascript, 'javascript');
+            },
             showProgress() {
                 if (this.progress > 0 && this.progress < 1) {
                     return true
@@ -191,7 +238,14 @@
                 }
             }
         },
+        mounted(){
+            Prism.highlightAll()
+        },
+        updated(){
+            Prism.highlightAll()
+        },
         created() {
+            // console.log(this.syntaxedNote)
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
@@ -203,6 +257,7 @@
 <style>
     @import "~bulma/css/bulma.css";
     @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
+     @import '~/node_modules/prismjs/themes/prism.css'; 
     body {
         overflow-x: hidden;
     }
@@ -210,6 +265,35 @@
     div {
         font-family: 'Roboto Mono', monospace;
         font-size: 18px;
+    }
+
+    .text-area { 
+        height: 600px !important;
+    }
+
+    .parsed {
+        text-align: left;
+    }
+
+    #markdown {
+        width: 90%;
+        background: transparent;
+        text-align: left;
+    }
+
+    #save-note-btn {
+        margin-top: 10px;
+        /* margin-left: 640px; */
+        transform: translate(-120px, 340px);
+    }
+
+    .number {
+        padding: 0px;
+        margin: 0px;
+        font-size: .85rem;
+        word-spacing: .5rem;
+        background-color: transparent;
+        border: none;
     }
     
     .card {
@@ -222,12 +306,20 @@
     
     .card-content {
         opacity: 1;
-        overflow: visible !important
+        overflow: visible !important;
+        text-align: left;
+    }
+
+    .card-footer  {
+        
+        padding-top: 20px;
+        padding-left: 50px;
     }
     
     .content {
+        
         overflow-wrap: break-word;
-        overflow: visible !important
+        overflow: visible !important;
     }
     
     .card-content.header {

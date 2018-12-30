@@ -8,6 +8,8 @@ import Firebase from 'firebase';
 import Vuex from 'vuex';
 import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';
+import Prism from 'prismjs';
+
 
 Vue.use(VueBar)
 Vue.use(Clipboard)
@@ -17,8 +19,7 @@ Vue.use(VueUp)
 Vue.use(Firebase)
 Vue.use(Vuex)
 Vue.use(Wget)
-// import Menu from './cdn/Menu.vue';
-// import Footer from './cdn/Footer.vue';
+Vue.use(Prism)
 Vue.use(VeeValidate,
   {
     classes: true,

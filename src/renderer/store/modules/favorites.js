@@ -19,7 +19,12 @@ const mutations = {
         state.favs = payload
     },
     updateFavs(state, payload) {
-        state.favs.push(payload)
+       
+         state.favs.push(payload)
+    },
+    insertEditedFav(state, payload){
+        let objIndex = state.favs.findIndex((obj => obj.name == payload.name))
+        state.favs[objIndex].Notes = payload.Notes
     },
     deleteFav(state, payload) {
         // TEST: Favs not being deleted from local storage
@@ -76,9 +81,6 @@ const actions = {
                     userId
                 })
                 .then(response => {
-                    // resolve(response)
-                    console.log(response)
-                    //FIXME: 'favCDNs' + UID
                     localStorage.setItem(`favCDNs-${payload.userCode}`, JSON.stringify(state.favs))
                     dispatch('notificationCtrl', {
                         msg: `${name} Library Added to your favourites`,
@@ -120,27 +122,12 @@ const actions = {
             return new Promise((resolve, reject) => {
                 const db = Firebase.database();
                 const ref = db.ref("favs");
-                ref.orderByChild('userId').equalTo(payload.uid).limitToFirst(1)
+                ref.orderByChild('userId').equalTo(payload.uid)
                 ref.on('value', (snapshot) => {
                     snapshot.forEach((data) => {
-                        // let fileExists = false
-                        // let fileName = data.val().cdn.split('/').splice(-1)
-                        // //TODO: Check if file is local if not download it
-                        // find.file(/\.js$/, userPath, (files) => {
-                        //     console.log(files)
-                        //     for (let i=0; i<files.length; i++){
-                        //        if (files[i] === `${userPath}/${fileName}`) {  // <-- new path
-                        //           return fileExists = true
-                        //        }    // call download cdn action
-                        //    } 
-                        //    if (!fileExists) {
-                        //        // if localCDN download
-                        //     console.log('need to download: ', fileName) 
-                        //    }
-                        // })
-                        //TODO: create local storage matching firebase data
                        if (data.val().userId === payload.uid) {
                         commit('updateFavs', data.val())
+                        
                         // console.log('dataVal ', fileName)
                         localFavArray.push(data.val())
                        }
@@ -169,6 +156,32 @@ const actions = {
         }
         
         // get favourites from local storage
+    },
+    updateFavs({commit}, payload){
+        console.dir(payload)
+        let counter = 0
+         Firebase.database().ref('favs')
+        .orderByChild('name').equalTo(payload.Data.name).limitToFirst(1)
+        .on('value', snap => {
+            snap.forEach(data => {
+                if (data.val().userId === payload.Data.userId) {
+                    console.log('update value')
+                    console.log(data.key)
+                    if (counter < 1){
+                        Firebase.database().ref('favs').child(data.key).update({
+                            Notes: payload.Note
+                        }).then(response => {
+                            console.log('done', response)
+                            commit('insertEditedFav', data.val())
+                           // commit('updateFavs', data.val())  
+                        }).catch(error=> {
+                            console.log(error)
+                        })
+                    }
+                   counter++
+                }
+            })
+        })
     },
     delFav({
         commit,

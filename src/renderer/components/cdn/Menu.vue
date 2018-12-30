@@ -8,7 +8,7 @@
         <app-menu-item fa-icon='fa fa-history fa-3x' item-name='history' event-name="history" @history='shoHistory' :class="{active:showHistory}"/>
         <app-menu-item fa-icon='fa fa-thumbs-o-up fa-3x' item-name='popular' event-name="popular" @popular='popular' />
         <li class="nav-item" @click='signOut()'> <i class="fa fa-sign-out fa-3x"></i><span>LEAVE</span></li>
-        <li><router-link :to="cdnNotes">cnd notes</router-link></li>
+        <!-- <li><router-link :to="cdnNotes">cnd notes</router-link></li> -->
         </ul>
     </div>
 </template>
