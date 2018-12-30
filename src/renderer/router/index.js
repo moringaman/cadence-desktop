@@ -9,6 +9,7 @@ import Vuex from 'vuex';
 import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';
 import Prism from 'prismjs';
+import electron from 'electron'
 
 
 Vue.use(VueBar)
@@ -20,6 +21,7 @@ Vue.use(Firebase)
 Vue.use(Vuex)
 Vue.use(Wget)
 Vue.use(Prism)
+Vue.use(electron)
 Vue.use(VeeValidate,
   {
     classes: true,

@@ -139,7 +139,7 @@ const actions = {
     const downloadPath = path.join(__dirname, '../..', `public/${state.userCode}`)
     console.log('file to delete: ', payload)
     fs.unlink(`${downloadPath}/${payload}`, (err) => {
-        if (err) throw err;
+        // if (err) throw err;
         console.log(`${downloadPath}/${payload} was deleted`);
         // delete local storage pointer
         let newCDNs = []

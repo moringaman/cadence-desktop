@@ -157,7 +157,7 @@ const actions = {
         
         // get favourites from local storage
     },
-    updateFavs({commit}, payload){
+    updateFavs({commit,dispatch}, payload){
         console.dir(payload)
         let counter = 0
          Firebase.database().ref('favs')
@@ -173,7 +173,7 @@ const actions = {
                         }).then(response => {
                             console.log('done', response)
                             commit('insertEditedFav', data.val())
-                           // commit('updateFavs', data.val())  
+                            dispatch('notificationCtrl', {msg: 'Note Updated Successfully', color: 'success'})
                         }).catch(error=> {
                             console.log(error)
                         })

@@ -16,14 +16,15 @@
             <i class="fa fa-heart"></i>
           </span>
           </a>
-          <a v-if='showFavs===true' class="card-header-icon">
-                    <span class="icon" @click="editCDN(Data.name)">
-            <i class="fa fa-sticky-note"></i>
-          </span>
-                </a>
                 <a class="card-header-icon tooltip" data-tooltip="copy to clipboard">
                     <span class="icon" @click="copyCDN()">
             <i class="fa fa-clipboard"></i>
+          </span>
+                </a>
+                <a v-if='showFavs===true' class="card-header-icon">
+                    <!-- <span class="icon" @click="(showNote =!showNote) && (editing=Data.name)"> -->
+                    <span class="icon" >     
+            <i class="fa fa-envelope"></i>
           </span>
                 </a>
                 <a v-if='searchData.length > 1 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
@@ -41,18 +42,52 @@
                   <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/{{userCode}}/</span>{{Data.file}}
                 </div>
                 <footer v-if='showFavs' class="card-footer">
-                    <textarea v-if='edit && editing === Data.name' v-model="contentNote"
+                     <span id="reveal-notes-icon" class="icon content" @click="(showNote =!showNote) && (editing=Data.name)">
+             <div v-if="!showNote && Data.Notes">
+                 <span>read notes</span>
+                 <i class="fa fa-chevron-down"></i>
+             </div>
+             <div v-if="showNote === false && !Data.Notes" @click="editCDN(Data.name)">
+                 <span>add notes</span>
+                 <i class="fa fa-chevron-down"></i>
+             </div>
+            <div v-if="showNote && !edit">
+                 <span>close notes</span>
+                 <i class="fa fa-chevron-up"></i>
+             </div>
+          </span>
+            <textarea v-if='edit && editing === Data.name' v-model="contentNote"
              class="textarea is-medium" style="height: 400px"
-              placeholder="You can put your notes for using this Library here (Supports code blocks)" rows="40">
+             id="text-area"
+              :placeholder="placeholder" rows="40">
               </textarea>
+                <div id="textarea-buttons" v-if='edit && editing === Data.name'>
+                    <button id="save-note-btn" class="button" 
+                    @click="cancel">Cancel</button>
                     <button id="save-note-btn" class="button is-primary" 
-                    v-if='edit && editing === Data.name'
-                    @click="updateFav">Save Note</button>
-            <vue-markdown id="markdown" class="content"  v-show='!edit && editing === Data.name' :source="Data.Notes">
+                    @click="updateFav">
+                    <span class="icon is-small">
+                     <i class="fa fa-check"></i>
+                     </span>
+                     <span>
+                         Save
+                     </span>
+                    </button>
+                </div>
+                    
+               <div class="content" id="markdown" v-show='(showNote && editing === Data.name)&&(!edit)'>
+                   <a v-if="Data.Notes" class="button edit-btn"  @click="editCDN(Data.name)">
+                       <span class="icon ">
+                       <i class="fa fa-edit is-small"></i>
+                       </span>
+                       <span>
+                           Edit
+                       </span>
+                   </a>  
+             <vue-markdown id="markdown-text" class="content" :source="Data.Notes">
             </vue-markdown>
+                   </div>     
                 </footer>
-            
-
             </div> 
         </div>
     </transition>
@@ -63,6 +98,7 @@
     import marked from 'marked';
     import wget from 'wget-improved';
     import VueMarkdown from 'vue-markdown'
+    import { dialog, remote } from 'electron'
     import {
         mapGetters,
         mapMutations
@@ -82,7 +118,20 @@
                 showNote: false,
                 edited: true,
                 key: 0,
-                editing: ''
+                editing: '',
+                showNote: false,
+                placeholder: `You can put your notes for using ${this.Data.name} here using Markdown
+Supports: 
+* syntax highlighting
+* Code Snippets
+-[x] to create a task
+# h1
+## h2
+### h3
+\`\`\`js
+// Code goes here 
+\`\`\` 
+etc.`
             }
         },
         methods: {
@@ -93,6 +142,10 @@
                 this.editing = file
                 let editor = this.editor
                 
+            },
+            cancel(){
+                this.showNote = false
+                this.edit = false
             },
             copyCDN(index) {
                 if (this.Data.latest) {
@@ -168,6 +221,10 @@
                 }
             },
             deleteFav() {
+                 let result = window.confirm("Are you sure you want to remove this")
+                if (result === false) {
+                    return
+                }
                 if (this.online === true) {
                          console.log('DELETING: ', this.Data.file)
                 if (!this.Data.file) {
@@ -202,7 +259,7 @@
                 }
             } else {
                 this.$store.dispatch('notificationCtrl',
-                {msg: 'You are currently offline deletions cannot be done when offline',
+                {msg: 'You are curreently offline deletions cannot be done when offline',
                  color: 'danger'})
             }   
             },
@@ -245,7 +302,7 @@
             Prism.highlightAll()
         },
         created() {
-            // console.log(this.syntaxedNote)
+             
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
@@ -269,22 +326,73 @@
 
     .text-area { 
         height: 600px !important;
+        margin-bottom: 50px;
+    }
+
+    #text-area{
+       margin-bottom: 50px; 
+       transform: translateX(-24px);
     }
 
     .parsed {
         text-align: left;
     }
 
+    .edit-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 2000;
+    }
+
+    #reveal-notes-icon {
+        position: absolute;
+        display: inline-block; 
+        top: 112px;
+        margin-left: 58.5%;
+        color: rgba(102, 102, 102, 0.747);
+        background-color: white;
+        padding: 3px;
+        text-align: right;
+        width: 250px;
+    }
+
+    #reveal-notes-icon > div> i {
+        color: rgba(137, 43, 226, 0.452);
+    }
     #markdown {
-        width: 90%;
+        width: 100%;
         background: transparent;
+        
+        transform: translateX(-30px);
+    }
+
+    #markdown-text {
+        margin-top: 50px;
         text-align: left;
     }
 
-    #save-note-btn {
+    #textarea-buttons {
         margin-top: 10px;
+        display: flex;
+        /* display: inline; */
         /* margin-left: 640px; */
-        transform: translate(-120px, 340px);
+        transform: translate(-200px, 410px);
+        width: 500px;
+        height: 50px;
+    }
+
+    pre[class*="language-"]{
+    /* background: #ffffff; */
+    border: 1px solid #ccc;
+}
+
+    pre {
+        background-color: #fff;
+    }
+
+    #textarea-buttons > button {
+        margin-left: 10px;
     }
 
     .number {
