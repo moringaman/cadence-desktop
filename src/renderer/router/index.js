@@ -43,11 +43,6 @@ export default new Router({
        name: 'cadence',
        component: require('@/components/Main')
     },
-     {
-      path: '/cdn-detail',
-      name: 'cdn-detail',
-      component: require('@/components/cdn/CdnNotes')
-     },
     {
       path: '*',
       redirect: '/'
