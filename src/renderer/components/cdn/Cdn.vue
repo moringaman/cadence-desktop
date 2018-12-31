@@ -97,7 +97,7 @@
 <script>
     import marked from 'marked';
     import wget from 'wget-improved';
-    import VueMarkdown from 'vue-markdown'
+    // import VueMarkdown from 'vue-markdown'
     import { dialog, remote } from 'electron'
     import {
         mapGetters,
@@ -107,7 +107,7 @@
     export default {
         props: ['Data'],
         components: {
-          VueMarkdown
+        //   VueMarkdown
         },
         data() {
             return {

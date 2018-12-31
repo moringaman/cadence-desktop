@@ -16,7 +16,9 @@ const winURL = process.env.NODE_ENV === 'development'
 function createWindow () {
   /**
    * Initial window options
+  
    */
+
   mainWindow = new BrowserWindow({
     height: 825,
     useContentSize: true,
@@ -29,6 +31,8 @@ function createWindow () {
    resizable: false,
    center: true,
   })
+
+  // mainWindow.webContents.openDevTools(); // uncomment for debugging
 
   mainWindow.loadURL(winURL)
 
