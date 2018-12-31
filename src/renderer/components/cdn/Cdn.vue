@@ -97,7 +97,7 @@
 <script>
     import marked from 'marked';
     import wget from 'wget-improved';
-    // import VueMarkdown from 'vue-markdown'
+    import VueMarkdown from 'vue-markdown'
     import { dialog, remote } from 'electron'
     import {
         mapGetters,
@@ -107,7 +107,7 @@
     export default {
         props: ['Data'],
         components: {
-        //   VueMarkdown
+          VueMarkdown
         },
         data() {
             return {
@@ -314,7 +314,7 @@ etc.`
 <style>
     @import "~bulma/css/bulma.css";
     @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
-     @import '~/node_modules/prismjs/themes/prism.css'; 
+     @import '~prismjs/themes/prism.css'; 
     body {
         overflow-x: hidden;
     }
@@ -341,7 +341,7 @@ etc.`
     .edit-btn {
         position: absolute;
         right: 0;
-        top: 0;
+        top: 20px;
         z-index: 2000;
     }
 

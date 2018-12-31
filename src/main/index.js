@@ -32,7 +32,7 @@ function createWindow () {
    center: true,
   })
 
-  // mainWindow.webContents.openDevTools(); // uncomment for debugging
+   mainWindow.webContents.openDevTools(); // uncomment for debugging
 
   mainWindow.loadURL(winURL)
 
