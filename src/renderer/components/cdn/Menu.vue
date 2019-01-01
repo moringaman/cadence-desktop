@@ -119,7 +119,7 @@ li i:hover {
 }
 
 .fa {
-    font-size: 50px;
+    /* font-size: 2.2rem; */
     text-align: center;
     vertical-align: top;
 }

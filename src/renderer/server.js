@@ -1,9 +1,13 @@
-var static = require('node-static');
-var file = new static.Server(`${__dirname}/public`)
+var s = require('node-static');
+var app  = require('electron').remote.app
+let userDir = app.getPath('userData')
+var file = new s.Server(`${userDir}`)
 
+// var file = new s.Server(`${__dirname}/public`)
 
+console.log(userDir)
 
-   function spinUp(port) {
+  export default function spinUp(port) {
     require('http').createServer(function (request, response) {
         request.addListener('end', function () {
             file.serve(request, response)
@@ -11,5 +15,4 @@ var file = new static.Server(`${__dirname}/public`)
     }).listen(port)
     }
    
-    spinUp(9990);
 

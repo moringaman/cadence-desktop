@@ -90,6 +90,8 @@ window.__FORM__ = {
   import {mapGetters} from 'vuex'
   import Notify from './helpers/Notify.vue'
 
+  const {getCurrentWindow, globalShortcut} = require('electron').remote;
+
 // Email Address validation 
 var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -194,7 +196,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
         .then(() => this.$router.push('/cadence'))
       },
       closeApp(){
-        window.close()
+      // getCurrentWindow().reload()
+      window.close()
       }
     },
     mounted() {
@@ -208,6 +211,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       })
     },
     created() {
+      // getCurrentWindow().reload()
       // TODO: do check for user in local storage and see if logged in to firebase
       this.$store.dispatch('loggedInStatusCheck')
       // TODO: Check for network status and update state variable
@@ -220,17 +224,26 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 <style scoped>
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
  
-
- #wrapper {
+body {
+  font-size: 62.5%;
+  border: 0px;
   padding: 0px;
-  height: 100%;
-  width: 100%;
+}
+ #wrapper {
+  
+  padding: 0px;
+  height: 100vh;
+  width: 100vw;
   position: absolute;
   text-align: center;
   overflow: hidden;
   /* background-color:rgba(105, 104, 104, 0.2); */
   background-color: rgba(185, 185, 92, 0.1);
  }
+
+ /* #wrapper > * {
+    transform: scale(0.9);
+ } */
 
  #wrapper::after {
    content: '';
@@ -275,10 +288,12 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
  }
 
 .fa-times {
-  position: relative;
-  top: 7px;
+  position: absolute;
+  top: 9px;
+  left: 12px;
   opacity: .5;
   z-index: 100;
+  font-size: 2rem ;
 }
 
 .fa-times:hover {
@@ -288,7 +303,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
  .welcome {
    position: absolute;
-   top: 223px;
+   top: 14rem;
    left: 50%;
    transform: translateX(-50%);
    color: blueviolet;
@@ -300,7 +315,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
    width: 150px;
    position: absolute;
    left:50%;
-   top: 11%;
+   top: 8rem;
    transform: translateX(-50%);
     -webkit-app-region: drag;
  }
@@ -310,7 +325,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 }
 .card {
   text-align: center;
-  height: 300px;
+  height: 17rem;
   width: 400px;
   position: absolute;
   top:50%;
@@ -336,22 +351,22 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
 
   .title {
     color: #2c3e50;
-    font-size: 20px;
+    font-size: .2rem;
     font-weight: bold;
     top: 300px;
     
   }
 
   #login-text {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: white;
     font-weight: 600;
     width: 400px;
-    position: relative;
-    top: 620px;
+    position: absolute;
+    top: 39rem;
     left: 50%;
     transform: translateX(-50%);
-    opacity: .5;
+    /* opacity: .9; */
     /* margin-left: -150px; */
   }
 
@@ -367,7 +382,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     font-weight: bold;
     position: absolute;
     width: 100%;
-    top: 770px;
+    top: 48rem;
     left: 50%;
     transform: translateX(-50%);
   }

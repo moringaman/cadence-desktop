@@ -30,6 +30,7 @@ function createWindow () {
    maximizable: false,
    resizable: false,
    center: true,
+   zoomFactor: 0.9
   })
 
    mainWindow.webContents.openDevTools(); // uncomment for debugging

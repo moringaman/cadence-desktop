@@ -98,6 +98,7 @@ div {
 }
 
 i {
+    font-size: 1.4rem;
     color:white;
     position: relative;
     margin-left: 10px;

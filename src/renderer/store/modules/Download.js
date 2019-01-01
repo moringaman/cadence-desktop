@@ -3,6 +3,7 @@ import uid from '../../helpers/uid';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
+var app  = require('electron').remote.app
 
 const state = {
    localCDNs: [], //localStorage.getItem('localCDNs')
@@ -65,12 +66,13 @@ const actions = {
         let userCode = currentUser.split("").splice(0,9).join("")
         const file = cdn.split('/').splice('-1' )[0]
         console.log('FILE: ',file);
-        const userPath = path.join(__dirname, '../..', `public/${userCode}`) 
+        // const userPath = path.join(__dirname, '../..', `public/${userCode}`) 
+        const userPath = path.join(`${app.getPath('userData')}`, `/${userCode}`) 
         if (!fs.existsSync(userPath)) {
             console.log('creating Folder')
             fs.mkdirSync(userPath)
         }
-        console.log(path.join(__dirname, '../..', `public/${userCode}`) )
+        console.log(userPath)
         const output = userPath + '/' + file;
         const options = {
             // see options below
@@ -136,7 +138,9 @@ const actions = {
     //   console.log(ext);
   },
   deleteCDN({commit, state, dispatch}, payload) {
-    const downloadPath = path.join(__dirname, '../..', `public/${state.userCode}`)
+    // const downloadPath = path.join(__dirname, '../..', `public/${state.userCode}`)
+    const downloadPath = path.join(`${app.getPath('userData')}`, `/${state.userCode}`) 
+
     console.log('file to delete: ', payload)
     fs.unlink(`${downloadPath}/${payload}`, (err) => {
         // if (err) throw err;
@@ -168,7 +172,9 @@ const actions = {
   },
   getCDNs({commit, state}, payload) {
     let localCDNArray = []
-    const userPath = path.join(__dirname, '../..', `public/${state.userCode}`) 
+    //  const userPath = path.join(__dirname, '../..', `public/${state.userCode}`) 
+    const userPath = path.join(`${app.getPath('userData')}`, `/${state.userCode}`) 
+
       if(payload.online === true) {
         const db = Firebase.database()
         const ref = db.ref('downloads')

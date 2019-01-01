@@ -5,7 +5,7 @@
       <div class="column is-2 side-bar">
         <app-menu></app-menu>
       </div>
-      <div class="column">
+      <div class="column list-space">
         <app-header @searchCDN="fetchData"></app-header>
         <!-- <div class="scroll-list"> -->
         <div class="main-logo" v-if="searchData.length < 1 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
@@ -195,7 +195,7 @@
   }
   
   body {
-    max-height: 100%;
+    max-height:100vh;
     margin: 0px;
     background: radial-gradient( ellipse at top left, rgba(255, 255, 255, 1) 40%, rgba(229, 229, 229, .9) 100%);
     overflow: hidden;
@@ -230,29 +230,26 @@
     transform: translateX(-45%);
   }
   
-  .fa-cog__1 {
+  /* .fa-cog__1 {
     position: absolute;
     opacity: .3;
     color: #333;
     bottom: 50px;
     left: 55%;
     animation: rotate 5s linear infinite;
-    /* text-shadow: 2px 2px 2px rgba(0,0,0, 0.2); */
-  }
+  } */
   
-  .fa-cog__2 {
+  /* .fa-cog__2 {
     position: absolute;
     opacity: .3;
     color: #333;
     bottom: 43px;
     left: 57.5%;
     animation: rotate 5s linear reverse infinite;
-    /* text-shadow: 2px 2px 2px rgba(0,0,0, 0.2); */
-  }
+  } */
   
   .local-count>p {
     position: absolute;
-    ;
     color: blueviolet;
     bottom: 50px;
     left: 55%;
@@ -265,7 +262,7 @@
     width: 60%;
     margin-right: 30px;
     z-index: 50;
-    height: 99.10vh;
+    height: 55.3rem;
   }
   
   div {
@@ -275,12 +272,16 @@
   p {
     color: rgba(0, 0, 0, 0.2);
   }
+
+  .list-space {
+    margin: 0px auto;
+  }
   
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 670px;
-    width: 99%;
+    height: 39rem;
+    width: 57rem;
     z-index: 99;
   }
   

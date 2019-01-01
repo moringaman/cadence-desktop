@@ -1,7 +1,7 @@
 <template>
 <div>
      <li class="nav-item">
-         <i :class='faIcon' @click='clickEvent(eventName)'>
+         <i :class='faIcon' class="fa" @click='clickEvent(eventName)'>
         </i>
          <span>{{ itemName }}
         </span>
@@ -34,6 +34,7 @@ export default {
 <style >
 
 li i {
+    font-size: 1.2rem;
     outline: none;
     margin: 30px auto;
     width: 50px;
@@ -56,7 +57,7 @@ li i:hover,i:active {
 }
 
 .fa {
-    font-size: 50px;
+    font-size: 2.2rem;
     text-align: center;
     vertical-align: top;
 }

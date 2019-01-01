@@ -39,7 +39,7 @@
                 </div>
                 <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
                   <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
-                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9990/{{userCode}}/</span>{{Data.file}}
+                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
                 </div>
                 <footer v-if='showFavs' class="card-footer">
                      <span id="reveal-notes-icon" class="icon content" @click="(showNote =!showNote) && (editing=Data.name)">
@@ -151,7 +151,7 @@ etc.`
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
                 } else if (this.Data.file){
-                    var cdn = `http://localhost:9990/${this.userCode}/${this.Data.file}`
+                    var cdn = `http://localhost:9082/${this.userCode}/${this.Data.file}`
                 } else {
                     var cdn = this.Data.cdn
                 }
@@ -195,7 +195,7 @@ etc.`
                     this.$store.dispatch('accessRights', {check: 'logged in', action: 'add favourites'})
                 } else {
                       if (this.searchData.length < 1) {
-                    cdn = `http://localhost:9990/${this.userCode}/${this.Data.file}`
+                    cdn = `http://localhost:9082/${this.userCode}/${this.Data.file}`
                     version = this.Data.cdnVersion
                 }
                 let userCode = this.userCode
