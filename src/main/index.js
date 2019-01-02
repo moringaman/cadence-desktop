@@ -1,4 +1,7 @@
-import { app, BrowserWindow } from 'electron'
+import {
+  app,
+  BrowserWindow
+} from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -9,11 +12,11 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+const winURL = process.env.NODE_ENV === 'development' ?
+  `http://localhost:9080` :
+  `file://${__dirname}/index.html`
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
   
@@ -25,15 +28,15 @@ function createWindow () {
     width: 1090,
     maxWidth: 1090,
     maxHeight: 825,
-   frame: false,
-   fullscreen: false,
-   maximizable: false,
-   resizable: false,
-   center: true,
-   zoomFactor: 0.9
+    frame: false,
+    fullscreen: false,
+    maximizable: false,
+    resizable: false,
+    center: true,
+    zoomFactor: 0.9
   })
 
-   mainWindow.webContents.openDevTools(); // uncomment for debugging
+  //  mainWindow.webContents.openDevTools(); // uncomment for debugging
 
   mainWindow.loadURL(winURL)
 

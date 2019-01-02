@@ -1,67 +1,71 @@
 <template>
-<div>
-     <li class="nav-item">
-         <i :class='faIcon' class="fa" @click='clickEvent(eventName)'>
-        </i>
-         <span>{{ itemName }}
-        </span>
+  <div>
+    <li class="nav-item">
+      <i :class="faIcon" class="fa" @click="clickEvent(eventName)"></i>
+      <span>{{ itemName }}</span>
+      <div id="pointer"></div>
     </li>
-</div>
-        
-    </template>
+  </div>
+</template>
 
 <script>
-
 export default {
-    props: ['fa-icon', 'item-name', 'event-name', 'active'],
-    data() {
-        return {
-
-        }
-    },
-    methods: {
-        clickEvent: function(val) {
-            console.log('hello ',  val)
-            this.$emit(val)
-        }
-    },
-    created() {
-        console.log('props: ', this.active)
+  props: ["fa-icon", "item-name", "event-name", "active", "point"],
+  data() {
+    return {};
+  },
+  methods: {
+    clickEvent: function(val) {
+      console.log("hello ", val);
+      this.$emit(val);
     }
-}
+  },
+  created() {
+    console.log("props: ", this.active);
+  }
+};
 </script>
 
 <style >
-
 li i {
-    font-size: 1.2rem;
-    outline: none;
-    margin: 30px auto;
-    width: 50px;
-    color: grey; 
-    opacity: 0.5;
-    vertical-align: middle;
-    color: inherit;
+  font-size: 1.2rem;
+  outline: none;
+  margin: 30px auto;
+  width: 50px;
+  color: grey;
+  opacity: 0.5;
+  vertical-align: middle;
+  color: inherit;
 }
 
 li > span {
-    text-transform: uppercase;
-    transform:translateY(40px);
-    position: absolute;
-    color: #fff;
-    font-weight: 600;
-}
-
-li i:hover,i:active {
-    color: blueviolet;
+  text-transform: uppercase;
+  transform: translateY(40px);
+  position: absolute;
+  color: #fff;
+  font-weight: 600;
 }
 
 .fa {
-    font-size: 2.2rem;
-    text-align: center;
-    vertical-align: top;
+  font-size: 2.2rem;
+  text-align: center;
+  vertical-align: top;
 }
 
+/* li .pointer {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  right: -36px;
+  z-index: 1000;
+  transform: rotate(45deg);
+  visibility: inherit;
+} */
+
+div.point #pointer {
+  visibility: visible;
+}
 </style>
 
 

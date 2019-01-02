@@ -1,6 +1,5 @@
 <template>
   <div>
-  
     <div class="columns">
       <div class="column is-2 side-bar">
         <app-menu></app-menu>
@@ -283,6 +282,7 @@
     height: 39rem;
     width: 57rem;
     z-index: 99;
+    transform: translateX(-30px);
   }
   
   .main-logo img {
