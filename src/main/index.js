@@ -3,6 +3,9 @@ import {
   BrowserWindow
 } from 'electron'
 
+const Nucleus = require('electron-nucleus')('5c2d2371e0c2e900ce16455f')
+
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
