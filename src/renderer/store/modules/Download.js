@@ -75,7 +75,7 @@ const actions = {
             })
             return
         }
-        if (cdn == 'seed'){
+        if (cdn === 'seed'){
             // just add entry without download - just for seed data
             console.log("creating seed data")
             let userId = currentUser
