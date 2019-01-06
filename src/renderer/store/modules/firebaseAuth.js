@@ -1,8 +1,14 @@
 import Firebase from '../../helpers/firebase'
-import licenceKey from '../../helpers/licence'
+// import licenceKey from '../../helpers/licence'
+import {
+    getLicence,
+    getPolicy,
+    createLicence
+} from '../../helpers/licence';
+
 let auth = Firebase.auth();
 
-const Nucleus = require('electron-nucleus')('5c2d2371e0c2e900ce16455f')
+const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
 
 
 const state = {
@@ -44,21 +50,36 @@ const actions = {
         dispatch
     }, payload) {
         //TODO: write code to create new user account & profile with licence key
+        createLicence.query(payload.email, 'basic')
+            .then(body => {
+                const Licence = body.key
+                console.log(Licence)
+            })
         auth.createUserWithEmailAndPassword(payload.email, payload.password)
             .then(user => {
                 console.log(user)
-                const Licence = licenceKey()
+                // const Licence = licenceKey()
                 const dbRef = Firebase.database().ref('user/' + user.uid)
                 dbRef.set({
-                        licence: licenceKey(),
+                        licence: '8763298329380938029', // licenceKey(),
                         email: payload.email,
                         paid: false
                     })
                     .then(() => {
+                        // Call addFav 
                         commit('setLoggedIn', {
                             loggedIn: true,
                             user: user.uid
                         })
+                        dispatch('addFav', {
+                            name: 'Cadence',
+                            version: "0.1.0 beta",
+                            cdn: "Favourites added from seach results will appear here for future use",
+                            userId: user.uid,
+                            online: true,
+                            loggedIn: true
+                        })
+                        dispatch('downloadCDN', {cdn: 'seed', currentUser: user.uid})
                         // check for local user register
                         let userData = JSON.stringify({
                             uid: user.uid,

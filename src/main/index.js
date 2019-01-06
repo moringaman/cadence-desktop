@@ -3,7 +3,7 @@ import {
   BrowserWindow
 } from 'electron'
 
-const Nucleus = require('electron-nucleus')('5c2d2371e0c2e900ce16455f')
+const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
 
 
 /**
@@ -39,7 +39,7 @@ function createWindow() {
     zoomFactor: 0.9
   })
 
-  //  mainWindow.webContents.openDevTools(); // uncomment for debugging
+  mainWindow.webContents.openDevTools(); // uncomment for debugging
 
   mainWindow.loadURL(winURL)
 

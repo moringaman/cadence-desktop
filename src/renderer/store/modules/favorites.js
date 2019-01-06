@@ -5,7 +5,7 @@ import _ from 'lodash';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
-const Nucleus = require('electron-nucleus')('5c2d2371e0c2e900ce16455f')
+const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
 
 const state = {
     favs: [],
@@ -131,20 +131,29 @@ const actions = {
                         snapshot.forEach((data) => {
                             if (data.val().userId === payload.uid) {
                                 commit('updateFavs', data.val())
-
-                                // console.log('dataVal ', fileName)
                                 localFavArray.push(data.val())
                             }
-
                         })
                         console.log('LocalStoragecreation: ', JSON.stringify(localFavArray))
                         localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
                     })
+                        // create starter data if nothing found in firebase
+                   
+                        // if (localFavArray === []) {
+                        //     let starterFav = {
+                        //         name: 'Welcome to Cadence Favourites',
+                        //         version: "0.1.0beta",
+                        //         cdn: 'Favourites',
+                        //         Notes: 'When you find Libraries via the search form you can click the heart icon to add them as favourites to be used again'
+                        //     }
+                        //     localFavArray.push(starterFav)
+                        //     localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
+                        // } 
                 })
                 .then(response => {
                     console.log('I got favs', response)
+                    
                     resolve(response)
-
                 }, error => {
                     reject(error)
                 })

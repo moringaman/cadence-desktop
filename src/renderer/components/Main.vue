@@ -7,7 +7,7 @@
       <div class="column list-space">
         <app-header @searchCDN="fetchData"></app-header>
         <!-- <div class="scroll-list"> -->
-        <div class="main-logo" v-if="searchData.length < 1 && localCDNStorage.length === 0"><img src="../././assets/logo2.svg">
+        <div class="main-logo" v-if="searchData.length < 1 && localCDNStorage.length === 0 && favs.length == 0"><img src="../././assets/logo2.svg">
           <br><span><p>Search for any Available CND for your project</p></span></div>
           <app-loading-bar v-if='dataLoading===true'></app-loading-bar>
         <template v-if='!showHistory && !showFavs'>
@@ -279,7 +279,7 @@
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 39rem;
+    height: 36rem;
     width: 57rem;
     z-index: 99;
     transform: translateX(-30px);

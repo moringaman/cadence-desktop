@@ -4,7 +4,7 @@ const path = require('path')
 const find = require('find')
 const fs = require('fs')
 var app = require('electron').remote.app
-const Nucleus = require('electron-nucleus')('5c2d2371e0c2e900ce16455f')
+const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
 
 
 const state = {
@@ -62,11 +62,11 @@ const actions = {
         state,
         dispatch
     }, {
-        cdn,
-        cdnName,
-        version,
-        wget,
-        currentUser
+        cdn ="",
+        cdnName ="",
+        version ="",
+        wget = null,
+        currentUser = ""
     }) {
         if (state.online === false) {
             dispatch('notificationCtrl', {
@@ -74,6 +74,20 @@ const actions = {
                 color: 'danger'
             })
             return
+        }
+        if (cdn == 'seed'){
+            // just add entry without download - just for seed data
+            console.log("creating seed data")
+            let userId = currentUser
+                    Firebase.database()
+                        .ref('downloads/' + uid())
+                        .set({
+                            cdn: 'Welcome to Cadence',
+                            name: "Libraries downloaded from search results will be listed here and served via your local cadence server",
+                            version: '0.1.0 Beta',
+                            userId: userId
+                        })
+                        return
         }
         const src = cdn;
         let name = cdnName
