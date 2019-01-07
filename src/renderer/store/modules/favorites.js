@@ -1,5 +1,6 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
+import safeName from '../../helpers/safeName'
 import _ from 'lodash';
 
 const path = require('path')
@@ -77,7 +78,8 @@ const actions = {
         if (payload.loggedIn == true) {
             // return new Promise((resolve, reject) => {
             console.log('adding to firebase ', payload)
-            Firebase.database().ref('favs/' + uid())
+            Firebase.database()
+                .ref('user/' + userId + '/favorites/' + safeName(name))
                 .set({
                     name,
                     version,
@@ -124,35 +126,36 @@ const actions = {
         // Is user logged in
         if (payload.uid && payload.online === true) { // And payload.online
             return new Promise((resolve, reject) => {
-                    const db = Firebase.database();
-                    const ref = db.ref("favs");
-                    ref.orderByChild('userId').equalTo(payload.uid)
+                    const db = Firebase.database()
+                    const ref = db.ref('user/' + payload.uid + '/favorites/')
+                    // ref.orderByChild('userId').equalTo(payload.uid)
                     ref.on('value', (snapshot) => {
-                        snapshot.forEach((data) => {
-                            if (data.val().userId === payload.uid) {
-                                commit('updateFavs', data.val())
-                                localFavArray.push(data.val())
-                            }
+                        snapshot.forEach(data => {
+                            // if (data.val().userId === payload.uid) {
+                            commit('updateFavs', data.val())
+                            localFavArray.push(data.val())
+                            // }
                         })
+                        console.log("array", localFavArray)
                         console.log('LocalStoragecreation: ', JSON.stringify(localFavArray))
                         localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
                     })
-                        // create starter data if nothing found in firebase
-                   
-                        // if (localFavArray === []) {
-                        //     let starterFav = {
-                        //         name: 'Welcome to Cadence Favourites',
-                        //         version: "0.1.0beta",
-                        //         cdn: 'Favourites',
-                        //         Notes: 'When you find Libraries via the search form you can click the heart icon to add them as favourites to be used again'
-                        //     }
-                        //     localFavArray.push(starterFav)
-                        //     localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
-                        // } 
+                    // create starter data if nothing found in firebase
+
+                    // if (localFavArray === []) {
+                    //     let starterFav = {
+                    //         name: 'Welcome to Cadence Favourites',
+                    //         version: "0.1.0beta",
+                    //         cdn: 'Favourites',
+                    //         Notes: 'When you find Libraries via the search form you can click the heart icon to add them as favourites to be used again'
+                    //     }
+                    //     localFavArray.push(starterFav)
+                    //     localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
+                    // } 
                 })
                 .then(response => {
                     console.log('I got favs', response)
-                    
+
                     resolve(response)
                 }, error => {
                     reject(error)
@@ -176,31 +179,21 @@ const actions = {
     }, payload) {
         console.dir(payload)
         let counter = 0
-        Firebase.database().ref('favs')
-            .orderByChild('name').equalTo(payload.Data.name).limitToFirst(1)
-            .on('value', snap => {
-                snap.forEach(data => {
-                    if (data.val().userId === payload.Data.userId) {
-                        console.log('update value')
-                        console.log(data.key)
-                        if (counter === 0) {
-                            Firebase.database().ref('favs').child(data.key).update({
-                                Notes: payload.Note
-                            }).then(response => {
-                                console.log('done', response)
-                                commit('insertEditedFav', data.val())
-                                dispatch('notificationCtrl', {
-                                    msg: 'Note Updated Successfully',
-                                    color: 'success'
-                                })
-                                Nucleus.track('Favourite-edit')
-                            }).catch(error => {
-                                console.log(error)
-                            })
-                        }
-                        counter++
-                    }
+        const db = Firebase.database()
+        const ref = db.ref('user/' + payload.uid + '/favorites/')
+        ref.child(safeName(payload.Data.name))
+            .update({
+                Notes: payload.Note
+            }).then(response => {
+                console.log('done', response)
+                commit('insertEditedFav', data.val())
+                dispatch('notificationCtrl', {
+                    msg: 'Note Updated Successfully',
+                    color: 'success'
                 })
+                Nucleus.track('Favourite-edit')
+            }).catch(error => {
+                console.log(error)
             })
     },
     delFav({
@@ -223,17 +216,9 @@ const actions = {
         state
     }, payload) {
         // TODO: Check for favourite in users firebase storage and delete (if logged in)
-        const ref = Firebase.database().ref('favs')
-            .orderByChild('name').equalTo(payload.name)
-            .on('value', snap => {
-                snap.forEach((data) => {
-                    if (data.val().userId === payload.userId) {
-                        console.log('delete value')
-                        console.log(data.key)
-                        Firebase.database().ref('favs').child(data.key).remove()
-                    }
-                })
-            })
+        let dbRef = Firebase.database().ref('user/' + payload.userId + '/favorites')
+        dbRef.child(safeName(payload.name)).remove()
+        console.log("Deleted from firebase")
     }
 }
 

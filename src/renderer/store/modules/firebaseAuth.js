@@ -72,9 +72,9 @@ const actions = {
                             user: user.uid
                         })
                         dispatch('addFav', {
-                            name: 'Cadence',
+                            name: 'Cadence_Favorites',
                             version: "0.1.0 beta",
-                            cdn: "Favourites added from seach results will appear here for future use",
+                            cdn: `Favourites added from seach results will appear here for future use`,
                             userId: user.uid,
                             online: true,
                             loggedIn: true
