@@ -144,26 +144,30 @@
       }
     },
     created() {
+      console.log('CURRENT USER: ', this.currentUser)
       //TODO: Initialize app - add localCDN & favourite (vuejs)
       const userId = this.currentUser
+      const online = this.online
       this.getIp()
       if (this.loggedIn === false && this.basicUser === false) {
         this.$router.push('/')
       }
       console.log('fetching favourites')
-      if (this.currentUser != '' && this.loggedIn === true) {
+      if (this.currentUser  && this.loggedIn === true) {
+        console.log('CURRENT USER: ', this.currentUser)
         this.userCode = userId.split('').splice(0,9).join('')
         this.$store.commit('setUserCode', this.userCode )
-        if ( localStorage.getItem(`localCDNs-${this.userCode}`) !== null && this.localCDNStorage.length === 0) {
+        if ( localStorage.getItem(`localCDNs-${this.userCode}`) !== [] && this.localCDNStorage.length === 0) {
           // this.$store.commit('loadStoredCDNs')
-          this.$store.dispatch('getCDNs', {wget, userId})
+          console.log('CALLING GETCDNS')
+          this.$store.dispatch('getCDNs', {wget, userId, online })
         } 
          console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
         // this.$store.dispatch('getFavs', this.currentUser)
-        this.$store.dispatch('getFavs', {uid: userId, userCode: this.userCode, online: this.online})
+        this.$store.dispatch('getFavs', {uid: this.currentUser, userCode: this.userCode, online: this.online})
       } else {
           // TODO: Load favourites from local storage if offline or not logged in
-           this.$store.dispatch('getFavs')
+          //  this.$store.dispatch('getFavs')
           // this.$store.commit('loadSearchHistory')
       }
     }

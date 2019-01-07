@@ -39,7 +39,7 @@
                 </div>
                 <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
                   <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
-                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
+                  <span v-if='searchData.length < 1 && showLocalStorage && Data.version !== "Notes" '>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
                 </div>
                 <footer v-if='showFavs' class="card-footer">
                      <span id="reveal-notes-icon" class="icon content" @click="(showNote =!showNote) && (editing=Data.name)">
@@ -255,7 +255,7 @@ etc.`
                     let file = this.Data.file
                     let online = this.online
                     console.log('delete ok')
-                    this.$store.dispatch('deleteCDN', file)
+                    this.$store.dispatch('deleteCDN', {name: this.Data.name, file:file, userId: this.currentUser})
                 }
             } else {
                 this.$store.dispatch('notificationCtrl',

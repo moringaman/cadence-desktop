@@ -122,7 +122,7 @@ input {
   background-color: #fff;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.2);
   position: absolute;
-  padding: 10px 20px;
+  padding: 10px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   top: 5rem;
