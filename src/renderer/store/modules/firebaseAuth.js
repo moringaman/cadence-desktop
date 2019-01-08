@@ -74,8 +74,13 @@ const actions = {
                         dispatch('addFav', {
                             name: 'Cadence_Favorites',
                             version: "0.1.0 beta",
-                            cdn: `Favourites added from seach results will appear here for future use`,
+                            cdn: `Favourites added from seach results will appear here for future use readthe notes below for more information`,
                             userId: user.uid,
+                            Notes: `<br><h3>Activate Cadence to unlock Premium Features</h3>
+                            <p>Want to support our team contiune development on Cadence and get updates and enhancements?</p>
+                            <p>Head over to <a href='https://cadence-desktop.com' target='_blank' class='url'>https://cadence-desktop.com</a> to purchase a full licence for just $5 and you&#39;ll get access to all the features and updates for life!!</p>
+                            <p>We will email you a licence code that you can use to fully activate Cadence</p>
+                            <p><img src='https://firebasestorage.googleapis.com/v0/b/cadence-8edfc.appspot.com/o/cadence-Activation.gif?alt=media&token=922b33a0-35af-4432-9e19-d06c1e4bfd71' alt='Cadence Activation' referrerPolicy='no-referrer' /></p>`,
                             online: true,
                             loggedIn: true
                         })

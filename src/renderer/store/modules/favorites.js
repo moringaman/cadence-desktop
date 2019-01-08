@@ -47,7 +47,7 @@ const actions = {
         dispatch
     }, payload) {
         let {
-            name = '', version = 'latest', cdn = '', userId, online
+            name = '', version = 'latest', cdn = '', userId, online, Notes = ''
         } = payload
         if (online === false) {
             dispatch('notificationCtrl', {
@@ -84,6 +84,7 @@ const actions = {
                     name,
                     version,
                     cdn,
+                    Notes,
                     userId
                 })
                 .then(response => {
@@ -180,13 +181,16 @@ const actions = {
         console.dir(payload)
         let counter = 0
         const db = Firebase.database()
-        const ref = db.ref('user/' + payload.uid + '/favorites/')
+        const ref = db.ref('user/' + payload.uid + '/favorites')
+        console.log("EDITING: ", safeName(payload.Data.name))
+        console.log("NOTE: ", payload.Note)
         ref.child(safeName(payload.Data.name))
             .update({
                 Notes: payload.Note
             }).then(response => {
                 console.log('done', response)
-                commit('insertEditedFav', data.val())
+                commit('insertEditedFav', {name: payload.Data.name, Notes: payload.Note })
+                // commit('insertEditedFav', data.val())
                 dispatch('notificationCtrl', {
                     msg: 'Note Updated Successfully',
                     color: 'success'

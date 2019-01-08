@@ -1,6 +1,7 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
 import safeName from '../../helpers/safeName';
+import _ from 'lodash';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
@@ -22,7 +23,7 @@ const mutations = {
         //   let cdnObj = {cdnName, cdnVersion, file}
         let cdnObj = payload
         console.log('PASSED', cdnObj)
-        state.localCDNs.push(payload)
+        state.localCDNs.push(...payload)
     },
     loadStoredCDNs(state, payload) {
         //TODO: Take code from favs to search firebase if online and download cdn's if not present
@@ -82,6 +83,7 @@ const actions = {
             console.log("creating seed data")
             let userId = currentUser
             commit('setLocalCDNs', {
+                cdn: "Cadence Downloads",
                 file: "Libraries downloaded from search results appear here and served via your local cadence server",
                 name: 'Welcome to Cadence',
                 version: 'Notes',
@@ -90,6 +92,7 @@ const actions = {
                     Firebase.database()
                         .ref('user/' + userId + '/downloads/' + "cdn_seed_data")
                         .set({
+                            cdn: "Cadence Downloads",
                             file: "Libraries downloaded from search results appear here, served via your local cadence server",
                             name: 'Welcome to Cadence',
                             version: 'Notes',
@@ -255,34 +258,36 @@ const actions = {
                                 localCDNArray.push(data.val())
                                 console.log("LOCALCDNARRAY ", localCDNArray)
                                 let fileExists = false
-                                let fileName = data.val().cdn.split('/').splice(-1)
-                                find.file(/\.js$/, userPath, (files) => {
-                                    console.log(files)
-                                    for (let i = 0; i < files.length; i++) {
-                                        if (files[i] === `${userPath}/${fileName}`) { // <-- new path
-                                            return fileExists = true
+                                if(!data.val().cdn === undefined){
+                                    let fileName = data.val().cdn.split('/').splice(-1)
+                                    find.file(/\.js$/, userPath, (files) => {
+                                        console.log(files)
+                                        for (let i = 0; i < files.length; i++) {
+                                            if (files[i] === `${userPath}/${fileName}`) { // <-- new path
+                                                return fileExists = true
+                                            }
                                         }
-                                    }
-                                    if (!fileExists) {
-                                        if (!fileName == 'Welcome to Cadence'){
-                                            console.log('need to download: ', fileName)
-    
-                                            let download = payload.wget.download(data.val().cdn, `${userPath}/${fileName}`);
-                                            download.on('error', function (err) {
-                                                console.log(err);
-                                            });
-                                            download.on('start', function (fileSize) {
-                                                console.log(fileSize);
-                                            });
-                                            download.on('end', function (output) {
-                                                console.log(output);
-                                            });  
+                                        if (!fileExists) {
+                                            if (!fileName == 'Welcome to Cadence'){
+                                                console.log('need to download: ', fileName)
+        
+                                                let download = payload.wget.download(data.val().cdn, `${userPath}/${fileName}`);
+                                                download.on('error', function (err) {
+                                                    console.log(err);
+                                                });
+                                                download.on('start', function (fileSize) {
+                                                    console.log(fileSize);
+                                                });
+                                                download.on('end', function (output) {
+                                                    console.log(output);
+                                                });  
+                                            }
                                         }
-                                    }
-                                })
-                            commit('setLocalCDNs', localCDNArray)
-                            localStorage.setItem(`localCDNs-${state.userCode}`, JSON.stringify(state.localCDNs))
+                                    })
+                                }
                         })
+                        commit('setLocalCDNs', localCDNArray)
+                        localStorage.setItem(`localCDNs-${state.userCode}`, JSON.stringify(state.localCDNs))
                 })
         } else {
             // Pull CDN's from local storage
@@ -303,7 +308,7 @@ const actions = {
 }
 
 const getters = {
-    localCDNStorage: state => state.localCDNs,
+    localCDNStorage: state => _.uniqBy(state.localCDNs,'name'),
     ipAddress: state => state.ipAddress,
     progress: state => state.progress,
     currentFile: state => state.currentFile,
