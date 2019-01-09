@@ -8,6 +8,7 @@
         fa-icon="fa fa-heart fa-3x"
         item-name="Favorites"
         event-name="showFavs"
+         :favs="favs.length"
         @showFavs="showFav"
         :class="{active:showFavs, point:showFavs}"
       />
@@ -15,6 +16,7 @@
         fa-icon="fa fa-download fa-3x"
         item-name="local Storage"
         event-name="clear"
+        :favs="localCDNStorage.length"
         @clear="clearSearch"
         :class="{active:showLocalStorage, point:showLocalStorage}"
       />
@@ -22,6 +24,7 @@
         fa-icon="fa fa-history fa-3x"
         item-name="history"
         event-name="history"
+        :favs="lastSearchData.length"
         @history="shoHistory"
         :class="{active:showHistory, point: showHistory}"
       />
@@ -29,6 +32,7 @@
         fa-icon="fa fa-thumbs-o-up fa-3x"
         item-name="popular"
         event-name="popular"
+        :favs="0"
         @popular="popular"
       />
       <li class="nav-item" @click="signOut()">
@@ -53,7 +57,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["showFavs", "showHistory", "showLocalStorage"])
+    ...mapGetters(["showFavs", "showHistory", "showLocalStorage", "favs", "localCDNStorage", "lastSearchData"])
   },
   methods: {
     ...mapActions(["clearSearchData", "signOut"]),
@@ -127,6 +131,20 @@ export default {
 
 li.point > #pointer {
   visibility: visible;
+}
+
+li > .counter {
+  position: relative;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  background-color: blueviolet;
+  font-weight: 600;
+  z-index: 3000;
+  right: 1.6rem;
+  top: -1rem;
 }
 
 li i {

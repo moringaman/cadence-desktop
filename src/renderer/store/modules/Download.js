@@ -145,8 +145,15 @@ const actions = {
                 download.on('end', function (output) {
                     console.log(output);
 
+                    // commit('setLocalCDNs', {
+                    //     name,
+                    //     cdnVersion,
+                    //     file
+                    // })
                     commit('setLocalCDNs', {
+                        cdn,
                         name,
+                        version,
                         cdnVersion,
                         file
                     })
@@ -157,7 +164,9 @@ const actions = {
                         .set({
                             cdn,
                             name,
+                            file,
                             version,
+                            cdnVersion,
                             userId
                         })
                         .then(response => {

@@ -27,7 +27,7 @@
             <i class="fa fa-envelope"></i>
           </span>
                 </a>
-                <a v-if='searchData.length > 1 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
+                <a v-if='searchData.length > 0 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
                     <span class="icon" @click='downloadCDN()'>
             <i  class="fa fa-download"></i>
           </span>
