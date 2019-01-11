@@ -1,5 +1,4 @@
 import Firebase from '../../helpers/firebase'
-// import licenceKey from '../../helpers/licence'
 import {
     getLicence,
     getPolicy,
@@ -17,7 +16,8 @@ const state = {
     online: true,
     currentUser: {},
     authenticating: false,
-    localUserInfo: []
+    localUserInfo: [],
+    licenseInfo: {}
 }
 
 const mutations = {
@@ -41,29 +41,38 @@ const mutations = {
     },
     loadLocalUsers(state, payload) {
         state.localUserInfo = payload
+    },
+    setLicenseInfo(state, payload) {
+        state.licenseInfo = payload
     }
 }
 
 const actions = {
     registerNewUser({
         commit,
+        state,
         dispatch
     }, payload) {
         //TODO: write code to create new user account & profile with licence key
         createLicence.query(payload.email, 'basic')
             .then(body => {
-                const Licence = body.key
-                console.log(Licence)
+                commit('setLicenseInfo', body)
+                // console.log(Licence)
             })
         auth.createUserWithEmailAndPassword(payload.email, payload.password)
             .then(user => {
                 console.log(user)
-                // const Licence = licenceKey()
+                let { key, expire, policy, active, version, userEmail } = state.licenseInfo
+                console.log("KEY: ", key)
                 const dbRef = Firebase.database().ref('user/' + user.uid)
                 dbRef.set({
-                        licence: '8763298329380938029', // licenceKey(),
-                        email: payload.email,
-                        paid: false
+                         licence: key, // Pulled fro Nucleus
+                        email: userEmail,
+                        paid: false,
+                        expire: expire,
+                        policy: policy,
+                        status: status,
+                        version: version
                     })
                     .then(() => {
                         // Call addFav 
@@ -87,8 +96,13 @@ const actions = {
                         dispatch('downloadCDN', {cdn: 'seed', currentUser: user.uid})
                         // check for local user register
                         let userData = JSON.stringify({
+                            licence: key,
                             uid: user.uid,
-                            email: payload.email
+                            email: payload.email,
+                            expire,
+                            policy,
+                            active,
+                            version
                         })
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
                             let localUserArr = [] // load dropdown default

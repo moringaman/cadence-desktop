@@ -14,7 +14,7 @@
       />
       <app-menu-item
         fa-icon="fa fa-download fa-3x"
-        item-name="local Storage"
+        item-name="Downloads"
         event-name="clear"
         :favs="localCDNStorage.length"
         @clear="clearSearch"
@@ -22,7 +22,7 @@
       />
       <app-menu-item
         fa-icon="fa fa-history fa-3x"
-        item-name="history"
+        item-name="History"
         event-name="history"
         :favs="lastSearchData.length"
         @history="shoHistory"
@@ -134,17 +134,21 @@ li.point > #pointer {
 }
 
 li > .counter {
-  position: relative;
+  position:absolute;
   height: 20px;
-  width: 20px;
-  border-radius: 50%;
+  min-width: 20px; 
+  padding: 0px 5px;
+  border-radius: 5px;
   color: #fff;
-  font-size: 1rem;
+  font-size: .9rem;
   background-color: blueviolet;
   font-weight: 600;
   z-index: 3000;
-  right: 1.6rem;
-  top: -1rem;
+  left: 6.5rem;
+  transform: translateY(-1rem); 
+  /* right: 1.6rem;
+  top: -1rem; */
+  clear: both;
 }
 
 li i {
