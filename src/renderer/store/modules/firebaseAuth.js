@@ -62,11 +62,18 @@ const actions = {
         auth.createUserWithEmailAndPassword(payload.email, payload.password)
             .then(user => {
                 console.log(user)
-                let { key, expire, policy, active, version, userEmail } = state.licenseInfo
+                let {
+                    key,
+                    expire,
+                    policy,
+                    status,
+                    version,
+                    userEmail
+                } = state.licenseInfo
                 console.log("KEY: ", key)
                 const dbRef = Firebase.database().ref('user/' + user.uid)
                 dbRef.set({
-                         licence: key, // Pulled fro Nucleus
+                        licence: key, // Pulled fro Nucleus
                         email: userEmail,
                         paid: false,
                         expire: expire,
@@ -75,7 +82,7 @@ const actions = {
                         version: version
                     })
                     .then(() => {
-                        // Call addFav 
+                        // TODO: Add to Cadence users local storage for offline use
                         commit('setLoggedIn', {
                             loggedIn: true,
                             user: user.uid
@@ -93,7 +100,10 @@ const actions = {
                             online: true,
                             loggedIn: true
                         })
-                        dispatch('downloadCDN', {cdn: 'seed', currentUser: user.uid})
+                        dispatch('downloadCDN', {
+                            cdn: 'seed',
+                            currentUser: user.uid
+                        })
                         // check for local user register
                         let userData = JSON.stringify({
                             licence: key,
@@ -101,7 +111,7 @@ const actions = {
                             email: payload.email,
                             expire,
                             policy,
-                            active,
+                            status,
                             version
                         })
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
@@ -121,10 +131,6 @@ const actions = {
                             color: 'success'
                         })
                     })
-                //TEST: provide use with licence key
-                //TEST: Create profile in database
-                //TEST: Store users licence key, paidup status, email@address & userID 
-
             })
             .catch(e => console.log(e.message));
     },
@@ -154,6 +160,18 @@ const actions = {
                     msg: `Welcome back!, Your local dev server is running at http://localhost:9990`,
                     color: 'success'
                 })
+                // Load LicenseInfo for user from local storage into state
+                let userObj = {}
+                let parsedUserData =  JSON.parse(localStorage.getItem('cadenceUsers'))
+              
+                    for (let i = 0; i < parsedUserData.length; i++){
+                      if (parsedUserData[i].email === email) {
+                        userObj = parsedUserData[i]
+                      }
+                    }
+                    // Send to mutation to update State
+                    commit('setLicenseInfo', userObj)  
+                // Log eventto Nucleus
                 Nucleus.track('Login')
             }).catch(err => {
                 console.log(err)
@@ -182,6 +200,7 @@ const actions = {
         commit,
         state
     }, payload) {
+        // TODO: check license type & status from state
         if (!state.loggedIn & payload.check === 'logged in') {
             commit('setNotification', {
                 msg: `You must be logged in to ${payload.action}`,
