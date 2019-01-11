@@ -163,12 +163,28 @@ const actions = {
                 // Load LicenseInfo for user from local storage into state
                 let userObj = {}
                 let parsedUserData =  JSON.parse(localStorage.getItem('cadenceUsers'))
-              
+                if (parsedUserData === undefined) {
+                    // Get data from firebase
+                    let dbRef = Firebase.database().ref('user/'+ user.uid)
+                    dbRef.on('value', snapshot=> {
+                        let {licence,
+                            uid,
+                            email,
+                            expire,
+                            policy,
+                            status,
+                            version} = snapshot
+                    commit('setLicenseInfo', { email, expire, policy, status, version, uid }) 
+                    })
+                } else {
+                    // Get from local storage
                     for (let i = 0; i < parsedUserData.length; i++){
-                      if (parsedUserData[i].email === email) {
-                        userObj = parsedUserData[i]
+                        if (parsedUserData[i].email === email) {
+                          userObj = parsedUserData[i]
+                        }
                       }
-                    }
+                }
+                  
                     // Send to mutation to update State
                     commit('setLicenseInfo', userObj)  
                 // Log eventto Nucleus
@@ -262,7 +278,8 @@ const getters = {
     basicUser: state => state.basicUser,
     online: state => state.online,
     authenticating: state => state.authenticating,
-    localUserInfo: state => state.localUserInfo
+    localUserInfo: state => state.localUserInfo,
+    licenseInfo: state => state.licenseInfo
 }
 
 export default {
