@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="licenseInfo.policy === 'basic'" class="account-status"> You Are On the 30 day free plan - Purchase Licence here for permanent access</div>
+    <div v-if="licenseInfo.policy === 'basic' && (licenseInfo.expires - licenseInfo.created < 5)" class="account-status"> You Are On the 30 day free plan - Purchase Licence here for permanent access</div>
     <div class="btn-person" @click="showMenu">
       <i class="fa fa-user-circle fa-2x"></i>
     </div>
@@ -64,7 +64,9 @@ export default {
       });
     }
   },
-  created() {}
+  created() {
+    console.log(this.licenseInfo.expire - this.licenseInfo.created)
+  }
 };
 </script>
 
@@ -147,11 +149,11 @@ input {
 }
 
 .account-status {
-  background-color: rgba(255, 0, 0, 0.2);
-  color: red;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
   text-transform: uppercase;
-  padding: 6px 8px 2px 8px;
-  border: 1px solid red;
+  padding: 6px 12px 2px 12px;
+  /* border: 1px solid red; */
   border-radius: 5px;
   display: inline;
   position: relative;

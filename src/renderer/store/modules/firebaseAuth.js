@@ -162,31 +162,41 @@ const actions = {
                 })
                 // Load LicenseInfo for user from local storage into state
                 let userObj = {}
-                let parsedUserData =  JSON.parse(localStorage.getItem('cadenceUsers'))
+                let parsedUserData = JSON.parse(localStorage.getItem('cadenceUsers'))
                 if (parsedUserData === undefined) {
                     // Get data from firebase
-                    let dbRef = Firebase.database().ref('user/'+ user.uid)
-                    dbRef.on('value', snapshot=> {
-                        let {licence,
+                    let dbRef = Firebase.database().ref('user/' + user.uid)
+                    dbRef.on('value', snapshot => {
+                        let {
+                            licence,
                             uid,
                             email,
                             expire,
                             policy,
                             status,
-                            version} = snapshot
-                    commit('setLicenseInfo', { email, expire, policy, status, version, uid }) 
+                            version
+                        } = snapshot
+                        commit('setLicenseInfo', {
+                            licence,
+                            email,
+                            expire,
+                            policy,
+                            status,
+                            version,
+                            uid
+                        })
                     })
                 } else {
                     // Get from local storage
-                    for (let i = 0; i < parsedUserData.length; i++){
+                    for (let i = 0; i < parsedUserData.length; i++) {
                         if (parsedUserData[i].email === email) {
-                          userObj = parsedUserData[i]
+                            userObj = parsedUserData[i]
                         }
-                      }
+                    }
                 }
-                  
-                    // Send to mutation to update State
-                    commit('setLicenseInfo', userObj)  
+
+                // Send to mutation to update State
+                commit('setLicenseInfo', userObj)
                 // Log eventto Nucleus
                 Nucleus.track('Login')
             }).catch(err => {

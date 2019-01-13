@@ -135,12 +135,13 @@ li.point > #pointer {
 
 li > .counter {
   position:absolute;
-  height: 20px;
+  /* height: 20px; */
   min-width: 20px; 
-  padding: 0px 5px;
-  border-radius: 5px;
+  padding: 2px;
+  border-radius: 4px;
   color: #fff;
-  font-size: .9rem;
+  font-size: .8rem;
+  line-height: 1.1rem;
   background-color: blueviolet;
   font-weight: 600;
   z-index: 3000;
