@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-if="licenseInfo.policy === 'basic'" class="account-status"> You Are On the 30 day free plan - Purchase Licence here for permanent access</div>
     <div class="btn-person" @click="showMenu">
       <i class="fa fa-user-circle fa-2x"></i>
     </div>
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -42,7 +44,11 @@ export default {
       licenceCode: ""
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'licenseInfo'
+    ])
+  },
   watch: {},
   methods: {
     showMenu() {
@@ -122,7 +128,7 @@ input {
   background-color: #fff;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.2);
   position: absolute;
-  padding: 10px 20px;
+  padding: 10px 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   top: 5rem;
@@ -138,6 +144,20 @@ input {
 #btn-cancel {
   grid-column: 3 / 4;
   margin-left: 10px;
+}
+
+.account-status {
+  background-color: rgba(255, 0, 0, 0.2);
+  color: red;
+  text-transform: uppercase;
+  padding: 6px 8px 2px 8px;
+  border: 1px solid red;
+  border-radius: 5px;
+  display: inline;
+  position: relative;
+  top: 0rem;
+ right: 2rem;
+ font-size: 1rem;
 }
 </style>
 

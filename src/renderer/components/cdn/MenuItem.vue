@@ -2,6 +2,7 @@
   <div>
     <li class="nav-item">
       <i :class="faIcon" class="fa" @click="clickEvent(eventName)"></i>
+      <div class="counter" v-if="favs > 0">{{favs}}</div>
       <span>{{ itemName }}</span>
       <div id="pointer"></div>
     </li>
@@ -10,7 +11,7 @@
 
 <script>
 export default {
-  props: ["fa-icon", "item-name", "event-name", "active", "point"],
+  props: ["fa-icon", "item-name", "event-name", "active", "point", "favs"],
   data() {
     return {};
   },
@@ -52,16 +53,9 @@ li > span {
   vertical-align: top;
 }
 
-/* li .pointer {
-  position: relative;
-  height: 20px;
-  width: 20px;
-  background-color: #fff;
-  right: -36px;
-  z-index: 1000;
-  transform: rotate(45deg);
-  visibility: inherit;
-} */
+.counter {
+  visibility: visible;
+}
 
 div.point #pointer {
   visibility: visible;

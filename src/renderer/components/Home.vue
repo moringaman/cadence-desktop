@@ -54,7 +54,8 @@
      v-validate="'required|min:6'" type="password" 
      placeholder="Password" 
      name="password"
-     v-model="user.password">
+     v-model="user.password"
+     v-on:keyup.enter="login">
     <span class="icon is-small is-left">
       <i class="fa fa-lock"></i>
     </span>

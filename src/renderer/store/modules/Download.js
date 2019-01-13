@@ -1,5 +1,7 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
+import safeName from '../../helpers/safeName';
+import _ from 'lodash';
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
@@ -21,7 +23,7 @@ const mutations = {
         //   let cdnObj = {cdnName, cdnVersion, file}
         let cdnObj = payload
         console.log('PASSED', cdnObj)
-        state.localCDNs.push(payload)
+        state.localCDNs.push(...payload)
     },
     loadStoredCDNs(state, payload) {
         //TODO: Take code from favs to search firebase if online and download cdn's if not present
@@ -68,6 +70,7 @@ const actions = {
         wget = null,
         currentUser = ""
     }) {
+        let userCode = currentUser.split("").splice(0, 9).join("")
         if (state.online === false) {
             dispatch('notificationCtrl', {
                 msg: "Download of library failed - NETWORK ERROR",
@@ -79,17 +82,27 @@ const actions = {
             // just add entry without download - just for seed data
             console.log("creating seed data")
             let userId = currentUser
+            commit('setLocalCDNs', {
+                cdn: "Cadence Downloads",
+                file: "Libraries downloaded from search results appear here and served via your local cadence server",
+                name: 'Welcome to Cadence',
+                version: 'Notes',
+                userId: userId
+            })
                     Firebase.database()
-                        .ref('downloads/' + uid())
+                        .ref('user/' + userId + '/downloads/' + "cdn_seed_data")
                         .set({
-                            cdn: 'Welcome to Cadence',
-                            name: "Libraries downloaded from search results will be listed here and served via your local cadence server",
-                            version: '0.1.0 Beta',
+                            cdn: "Cadence Downloads",
+                            file: "Libraries downloaded from search results appear here, served via your local cadence server",
+                            name: 'Welcome to Cadence',
+                            version: 'Notes',
                             userId: userId
-                        })
-                        return
-        }
-        const src = cdn;
+                        }).then(response =>{
+                            localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
+                            return
+                        })       
+        } else {
+            const src = cdn;
         let name = cdnName
         let cdnVersion = version
         let userCode = currentUser.split("").splice(0, 9).join("")
@@ -132,19 +145,28 @@ const actions = {
                 download.on('end', function (output) {
                     console.log(output);
 
+                    // commit('setLocalCDNs', {
+                    //     name,
+                    //     cdnVersion,
+                    //     file
+                    // })
                     commit('setLocalCDNs', {
+                        cdn,
                         name,
+                        version,
                         cdnVersion,
                         file
                     })
                     //TODO: Store download in firebase
                     let userId = currentUser
                     Firebase.database()
-                        .ref('downloads/' + uid())
+                        .ref('user/' + userId + '/downloads/' + safeName(name) )
                         .set({
                             cdn,
                             name,
+                            file,
                             version,
+                            cdnVersion,
                             userId
                         })
                         .then(response => {
@@ -175,7 +197,9 @@ const actions = {
                 })
             }
         })
-        //   console.log(ext);
+    }
+        
+        //   console.log(ext);userId
     },
     deleteCDN({
         commit,
@@ -184,38 +208,39 @@ const actions = {
     }, payload) {
         // const downloadPath = path.join(__dirname, '../..', `public/${state.userCode}`)
         const downloadPath = path.join(`${app.getPath('userData')}`, `/${state.userCode}`)
-
-        console.log('file to delete: ', payload)
-        fs.unlink(`${downloadPath}/${payload}`, (err) => {
+       
+        console.log('file to delete: ', payload.file)
+        fs.unlink(`${downloadPath}/${payload.file}`, (err) => {
             // if (err) throw err;
-            console.log(`${downloadPath}/${payload} was deleted`);
+            console.log(`${downloadPath}/${payload.file} was deleted`);
             // delete local storage pointer
             let newCDNs = []
             for (let i = 0; i < state.localCDNs.length; i++) {
-                if (state.localCDNs[i].file !== payload) {
+                if (state.localCDNs[i].file !== payload.file) {
                     newCDNs.push(state.localCDNs[i])
                 }
             }
             commit('setRemovedCDN', newCDNs)
             localStorage.setItem('localCDNs', JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID
             dispatch('notificationCtrl', {
-                msg: `${payload} has been removed from your local storage`,
+                msg: `${payload.file} has been removed from your local storage`,
                 color: 'success'
             })
         });
         //  Remove from firebase if Online
         // TODO: Do online check my passing online state
-        Firebase.database()
-            .ref('downloads')
-            .orderByChild('file').equalTo(payload)
-            .on('value', snap => {
-                snap.forEach(data => {
-                    let first9Chars = data.val().userId.split("").splice(0, 9).join('')
-                    if (first9Chars === state.userCode) {
-                        Firebase.database().ref('downloads').child(data.key).remove()
-                    }
-                })
-            })
+        let dbRef = Firebase.database().ref('user/' + payload.userId + '/downloads')
+            dbRef.child(safeName(payload.name)).remove()
+            console.log("Deleted from firebase")
+            // .orderByChild('name').equalTo(payload)
+            // .on('value', snap => {
+            //     snap.forEach(data => {
+            //         let first9Chars = data.val().userId.split("").splice(0, 9).join('')
+            //         if (first9Chars === state.userCode) {
+            //             Firebase.database().ref('user/' + userId + '/downloads/').child(data.key).remove()
+            //         }
+            //     })
+            // })
     },
     getCDNs({
         commit,
@@ -224,44 +249,54 @@ const actions = {
         let localCDNArray = []
         //  const userPath = path.join(__dirname, '../..', `public/${state.userCode}`) 
         const userPath = path.join(`${app.getPath('userData')}`, `/${state.userCode}`)
-
+        if (!fs.existsSync(userPath)) {
+            console.log('creating Folder')
+            fs.mkdirSync(userPath)
+        }
         if (payload.online === true) {
+            console.log("FETCHING DOWNLOADS FROM FIREBASE")
             const db = Firebase.database()
-            const ref = db.ref('downloads')
-            ref.orderByChild('userId').equalTo(payload.userId).limitToFirst(1)
-                .on('value', (snapshot) => {
-                    snapshot.forEach(data => {
-                        if (data.val().userId === payload.userId) {
-                            localCDNArray.push(data.val())
-                            let fileExists = false
-                            let fileName = data.val().cdn.split('/').splice(-1)
-                            find.file(/\.js$/, userPath, (files) => {
-                                console.log(files)
-                                for (let i = 0; i < files.length; i++) {
-                                    if (files[i] === `${userPath}/${fileName}`) { // <-- new path
-                                        return fileExists = true
-                                    }
+            const ref = db.ref('user/' + payload.userId + '/downloads/')
+            // ref.orderByChild('userId').equalTo(payload.userId).limitToFirst(1)
+                ref.on('value', (snapshot) => {
+                    console.log("SNAPSHOT: " , snapshot)
+                    console.log("DOWNLOADS ", snapshot.exists())
+                    
+                        snapshot.forEach(data => {
+                            // if (data.val().userId === payload.userId) {
+                                localCDNArray.push(data.val())
+                                console.log("LOCALCDNARRAY ", localCDNArray)
+                                let fileExists = false
+                                if(!data.val().cdn === undefined){
+                                    let fileName = data.val().cdn.split('/').splice(-1)
+                                    find.file(/\.js$/, userPath, (files) => {
+                                        console.log(files)
+                                        for (let i = 0; i < files.length; i++) {
+                                            if (files[i] === `${userPath}/${fileName}`) { // <-- new path
+                                                return fileExists = true
+                                            }
+                                        }
+                                        if (!fileExists) {
+                                            if (!fileName == 'Welcome to Cadence'){
+                                                console.log('need to download: ', fileName)
+        
+                                                let download = payload.wget.download(data.val().cdn, `${userPath}/${fileName}`);
+                                                download.on('error', function (err) {
+                                                    console.log(err);
+                                                });
+                                                download.on('start', function (fileSize) {
+                                                    console.log(fileSize);
+                                                });
+                                                download.on('end', function (output) {
+                                                    console.log(output);
+                                                });  
+                                            }
+                                        }
+                                    })
                                 }
-                                if (!fileExists) {
-                                    // if no localCDN download it
-                                    console.log('need to download: ', fileName)
-
-                                    let download = wget.download(data().cdn, `${userPath}/${fileName}`);
-                                    download.on('error', function (err) {
-                                        console.log(err);
-                                    });
-                                    download.on('start', function (fileSize) {
-                                        console.log(fileSize);
-                                    });
-                                    download.on('end', function (output) {
-                                        console.log(output);
-                                    });
-
-                                }
-                            })
-                        }
-                    })
-                    commit('setLocalCDNs', localCDNArray)
+                        })
+                        commit('setLocalCDNs', localCDNArray)
+                        localStorage.setItem(`localCDNs-${state.userCode}`, JSON.stringify(state.localCDNs))
                 })
         } else {
             // Pull CDN's from local storage
@@ -269,18 +304,20 @@ const actions = {
             if (localCDNStorage.length > 0) {
                 commit('loadStoredCDNs', localCDNStorage)
             } else {
-                seedData = [{
-                    "name": "Locally Stored Library's",
-                    "cdnVersion": "Notes",
-                    "file": "This is where all the libraries that you have downloaded are stored"
-                }]
+                seedData = {
+                    name: "Locally Stored Library's",
+                    cdnVersion: "Notes",
+                    file: "This is where all the libraries that you have downloaded are stored"
+                }
+                commit('loadStoredCDNs', localCDNStorage)
+                localStorage.setItem(`localCDNs-${state.userCode}`, JSON.stringify(state.localCDNs))
             }
         }
     }
 }
 
 const getters = {
-    localCDNStorage: state => state.localCDNs,
+    localCDNStorage: state => _.uniqBy(state.localCDNs,'name'),
     ipAddress: state => state.ipAddress,
     progress: state => state.progress,
     currentFile: state => state.currentFile,

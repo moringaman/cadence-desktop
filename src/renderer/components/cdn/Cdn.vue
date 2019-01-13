@@ -27,7 +27,7 @@
             <i class="fa fa-envelope"></i>
           </span>
                 </a>
-                <a v-if='searchData.length > 1 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
+                <a v-if='searchData.length > 0 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
                     <span class="icon" @click='downloadCDN()'>
             <i  class="fa fa-download"></i>
           </span>
@@ -38,8 +38,8 @@
                     <progress class="progress is-primary" :value='progress * 100' max="100"></progress>
                 </div>
                 <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
-                  <span v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
-                  <span v-if='searchData.length < 1 && showLocalStorage'>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
+                  <span class="content" v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
+                  <span v-if='searchData.length < 1 && showLocalStorage && Data.version !== "Notes" '>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
                 </div>
                 <footer v-if='showFavs' class="card-footer">
                      <span id="reveal-notes-icon" class="icon content" @click="(showNote =!showNote) && (editing=Data.name)">
@@ -214,7 +214,7 @@ etc.`
             updateFav(){
                 if(this.online === true){
                     console.log('updating')
-                    this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown})
+                    this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown, uid:this.currentUser})
                     this.edit = false
                 } else {
                     this.$store.dispatch('notificationCtrl', {msg: 'You need to be online to update Library notes', color: 'warning'})
@@ -255,7 +255,7 @@ etc.`
                     let file = this.Data.file
                     let online = this.online
                     console.log('delete ok')
-                    this.$store.dispatch('deleteCDN', file)
+                    this.$store.dispatch('deleteCDN', {name: this.Data.name, file:file, userId: this.currentUser})
                 }
             } else {
                 this.$store.dispatch('notificationCtrl',
