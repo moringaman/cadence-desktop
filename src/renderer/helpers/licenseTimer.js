@@ -1,10 +1,10 @@
 const moment = require('moment'); //?
 
-export default function licenseTimer(createdDate, expires) {
-    let timeLeft = moment(moment(expires) - moment(createdDate)).format('DD') //?
-    timeLeft < 1 ? expired = true : expired = false
-    return expired
+export default function daysRemaining(expire) {
+    var eventdate = moment(expire);
+    var todaysdate = moment();
+    return eventdate.diff(todaysdate, 'days');
 }
 
 
-// Usage -> thirtyDaysOld('2019-01-12T03:27:18.481Z','2019-02-11' )
+// Usage -> thirtyDaysOld('2019-02-11' )

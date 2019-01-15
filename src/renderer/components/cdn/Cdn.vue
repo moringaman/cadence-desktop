@@ -136,6 +136,10 @@ etc.`
         },
         methods: {
             editCDN(file){
+                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                if (validLicense === false) {
+                    return
+                }
                 this.key++
                this.edit===true?this.edit=false:this.edit=true
                console.log('editing file', this.edit)
@@ -164,6 +168,10 @@ etc.`
                 })
             },
             downloadCDN() {
+                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                if (validLicense === false) {
+                    return
+                }
                 if (this.online === false) {
                     this.$store.dispatch('notificationCtrl',
                      {msg: 'NETWORK ERROR: No downloads cannot be performed at this time',
@@ -184,6 +192,10 @@ etc.`
                     })
             },
             favouriteCDN() {
+                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                if (validLicense === false) {
+                    return
+                }
                 let name = this.Data.name,
                     version = this.Data.version,
                     cdn = this.Data.latest,
@@ -212,6 +224,10 @@ etc.`
               
             },
             updateFav(){
+                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                if (validLicense === false) {
+                    return
+                }
                 if(this.online === true){
                     console.log('updating')
                     this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown, uid:this.currentUser})
@@ -302,11 +318,13 @@ etc.`
             Prism.highlightAll()
         },
         created() {
-             
+             if (!this.currentUser === {}) {
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
+            
             this.userCode = this.currentUser.split("").splice(0,9).join("")
+            }
         }
     }
 </script>

@@ -61,11 +61,27 @@
     </span>
   </p>
 </div>
-       <a class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="login">Login</a>
+<div v-if="online && signUpForm" class="field">
+  <label class="label"></label>
+  <p class="control has-icons-left">
+    <input class="input" key="password-input"
+     v-validate="{is: user.password}" type="password" 
+     placeholder="Confirm Password" 
+     name="passwordConfirm"
+     v-on:keyup.enter="signUp">
+    <span class="icon is-small is-left">
+      <i class="fa fa-lock"></i>
+    </span>
+  </p>
+</div>
+       <a v-if="signUpForm === false" class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="login">Login</a>
        <!-- <a class="button is-primary" @click.prevent.native="login" v-if="errors" disabled>Login</a> -->
-       <a class="button is-info" @click.prevent="signUp">Sign Up</a>
+       <a v-if="signUpForm === true" class="button is-info" @click.prevent="signUp">Sign Up</a>
+       <a v-if="signUpForm === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
+       <a v-if="signUpForm === false" class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
+
+       <a class="button" @click.prevent="loginBasic">Simple Search</a>
        <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
-       <a class="button" @click.prevent="login">Just Use</a>
 </form>
       <!--  <a class="button is-danger" @click="close">Exit</a> -->
        </div>
@@ -83,7 +99,8 @@
 window.__FORM__ = {
   user: {
   selectedEmail: 'Select email address from below'
-  }
+  },
+  signUpForm: true
 }
   
   import Firebase from 'firebase'
@@ -108,7 +125,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
           password: '',
           selectedEmail: '',
        },
-       emailValid: false
+       emailValid: false,
+       signUpForm: true
         }
     },
   computed: {
@@ -176,16 +194,16 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
               }
           }
         })
-       
-          
-          
-      
       },
       signUp () {
-      //  const promise = auth.createUserWithEmailAndPassword(this.user.email, this.user.password)
-      //   .then(user => console.log(user))
-      //     .catch(e => console.log(e.message));
-      this.$store.dispatch('registerNewUser', {email: this.user.email, password: this.user.password})
+       this.$validator.validate().then((result) => {
+         if(!result) {
+           this.$store.dispatch('notificationCtrl', {msg: "Please correct form errors", color: "danger"})
+             return 
+         } else {
+          this.$store.dispatch('registerNewUser', {email: this.user.email, password: this.user.password})
+         }
+       })
       },
       logOut () {
       //  auth.signOut(); //TEST: Do we need to logout here?
@@ -326,7 +344,7 @@ body {
 }
 .card {
   text-align: center;
-  height: 17rem;
+  height: 20rem;
   width: 400px;
   position: absolute;
   top:50%;
@@ -334,7 +352,9 @@ body {
   margin-top:-150px; /* this is half the height of your div*/  
   margin-left:-200px; /*this is half of width of your div*/
   box-shadow: 2px 2px 6px rgba(0,0,0, .2);
-  background-color: rgba(250,250,250, .1);
+  /* background-color: rgba(250,250,250, .1); */
+  border-radius: 5px;
+  background-color: rgba(255,255,255, .8);
  }
 
 .card-header {
@@ -373,7 +393,17 @@ body {
 
   .button {margin-top: 20px}
 
-  
+  .form-link {
+    color:rgba(102, 102, 102, 0.849);
+    display: inline-block;
+    font-weight: 600;
+    margin-top: 25px;
+    margin-left: 20px;
+  }
+
+  .form-link:hover {
+    color: blueviolet;
+  }
 
   .slogun {
     font-size: 7.5rem;

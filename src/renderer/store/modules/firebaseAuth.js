@@ -5,6 +5,8 @@ import {
     createLicence
 } from '../../helpers/licence';
 
+import daysRemaining from '../../helpers/licenseTimer';
+
 let auth = Firebase.auth();
 
 const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
@@ -157,7 +159,7 @@ const actions = {
                 commit('isAuthenticating', false)
 
                 dispatch('notificationCtrl', {
-                    msg: `Welcome back!, Your local dev server is running at http://localhost:9990`,
+                    msg: `Welcome back!, Your local dev server is running at http://localhost:9082`,
                     color: 'success'
                 })
                 // Load LicenseInfo for user from local storage into state
@@ -185,6 +187,7 @@ const actions = {
                             version,
                             uid
                         })
+
                     })
                 } else {
                     // Get from local storage
@@ -194,7 +197,6 @@ const actions = {
                         }
                     }
                 }
-
                 // Send to mutation to update State
                 commit('setLicenseInfo', userObj)
                 // Log eventto Nucleus
@@ -224,9 +226,24 @@ const actions = {
     },
     accessRights({
         commit,
+        dispatch,
         state
     }, payload) {
         // TODO: check license type & status from state
+        if (payload.check === "license") {
+            let timeLeft = daysRemaining(state.licenseInfo.expire)
+            if (timeLeft > 0 && state.licenseInfo.policy === 'basic' ) {
+                dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
+            } else if  (timeLeft < 0 && state.licenseInfo.policy === 'basic' ) {
+                dispatch('notificationCtrl', {msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger"})
+                return false
+            } else if  (timeLeft < 0 && state.licenseInfo.policy !== 'basic' ) {
+                dispatch('notificationCtrl', {msg: `Your yearly license has expired, Please purchase a licence to contimue using this feature`, color: "danger"})
+                return false
+            } else {
+                return true
+            }
+        }
         if (!state.loggedIn & payload.check === 'logged in') {
             commit('setNotification', {
                 msg: `You must be logged in to ${payload.action}`,
@@ -247,6 +264,66 @@ const actions = {
             }, 4000)
             return false
         }
+    },
+    updateLicense({
+        commit,
+        dispatch,
+        state
+    }, payload) {
+        getLicence.query(null, null, payload.licence)
+            .then(body => {
+                console.log("Licence Info ", body)
+                if (body.error === "License not existing.") {
+                    dispatch('notificationCtrl', {msg: "licence not found on server", color: 'danger'})
+                    return
+                }
+                if (state.licenseInfo.email === body.userEmail) {
+                    commit('setLicenseInfo', body)
+                    // remove user from local user storage
+                    let localUserArr = []
+                    let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
+                    for (var obj in parsedObj) {
+                        if (obj.userEmail != body.userEmail) {
+                            localUserArr.push(obj)
+                        }
+                    }
+                    // pull params from getLicence body
+                    let {
+                        userEmail,
+                        expire,
+                        policy,
+                        licence,
+                        status,
+                        version
+                    } = body
+                    // create new user data including userId
+                    let newUserData = {
+                        licence,
+                        uid: state.currentUser,
+                        email: userEmail,
+                        expire,
+                        policy,
+                        status,
+                        version
+                    }
+                    // push new user data onto temp array
+                    localUserArr.push(newUserData)
+                    //recreate local users in local storage
+                    localStorage.setItem('cadenceUsers', JSON.stringify(localUserArr))
+
+                    //Update users licence info in firebase
+                    Firebase.database().ref('user/' + state.currentUser)
+                    .update(body)
+                    .then(() => {
+                        // Your Licence has been updated thankyou
+                        dispatch('notificationCtrl', {msg: "Thankyou for updating your licence you can now access premium features", color: 'success'})
+                    })
+                } else {
+                    // licence does not belong to this email address
+                    dispatch('notificationCtrl', {msg: "Sorry but this licence does not match the email address you're signed in with", color: 'danger'})
+                }
+                
+            })
     },
     loggedInStatusCheck() {
         var user = Firebase.auth().currentUser

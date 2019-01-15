@@ -14,6 +14,7 @@ const mutations = {
   loadSearchData(state, payload) {
     state.searchData = payload
     state.lastSearchData = payload
+  
   },
   clearSearchData(state) {
     if (state.searchData > 0) {
@@ -28,13 +29,17 @@ const mutations = {
     state.showHistory = payload
   },
   toggleShowLocalStorage(state, payload) {
+    
     state.showLocalStorage = payload
+    
   },
   toggleDataLoading(state) {
     state.dataLoading = !state.dataLoading
   },
   loadSearchHistory(state) {
-    state.lastSearchData = payload
+    
+      state.lastSearchData = payload
+  
   }
 }
 

@@ -58,14 +58,15 @@ export default {
     submitLicence() {
       console.log("submitLicence", this.licenceCode);
       this.shoLicence = false;
-      this.$store.dispatch("notificationCtrl", {
-        msg: "Your Licence has been accepted full functionality enabled",
-        color: "success"
-      });
+      // this.$store.dispatch("notificationCtrl", {
+      //   msg: "Your Licence has been accepted full functionality enabled",
+      //   color: "success"
+      // });
+      this.$store.dispatch('updateLicense', {licence: this.licenceCode})
     }
   },
   created() {
-    console.log(this.licenseInfo.expire - this.licenseInfo.created)
+    this.$store.dispatch('accessRights', {check: "license"})
   }
 };
 </script>
