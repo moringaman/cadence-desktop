@@ -6,12 +6,12 @@
     <p class='welcome'>Cadence</p>
   <div class="card">
       <div class="card-content">
-        <div class="card-content-heading">
+        <!-- <div class="card-content-heading">
           Login
-        </div>
+        </div> -->
         <form  v-on:submit.prevent>
 <div  v-if="online" class="field">
-  <hr>
+  <!-- <hr> -->
   <label class="label"></label>
   <p class="control has-icons-left has-icons-right">
     <input class="input" 
@@ -35,7 +35,7 @@
   <label class="label"></label>
   <div class="control has-icons-left">
   <div class="select">
-    <select v-model="user.selectedEmail">
+    <select v-validate="'email'" v-model="user.selectedEmail">
       <option selected>{{user.selectedEmail}}</option> 
       <option v-for="user in localUserInfo" :key="user.email" :value="user.email">{{user.email}}</option>
     </select>
@@ -74,21 +74,22 @@
     </span>
   </p>
 </div>
-       <a v-if="signUpForm === false" class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="login">Login</a>
+       <a v-if="signUpForm === false || online === false" class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="login">Login</a>
        <!-- <a class="button is-primary" @click.prevent.native="login" v-if="errors" disabled>Login</a> -->
-       <a v-if="signUpForm === true" class="button is-info" @click.prevent="signUp">Sign Up</a>
-       <a v-if="signUpForm === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
+       <a v-if="signUpForm === true && online === true" class="button is-info" @click.prevent="signUp">Sign Up</a>
+       
+       <a class="button" @click.prevent="loginBasic">Simple Search</a>
+       <a v-if="signUpForm === true && online === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
        <a v-if="signUpForm === false" class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
 
-       <a class="button" @click.prevent="loginBasic">Simple Search</a>
        <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
 </form>
       <!--  <a class="button is-danger" @click="close">Exit</a> -->
        </div>
        </div>
-      <div id="login-text">
+      <!-- <div id="login-text">
        <p>Sign In to access your history, favourites and special features or just use the basics.</p>
-       </div >
+       </div > -->
        <app-notify :notification='notification'/>
       <div class="slogun"> coding on the go</div>
   </div>
@@ -183,6 +184,11 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
                     if (parsedUserData[i].email === this.user.selectedEmail) {
                       userObj.email = this.user.selectedEmail
                       userObj.uid = parsedUserData[i].uid
+                      userObj.licence = parsedUserData[i].licence
+                      userObj.policy = parsedUserData[i].policy
+                      userObj.expire = parsedUserData[i].expire
+                      userObj.policy = parsedUserData[i].policy
+                      userObj.status = parsedUserData[i].status
                     }
                   }
                   console.log( userObj) // uid and email
@@ -190,6 +196,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
                   // load favs
                   // set loggedIn to true
                   this.$store.commit('setLoggedIn', {loggedIn: true, user: userObj.uid})
+                  this.$store.commit('setLicenseInfo', userObj)
                   // load localCDNs from storage
               }
           }
@@ -222,11 +229,11 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
     mounted() {
       window.addEventListener('online', () =>{
         console.log('we are online')
-        this.$store.commit('setOnlineStatus', true)
+        this.$store.dispatch('networkStatus')
       })
       window.addEventListener('offline', () =>{
         console.log('we are offline')
-        this.$store.commit('setOnlineStatus', false)
+        this.$store.dispatch('networkStatus')
       })
     },
     created() {
@@ -344,7 +351,7 @@ body {
 }
 .card {
   text-align: center;
-  height: 20rem;
+  /* height: 23rem; */
   width: 400px;
   position: absolute;
   top:50%;
@@ -359,6 +366,10 @@ body {
 
 .card-header {
   text-align: center;
+}
+
+.button {
+  position: relative;
 }
 
 

@@ -320,7 +320,7 @@ etc.`
             Prism.highlightAll()
         },
         created() {
-             if (!this.currentUser === {}) {
+             if (this.currentUser !== '') {
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
             }
