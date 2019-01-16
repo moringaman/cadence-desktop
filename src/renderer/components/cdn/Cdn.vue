@@ -168,16 +168,17 @@ etc.`
                 })
             },
             downloadCDN() {
-                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
-                if (validLicense === false) {
-                    return
-                }
+                // let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                // if (validLicense === false) {
+                //     return
+                // }
                 if (this.online === false) {
                     this.$store.dispatch('notificationCtrl',
                      {msg: 'NETWORK ERROR: No downloads cannot be performed at this time',
                      color: 'danger'})
                      return
                 }
+                this.fileNameData = this.Data.latest.split("/").splice(-1)[0]
                 console.log("wget: ", wget)
                 let cdnName = this.Data.name,
                     version = this.Data.version,
@@ -294,7 +295,8 @@ etc.`
                 'loggedIn',
                 'online',
                 'favs',
-                'showHistory'
+                'showHistory',
+                'showProgress'
             ]),
              compiledMarkdown: function () {
                  console.log('compiled')

@@ -14,7 +14,8 @@ const state = {
     ipAddress: '127.0.0.1',
     progress: 0,
     currentFile: '',
-    userCode: ''
+    userCode: '',
+    showProgress: false
 }
 
 const mutations = {
@@ -55,6 +56,9 @@ const mutations = {
     },
     setUserCode(state, payload) {
         state.userCode = payload
+    },
+    showProgress(state, payload){
+        state.showProgress = payload
     }
 }
 
@@ -176,6 +180,7 @@ const actions = {
                                 msg: `Downloaded: ${file} for local use via http://localhost:9990/${userCode}`,
                                 color: 'success'
                             })
+                            commit('showProgress', false)
                             Nucleus.track('Download')
                         })
                         .catch(error => {
@@ -188,6 +193,7 @@ const actions = {
                     console.log(progress)
                     commit('updateProgress', progress)
                     // code to show progress bar
+                    commit('showProgress', true)
                 });
 
             } else {
@@ -321,7 +327,8 @@ const getters = {
     ipAddress: state => state.ipAddress,
     progress: state => state.progress,
     currentFile: state => state.currentFile,
-    userCode: state => state.userCode
+    userCode: state => state.userCode.Firebase,
+    showProgress: state => state.showProgress
 }
 
 export default {
