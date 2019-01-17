@@ -24,7 +24,7 @@ export default {
   watch: {
     online(val) {
       if (val) {
-        this.Label = "rgb(168, 101, 231)";
+        this.Label = "rgb(144, 238, 144)";
         console.log("netStat ", val);
         console.log(this.label);
         this.$store.dispatch("notificationCtrl", {
@@ -78,7 +78,7 @@ div p {
 .network-status {
   display: grid;
   position: absolute;
-  background-color: rgb(168, 101, 231);
+  background-color: rgb(144, 238, 144);
   width: 100px;
   height: 120%;
   margin: 0px 81%;
@@ -95,7 +95,7 @@ div p {
 }
 
 .online {
-  color: lightgreen;
+  color: blueviolet;
 }
 
 .offline {

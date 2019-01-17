@@ -35,8 +35,8 @@
 
   
       <app-notify :notification='notification'/>
-    <div class='ad-space' v-if="!loggedIn"><h3>YOUR AD HERE</h3></div>
-    <p class="ad-msg" v-if="!loggedIn">Please <a linkTo='#'>Donate</a> to remove ads and unlock new features</p>
+    <div class='ad-space' v-if="licenseInfo.policy === 'basic'"><h3>YOUR AD HERE</h3></div>
+    <p class="ad-msg" v-if="licenseInfo.policy === 'basic'">Please <a linkTo='https://cadence-desktop/buy'>Purchase a License</a> to remove ads and unlock new features</p>
       </div>      
     </div>
      <app-footer></app-footer> 
@@ -132,7 +132,8 @@
         'favs',
         'showFavs',
         'dataLoading',
-        'online'
+        'online',
+        'licenseInfo'
         
       ])
     },
@@ -213,7 +214,7 @@
 
   .ad-space {
     height: 90px;
-    width: 500px;
+    width: 728px;
     /* border: 1px solid gray; */
     background-color: white;
     margin: 0px auto;
@@ -257,6 +258,7 @@
     bottom: 50px;
     left: 55%;
     transform: translateX(-45%);
+    visibility: hidden;
   }
   
   .side-bar {

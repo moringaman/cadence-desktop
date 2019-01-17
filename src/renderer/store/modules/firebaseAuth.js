@@ -19,7 +19,8 @@ const state = {
     currentUser: {},
     authenticating: false,
     localUserInfo: [],
-    licenseInfo: {}
+    licenseInfo: {},
+    licenseTimeout: 30
 }
 
 const mutations = {
@@ -46,6 +47,9 @@ const mutations = {
     },
     setLicenseInfo(state, payload) {
         state.licenseInfo = payload
+    },
+    setLicenseTimeout(state, payload){
+        state.licenseTimeout = payload
     }
 }
 
@@ -233,7 +237,8 @@ const actions = {
         if (payload.check === "license") {
             let timeLeft = daysRemaining(state.licenseInfo.expire)
             if (timeLeft > 0 && state.licenseInfo.policy === 'basic' ) {
-                dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
+                // dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
+                commit("setLicenseTimeout", timeLeft)
             } else if  (timeLeft < 0 && state.licenseInfo.policy === 'basic' ) {
                 dispatch('notificationCtrl', {msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger"})
                 return false
@@ -366,7 +371,8 @@ const getters = {
     online: state => state.online,
     authenticating: state => state.authenticating,
     localUserInfo: state => state.localUserInfo,
-    licenseInfo: state => state.licenseInfo
+    licenseInfo: state => state.licenseInfo,
+    licenseTimeout: state => state.licenseTimeout
 }
 
 export default {

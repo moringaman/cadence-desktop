@@ -45,7 +45,7 @@ export default {
   color: blueviolet;
   padding: 2px;
   border: 3px solid blueviolet;
-  border-radius: 50%;
+  border-radius: 7px;
   position: absolute;
   z-index: 301;
   top: 10px;
@@ -54,6 +54,7 @@ export default {
 
 .notify > .icon-circle > .icon-circle__icon {
     margin-top: 3px;
+    background-color: #fff;
 }
 
 .warning {

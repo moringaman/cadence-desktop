@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="licenseInfo.policy === 'basic' && (licenseInfo.expires - licenseInfo.created < 5)" class="account-status"> You Are On the 30 day free plan - Purchase Licence here for permanent access</div>
+    <a v-if="licenseInfo.policy === 'basic' && licenseTimeout < 7" class="account-status"> You're {{ 30 - licenseTimeout }} days into your 30 day free plan - Purchase Licence here for permanent access</a>
     <div class="btn-person" @click="showMenu">
       <i class="fa fa-user-circle fa-2x"></i>
     </div>
@@ -46,7 +46,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'licenseInfo'
+      'licenseInfo',
+      'licenseTimeout'
     ])
   },
   watch: {},

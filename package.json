@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "author": "Leon D (code@Webnostix.co.uk)",
   "description": "CDN Organizer",
-  "license": null,
+  "license": "Creative Commons",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
