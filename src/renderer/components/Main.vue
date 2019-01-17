@@ -17,6 +17,11 @@
              <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{resizeRefresh: false, preventParentScroll:false}">
       <app-cdn-list :localCDNStorage="localCDNStorage"></app-cdn-list>   
         </div>
+
+<!-- Modal -->
+  <app-modal :showModal="showModal"/>
+ <!-- Modal End -->
+
 </template>
 <template v-if='showFavs'>
   <div v-if="favs.length > 0" class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
@@ -41,9 +46,14 @@
     </div>
      <app-footer></app-footer> 
     </div>
+
   
 </div>
 </template>
+
+
+
+
 
 <script>
   const URL = `https://api.cdnjs.com/libraries?search=`;
@@ -56,6 +66,7 @@
   import Footer from './cdn/Footer.vue';
   import Notify from './helpers/Notify.vue'
   import loadingBar from './helpers/loading.vue'
+  import Modal from './helpers/Modal.vue'
   import vuebar from 'vuebar'
 
   import {
@@ -72,7 +83,8 @@
     data: function() {
       return {
         // ipAddress: '',
-        userCode: ''
+        userCode: '',
+        showModal: false
       }
     },
     components: {
@@ -81,7 +93,8 @@
       appMenu: Menu,
       appFooter: Footer,
       appNotify: Notify,
-      appLoadingBar: loadingBar
+      appLoadingBar: loadingBar,
+      appModal: Modal
     },
     methods: {
       ...mapActions([
@@ -327,6 +340,10 @@
     border: 0px;
     position: relative;
     visibility: hidden;
+  }
+
+  .modal {
+    z-index: 6000 !important;
   }
   
   .fade-enter-active,

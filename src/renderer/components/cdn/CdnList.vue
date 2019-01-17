@@ -7,9 +7,12 @@
     <app-cdn  v-for=" (search,index) in searchData" :key="search.name"
       @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
-        <app-cdn v-if='showLocalStorage' v-for=" (search,index) in localCDNStorage" :key="search.file"
+        <div v-if='showLocalStorage'>
+              <app-cdn  v-for=" (search,index) in localCDNStorage" :key="search.file"
       @click.native="copyCDN(index)" :Data='search'>
         </app-cdn>
+        </div>
+      
        </div> 
      
      </div> 
