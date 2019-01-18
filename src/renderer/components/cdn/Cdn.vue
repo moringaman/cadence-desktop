@@ -6,17 +6,17 @@
                 <p class="card-content header">
                     {{Data.name}}<span> ({{Data.version}} {{Data.cdnVersion}}) </span>
                 </p>
-                     <a v-if='showFavs || showLocalStorage' class="card-header-icon">
+                     <a v-if='showFavs || showLocalStorage' class="card-header-icon tooltip" v-ttip.bottom="'Delete'">
                     <span class="icon" @click="deleteFav()">
             <i class="fa fa-trash"></i>
           </span>
                 </a> 
-                <a v-if='showFavs===false' class="card-header-icon">
+                <a v-if='showFavs===false' class="card-header-icon tooltip" v-ttip.bottom="'Add to favorites'">
                     <span class="icon" @click="favouriteCDN()">
             <i class="fa fa-heart"></i>
           </span>
           </a>
-                <a class="card-header-icon tooltip" data-tooltip="copy to clipboard">
+                <a class="card-header-icon tooltip" v-ttip.bottom="'Copy to clipboard'">
                     <span class="icon" @click="copyCDN()">
             <i class="fa fa-clipboard"></i>
           </span>
@@ -27,7 +27,7 @@
             <i class="fa fa-envelope"></i>
           </span>
                 </a>
-                <a v-if='searchData.length > 0 || showHistory == true ' class="card-header-icon tooltip is-tooltip-bottom" data-tooltip="download?">
+                <a v-if='searchData.length > 0 || showHistory == true ' class="card-header-icon tooltip" v-ttip.bottom='"Download Library"'>
                     <span class="icon" @click='downloadCDN()'>
             <i  class="fa fa-download"></i>
           </span>
@@ -37,7 +37,7 @@
                 <div v-if="showProgress === true && currentFile === fileNameData" class='content'>
                     <progress class="progress is-primary" :value='progress * 100' max="100"></progress>
                 </div>
-                <div v-else class="content tooltip is-tooltip-primary is-tooltip-multiline" :data-tooltip='Data.description'>
+                <div v-else class="content tooltip" v-ttip.multiline="Data.description">
                   <span class="content" v-if='showFavs'>{{Data.cdn}}</span>{{Data.latest}}
                   <span v-if='searchData.length < 1 && showLocalStorage && Data.version !== "Notes" '>http://localhost:9082/{{userCode}}/</span>{{Data.file}}
                 </div>
@@ -183,13 +183,15 @@ etc.`
                 let cdnName = this.Data.name,
                     version = this.Data.version,
                     cdn = this.Data.latest,
-                    currentUser = this.currentUser
+                    currentUser = this.currentUser,
+                    description = Data.description
                 this.$store.dispatch('downloadCDN', {
                         wget,
                         cdn,
                         cdnName,
                         version,
-                        currentUser
+                        currentUser,
+                        description
                     })
             },
             favouriteCDN() {
@@ -465,6 +467,7 @@ etc.`
     .card-content.header span {
         font-weight: normal;
         font-size: 18px;
+        overflow: visible;
     }
     
     .card-content.header:hover {
@@ -485,8 +488,8 @@ etc.`
         opacity: 0.6;
     }
 
-    .tooltip {
-        z-index: 1000;
+    .tooltip  {
+        z-index: 9000 !important;
         font-size: 1rem;
     }
     

@@ -72,7 +72,8 @@ const actions = {
         cdnName ="",
         version ="",
         wget = null,
-        currentUser = ""
+        currentUser = "",
+        description = ""
     }) {
         let userCode = currentUser.split("").splice(0, 9).join("")
         if (state.online === false) {
@@ -109,6 +110,7 @@ const actions = {
             const src = cdn;
         let name = cdnName
         let cdnVersion = version
+        let description = description
         let userCode = currentUser.split("").splice(0, 9).join("")
         const file = cdn.split('/').splice('-1')[0]
         console.log('FILE: ', file);
@@ -159,7 +161,8 @@ const actions = {
                         name,
                         version,
                         cdnVersion,
-                        file
+                        file,
+                        description
                     })
                     //TODO: Store download in firebase
                     let userId = currentUser
@@ -171,7 +174,8 @@ const actions = {
                             file,
                             version,
                             cdnVersion,
-                            userId
+                            userId,
+                            description
                         })
                         .then(response => {
                             localStorage.setItem(`localCDNs-${userCode}`, JSON.stringify(state.localCDNs)) //FIXME: 'localCDNs' + UID

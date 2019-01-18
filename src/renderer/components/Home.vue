@@ -78,7 +78,7 @@
        <!-- <a class="button is-primary" @click.prevent.native="login" v-if="errors" disabled>Login</a> -->
        <a v-if="signUpForm === true && online === true" class="button is-info" @click.prevent="signUp">Sign Up</a>
        
-       <a class="button" @click.prevent="loginBasic">Simple Search</a>
+       <a class="button" @click.prevent="loginBasic" v-ttip="'Use simple library search'">Simple Search</a>
        <a v-if="signUpForm === true && online === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
        <a v-if="signUpForm === false" class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
 
