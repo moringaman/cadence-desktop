@@ -110,7 +110,6 @@ const actions = {
             const src = cdn;
         let name = cdnName
         let cdnVersion = version
-        let description = description
         let userCode = currentUser.split("").splice(0, 9).join("")
         const file = cdn.split('/').splice('-1')[0]
         console.log('FILE: ', file);

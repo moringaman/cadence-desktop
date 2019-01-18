@@ -184,7 +184,7 @@ etc.`
                     version = this.Data.version,
                     cdn = this.Data.latest,
                     currentUser = this.currentUser,
-                    description = Data.description
+                    description = this.Data.description
                 this.$store.dispatch('downloadCDN', {
                         wget,
                         cdn,
@@ -203,7 +203,8 @@ etc.`
                     version = this.Data.version,
                     cdn = this.Data.latest,
                     userId = this.currentUser,
-                    online = this.online
+                    online = this.online,
+                    description = this.Data.description
                   this.userCode = userId.split("").splice(0,9).join("")
                 let loggedIn = this.loggedIn
                 if (!loggedIn) {
@@ -221,7 +222,9 @@ etc.`
                         userId,
                         loggedIn,
                         userCode,
-                        online
+                        online,
+                        description,
+                        url: this.Data.latest
                     })
                 }
               

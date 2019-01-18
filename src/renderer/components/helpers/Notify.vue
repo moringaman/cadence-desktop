@@ -44,7 +44,7 @@ export default {
   background-color: white;
   color: blueviolet;
   padding: 2px;
-  border: 3px solid blueviolet;
+  /* border: 3px solid blueviolet; */
   border-radius: 7px;
   position: absolute;
   z-index: 301;

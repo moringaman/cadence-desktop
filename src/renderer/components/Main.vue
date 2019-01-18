@@ -40,7 +40,7 @@
 
   
       <app-notify :notification='notification'/>
-    <div class='ad-space' v-if="licenseInfo.policy === 'basic'"><h3>YOUR AD HERE</h3></div>
+    <div class='ad-space' v-if="licenseInfo.policy === 'basic' && online === true" @click="openAd"><img :src="currentAd.img"/></div>
     <p class="ad-msg" v-if="licenseInfo.policy === 'basic'">Please <a linkTo='https://cadence-desktop/buy'>Purchase a License</a> to remove ads and unlock new features</p>
       </div>      
     </div>
@@ -129,6 +129,10 @@
             ++alias;
           });
         }) //.bind(self.$store);
+      },
+      openAd(){
+        const { shell } = require('electron')
+       shell.openExternal(this.currentAd.url)
       }
     },
     computed: {
@@ -146,7 +150,8 @@
         'showFavs',
         'dataLoading',
         'online',
-        'licenseInfo'
+        'licenseInfo',
+        'currentAd'
         
       ])
     },
@@ -184,6 +189,7 @@
           //  this.$store.dispatch('getFavs')
           // this.$store.commit('loadSearchHistory')
       }
+      this.$store.dispatch('getRandomAd')
     }
   }
 </script>
@@ -232,11 +238,9 @@
     background-color: white;
     margin: 0px auto;
     transform: translateX(-31px);
+    cursor: pointer;
   }
 
-  .ad-space > h3 {
-    
-  }
   
   .server-message>p {
     position: absolute;

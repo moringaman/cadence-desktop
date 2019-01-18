@@ -47,7 +47,7 @@ const actions = {
         dispatch
     }, payload) {
         let {
-            name = '', version = 'latest', cdn = '', userId, online, Notes = ''
+            name = '', version = 'latest', cdn = '', userId, online, Notes = '', description = '', url = ''
         } = payload
         if (online === false) {
             dispatch('notificationCtrl', {
@@ -85,7 +85,9 @@ const actions = {
                     version,
                     cdn,
                     Notes,
-                    userId
+                    userId,
+                    description,
+                    url
                 })
                 .then(response => {
                     localStorage.setItem(`favCDNs-${payload.userCode}`, JSON.stringify(state.favs))
@@ -141,18 +143,6 @@ const actions = {
                         console.log('LocalStoragecreation: ', JSON.stringify(localFavArray))
                         localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
                     })
-                    // create starter data if nothing found in firebase
-
-                    // if (localFavArray === []) {
-                    //     let starterFav = {
-                    //         name: 'Welcome to Cadence Favourites',
-                    //         version: "0.1.0beta",
-                    //         cdn: 'Favourites',
-                    //         Notes: 'When you find Libraries via the search form you can click the heart icon to add them as favourites to be used again'
-                    //     }
-                    //     localFavArray.push(starterFav)
-                    //     localStorage.setItem(`favCDNs-${userCode}`, JSON.stringify(localFavArray))
-                    // } 
                 })
                 .then(response => {
                     console.log('I got favs', response)
