@@ -12,15 +12,18 @@ const mutations = {
 
 const actions = {
     getRandomAd({commit}) {
-         const randomIdx = Math.floor(Math.random() * 2) + 1
-       Firebase.database().ref('ads/').limitToFirst(randomIdx)
-        .on('value', (snapshot) => {
-            console.log(snapshot)
-            snapshot.forEach(data => {
-                console.log(data.val())
-                commit('setCurrentAd', data.val())
-            })
-        })
+        setInterval(() => {
+            const randomIdx = Math.floor(Math.random() * 2) + 1
+            Firebase.database().ref('ads/').limitToFirst(randomIdx)
+             .on('value', (snapshot) => {
+                 console.log(snapshot)
+                 snapshot.forEach(data => {
+                     console.log(data.val())
+                     commit('setCurrentAd', data.val())
+                 })
+             })
+        }, 60000)
+       
     }
 }
 

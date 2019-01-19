@@ -37,14 +37,16 @@
       <div class='local-count' v-if='localCDNStorage.length > 0 && searchData.length < 1'>
       <p>You have {{ localCDNStorage.length }} CDN's available for use offline</p>
       </div>
-
-  
-      <app-notify :notification='notification'/>
     <div class='ad-space' v-if="licenseInfo.policy === 'basic' && online === true" @click="openAd"><img :src="currentAd.img"/></div>
     <p class="ad-msg" v-if="licenseInfo.policy === 'basic'">Please <a linkTo='https://cadence-desktop/buy'>Purchase a License</a> to remove ads and unlock new features</p>
-      </div>      
+      
+      <app-notify :notification='notification'/>
+    
+      <!-- </div>   -->
+
+        
     </div>
-     <app-footer></app-footer> 
+     <app-footer></app-footer> `
     </div>
 
   
