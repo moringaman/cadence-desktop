@@ -12,7 +12,8 @@ const mutations = {
 
 const actions = {
     getRandomAd({commit}) {
-        setInterval(() => {
+
+        let pickRandom = function() {
             const randomIdx = Math.floor(Math.random() * 2) + 1
             Firebase.database().ref('ads/').limitToFirst(randomIdx)
              .on('value', (snapshot) => {
@@ -22,6 +23,10 @@ const actions = {
                      commit('setCurrentAd', data.val())
                  })
              })
+        }
+        pickRandom()
+        setInterval(() => {
+           pickRandom()
         }, 60000)
        
     }

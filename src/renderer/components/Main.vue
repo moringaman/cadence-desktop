@@ -37,19 +37,11 @@
       <div class='local-count' v-if='localCDNStorage.length > 0 && searchData.length < 1'>
       <p>You have {{ localCDNStorage.length }} CDN's available for use offline</p>
       </div>
-    <div class='ad-space' v-if="licenseInfo.policy === 'basic' && online === true" @click="openAd"><img :src="currentAd.img"/></div>
-    <p class="ad-msg" v-if="licenseInfo.policy === 'basic'">Please <a linkTo='https://cadence-desktop/buy'>Purchase a License</a> to remove ads and unlock new features</p>
-      
+       <app-ads/>
       <app-notify :notification='notification'/>
-    
-      <!-- </div>   -->
-
-        
     </div>
-     <app-footer></app-footer> `
+     <app-footer></app-footer>
     </div>
-
-  
 </div>
 </template>
 
@@ -69,6 +61,7 @@
   import Notify from './helpers/Notify.vue'
   import loadingBar from './helpers/loading.vue'
   import Modal from './helpers/Modal.vue'
+  import Ads from './helpers/Ads.vue'
   import vuebar from 'vuebar'
 
   import {
@@ -96,7 +89,8 @@
       appFooter: Footer,
       appNotify: Notify,
       appLoadingBar: loadingBar,
-      appModal: Modal
+      appModal: Modal,
+      appAds: Ads
     },
     methods: {
       ...mapActions([
@@ -196,7 +190,7 @@
   }
 </script>
 
-<style>
+<style >
   @import "https://unpkg.com/vue-notifyjs/themes/default.css";
 
   html {
@@ -216,7 +210,7 @@
     /* Internet Explorer/Edge */
     user-select: none;
     /* Non-prefixed version, currently
-                                    supported by Chrome and Opera */
+    supported by Chrome and Opera */
   }
   
   body {
@@ -227,21 +221,7 @@
     font-family: 'Roboto Mono', monospace;
   }
 
-  .ad-msg {
-    transform: translateX(-27px);
-    font-size: .95rem;
-    margin-top: 10px;
-  }
-
-  .ad-space {
-    height: 90px;
-    width: 728px;
-    /* border: 1px solid gray; */
-    background-color: white;
-    margin: 0px auto;
-    transform: translateX(-31px);
-    cursor: pointer;
-  }
+ 
 
   
   .server-message>p {
@@ -253,23 +233,6 @@
     transform: translateX(-45%);
   }
   
-  /* .fa-cog__1 {
-    position: absolute;
-    opacity: .3;
-    color: #333;
-    bottom: 50px;
-    left: 55%;
-    animation: rotate 5s linear infinite;
-  } */
-  
-  /* .fa-cog__2 {
-    position: absolute;
-    opacity: .3;
-    color: #333;
-    bottom: 43px;
-    left: 57.5%;
-    animation: rotate 5s linear reverse infinite;
-  } */
   
   .local-count>p {
     position: absolute;
@@ -304,7 +267,7 @@
   .scroll-list {
     margin-top: 50px;
     margin-bottom: 40px;
-    height: 36rem;
+    height: 35rem;
     width: 57rem;
     z-index: 99;
     transform: translateX(-30px);

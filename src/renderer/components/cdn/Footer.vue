@@ -48,11 +48,11 @@ export default {
 
 <style scoped>
 body {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 div {
-  height: 32px;
+  height: 40px;
   width: 100vw;
   position: absolute;
   bottom: 0px;
@@ -67,17 +67,18 @@ div {
 
 div p {
   color: blueviolet;
-  line-height: 10px;
-  font-size: 14px;
+  line-height: 15px;
+  font-size: 16px;
   margin: 3px -10px;
   /* float: left; */
-  font-weight: 300;
-  margin-left: -7rem;
+  font-weight: 400;
+  margin-left: -13rem;
 }
 
 .network-status {
   display: grid;
   position: absolute;
+  left: 4.5rem;
   background-color: rgb(144, 238, 144);
   width: 100px;
   height: 120%;
@@ -87,6 +88,7 @@ div p {
   grid-template-rows: 1fr;
   transition: all 0.3s ease;
   letter-spacing: 1px;
+  z-index: 8000;
 }
 
 .network-status > span {

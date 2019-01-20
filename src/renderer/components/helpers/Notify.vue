@@ -34,7 +34,7 @@ export default {
   padding: 10px 10px 10px 50px;
   z-index: 300;
   word-wrap:normal;
-  opacity: .7;
+  opacity: .9;
   /* overflow: hidden; */
 }
 
