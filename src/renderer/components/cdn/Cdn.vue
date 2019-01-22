@@ -11,7 +11,7 @@
             <i class="fa fa-trash"></i>
           </span>
                 </a> 
-                <a v-if='showFavs===false' class="card-header-icon tooltip" v-ttip.bottom="'Add to favorites'">
+                <a v-if='showFavs===false && searchData.length < 1' class="card-header-icon tooltip" v-ttip.bottom="'Add to favorites'">
                     <span class="icon" @click="favouriteCDN()">
             <i class="fa fa-heart"></i>
           </span>
@@ -195,6 +195,12 @@ etc.`
                     })
             },
             favouriteCDN() {
+      this.$store.dispatch('showModal', {message: "You are advised to download libraries before adding them to your favorites"})
+       this.$watch('modalResponse', (result) => {
+           console.log("Result: ", result)
+           if (result === false) {
+               return
+           } else {
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
                 if (validLicense === false) {
                     return
@@ -227,7 +233,8 @@ etc.`
                         url: this.Data.latest
                     })
                 }
-              
+                }
+              })
             },
             updateFav(){
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
@@ -243,13 +250,20 @@ etc.`
                 }
             },
             deleteFav() {
-                 let result = window.confirm("Are you sure you want to remove this")
-                if (result === false) {
-                    return
-                }
+        
+                //  let result = window.confirm("Are you sure you want to remove this")
+                // if (result === false) {
+                //     return
+                // }
                 if (this.online === true) {
                          console.log('DELETING: ', this.Data.file)
                 if (!this.Data.file) {
+            this.$store.dispatch('showModal', {message: "By deleting this favourite you will also delete the associated notes, Are you sure you want to do this?"})
+            this.$watch('modalResponse', (result) => {
+                console.log("Result: ", result)
+                if (result === false) {
+                    return
+                } else {
                     let name = this.Data.name
                     let userId = this.currentUser
                     console.log('DELETING: ', name)
@@ -261,12 +275,14 @@ etc.`
                     .then(()=> {
                         this.$store.dispatch('notificationCtrl', {msg: `${name} Library removed from your favourites`, color: 'success'})   
                     })
-                
+                 }
+            })   
                 } else {
                     // call delete locally stored CDN function
                     //TODO: refuse deletion if Library is a favourite
+                
                         for(let i=0; i < this.favs.length; i++){
-                            if(this.favs[i].name === this.Data.file.split('.')[0]) {
+                            if(this.favs[i].name.split('.')[0] === this.Data.file.split('.')[0]) {
                                 this.$store.dispatch('notificationCtrl', 
                                 {msg: `${this.Data.file.split('.')[0]} is in your favourites, please delete it from your favourites list first`,
                                  color: 'warning'})
@@ -277,13 +293,15 @@ etc.`
                     let file = this.Data.file
                     let online = this.online
                     console.log('delete ok')
+                    
                     this.$store.dispatch('deleteCDN', {name: this.Data.name, file:file, userId: this.currentUser})
                 }
             } else {
                 this.$store.dispatch('notificationCtrl',
                 {msg: 'You are curreently offline deletions cannot be done when offline',
                  color: 'danger'})
-            }   
+            }  
+       
             },
             ...mapMutations([
                 'clearNotification'
@@ -301,7 +319,8 @@ etc.`
                 'online',
                 'favs',
                 'showHistory',
-                'showProgress'
+                'showProgress',
+                'modalResponse'
             ]),
              compiledMarkdown: function () {
                  console.log('compiled')
@@ -325,6 +344,8 @@ etc.`
             Prism.highlightAll()
         },
         created() {
+            // console.log(this.Data.file.split('.')[0])
+            // console.log(this.favs[3].name.split('.')[0])
              if (this.currentUser !== '') {
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
@@ -332,6 +353,7 @@ etc.`
             
             this.userCode = this.currentUser.split("").splice(0,9).join("")
             }
+            
         }
     }
 </script>

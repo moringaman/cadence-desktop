@@ -1,20 +1,19 @@
 <template>
-     <div class="modal" :class="{'is-active':showModal}">
+     <div class="modal" v-if="showModal" :class="{'is-active':showModal}"   transition="fade">
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Please Confirm</p>
+      <p class="modal-card-title">Really?</p>
       <button class="delete" aria-label="close"></button>
     </header>
     <section class="modal-card-body">
-      Because favourites are often for use whilst you 
-      are offline we advise you to download this library first
-      so that it is accessible via your local cadence http server.
-
+      <slot>
+        Please confirm this action
+      </slot>
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success">Continue</button>
-      <button class="button">Cancel</button>
+      <button class="button is-success" @click='confirm'>Continue</button>
+      <button class="button" @click="close">Cancel</button>
     </footer>
   </div>
 </div>
@@ -29,13 +28,31 @@ export default {
         }
     },
     computed: {},
-    methods:{},
+    methods:{
+      close() {
+        this.$store.dispatch('hideModal', false)
+        // this.$emit('cancel')
+      },
+      confirm() {
+         this.$store.dispatch('confirmOperation')
+        // this.$emit('confirm')
+      }
+    },
     created(){}
 }
 </script>
 
 <style scoped>
+.modal-background{
+  background-color: rgba(0,0,0,.5)
+}
 
+ .fade-enter-active, .fade-leave-active {
+        transition: opacity .7s;
+    }
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    }
 </style>
 
 

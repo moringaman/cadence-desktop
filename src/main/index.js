@@ -39,7 +39,7 @@ function createWindow() {
     // zoomFactor: 0.9
   })
 
-   mainWindow.webContents.openDevTools(); // uncomment for debugging
+  //  mainWindow.webContents.openDevTools(); // uncomment for debugging
 
   mainWindow.loadURL(winURL)
 

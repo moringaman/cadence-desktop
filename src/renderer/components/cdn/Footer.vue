@@ -6,6 +6,7 @@
     <div class="network-status" :style="{backgroundColor: Label}">
       <span v-if="online" :class="{online: online}">ONLINE</span>
       <span v-if="!online" :class="{offline: !online}">OFFLINE</span>
+      <div class="zigzag"></div>
     </div>
   </div>
 </template>
@@ -46,7 +47,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  lang='scss' scoped>
 body {
   /* overflow: hidden; */
 }
@@ -73,6 +74,10 @@ div p {
   /* float: left; */
   font-weight: 400;
   margin-left: -13rem;
+}
+
+span {
+  z-index: 9000;
 }
 
 .network-status {
@@ -103,5 +108,59 @@ div p {
 .offline {
   color: white;
   /* background-color: #333; */
+}
+
+$height: 12px;
+$halfheight: ($height/2);
+$thickness: 110%; // increase to make the line thicker
+$offset: 4px;
+$backgroundcolor: rgb(144, 238, 144);
+$linecolor: blueviolet;
+
+body {
+  background: $backgroundcolor;
+}
+
+.zigzag {
+  margin: -37% 0;
+  width: 100%;
+  background: $backgroundcolor;
+  position: relative;
+  height: $height;
+  z-index: 8000;
+  &:before,
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+  &:before {
+    height: ($height - $offset);
+    top: $thickness;
+    background: linear-gradient(-135deg, $linecolor $halfheight, transparent 0)
+        0 $halfheight,
+      linear-gradient(135deg, $linecolor $halfheight, transparent 0) 0
+        $halfheight;
+    background-position: top left;
+    background-repeat: repeat-x;
+    background-size: $height $height;
+  }
+  &:after {
+    height: $height;
+    top: 100%;
+    background: linear-gradient(
+          -135deg,
+          $backgroundcolor $halfheight,
+          transparent 0
+        )
+        0 $halfheight,
+      linear-gradient(135deg, $backgroundcolor $halfheight, transparent 0) 0
+        $halfheight;
+    background-position: top left;
+    background-repeat: repeat-x;
+    background-size: $height $height;
+  }
 }
 </style>

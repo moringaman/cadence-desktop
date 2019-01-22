@@ -19,11 +19,22 @@
         </div>
 
 <!-- Modal -->
-  <app-modal :showModal="showModal"/>
+
+  <app-modal :showModal="showModal">
+    {{modalMessage}}
+    </app-modal>
+   
  <!-- Modal End -->
 
 </template>
 <template v-if='showFavs'>
+  <!-- Modal -->
+
+  <app-modal :showModal="showModal">
+    {{modalMessage}}
+    </app-modal>
+   
+ <!-- Modal End -->
   <div v-if="favs.length > 0" class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
     <app-cdn-list :searchData="favs"></app-cdn-list>
   </div>
@@ -78,8 +89,7 @@
     data: function() {
       return {
         // ipAddress: '',
-        userCode: '',
-        showModal: false
+        userCode: ''
       }
     },
     components: {
@@ -129,6 +139,14 @@
       openAd(){
         const { shell } = require('electron')
        shell.openExternal(this.currentAd.url)
+      },
+      async actionRefused() {
+          let result = await this.$store.dispatch('hideModal')
+          console.log(result)
+          
+      },
+      actionConfirmed() {
+        let result = this.$store.dispatch('confirmOperation')
       }
     },
     computed: {
@@ -147,8 +165,10 @@
         'dataLoading',
         'online',
         'licenseInfo',
-        'currentAd'
-        
+        'currentAd',
+        'showModal',
+        'modalMessage',
+        'modalResponse'
       ])
     },
     watch: {
@@ -156,7 +176,10 @@
         if (this.loggedIn === false || this.basicUser === false) {
           this.$router.push('/')
         }
-      }
+      },
+      // modalResponse: function(val) {
+      //   console.log(val)
+      // }
     },
     created() {
       console.log('CURRENT USER: ', this.currentUser)
@@ -186,6 +209,11 @@
           // this.$store.commit('loadSearchHistory')
       }
       this.$store.dispatch('getRandomAd')
+      
+    //  this.$store.dispatch('showModal', {message: "Main component message"})
+    //    this.$watch('modalResponse', (data) => {
+    //     console.log("Result: ", data)
+    //   })
     }
   }
 </script>

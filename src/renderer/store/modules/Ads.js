@@ -14,7 +14,7 @@ const actions = {
     getRandomAd({commit}) {
 
         let pickRandom = function() {
-            const randomIdx = Math.floor(Math.random() * 2) + 1
+            const randomIdx = Math.floor(Math.random() * 3) + 1
             Firebase.database().ref('ads/').limitToFirst(randomIdx)
              .on('value', (snapshot) => {
                  console.log(snapshot)
