@@ -41,6 +41,9 @@
 </template>
 
 <template v-if='showHistory && !showFavs'>
+  <app-modal :showModal="showModal" transition="fade">
+    {{modalMessage}}
+    </app-modal>
   <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
     <app-cdn-list :searchData="lastSearchData"></app-cdn-list>
   </div>

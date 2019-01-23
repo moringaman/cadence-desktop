@@ -341,7 +341,7 @@ body {
    width: 150px;
    position: absolute;
    left:50%;
-   top: 8rem;
+   top: 7rem;
    transform: translateX(-50%);
     -webkit-app-region: drag;
  }
@@ -354,7 +354,7 @@ body {
   /* height: 23rem; */
   width: 400px;
   position: absolute;
-  top:50%;
+  top:54%;
   left:50%;
   margin-top:-150px; /* this is half the height of your div*/  
   margin-left:-200px; /*this is half of width of your div*/
@@ -418,14 +418,15 @@ body {
 
   .slogun {
     font-size: 7.5rem;
+    word-spacing: 1rem;
     font-weight: bolder;
     color: rgba(250,250,250, .3);
     text-transform: uppercase;
     font-weight: bold;
     position: absolute;
     width: 100%;
-    top: 48rem;
-    left: 50%;
+    top: 44rem;
+    left: 45%;
     transform: translateX(-50%);
   }
 

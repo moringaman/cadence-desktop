@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="ad-space" v-if="licenseInfo.policy === 'basic' && online === true" @click="openAd">
-      <img :src="currentAd.img" alt="YOUR AD HERE">
+      <img :src="currentAd.img">
     </div>
     <p class="ad-msg" v-if="licenseInfo.policy === 'basic' || licenseInfo.policy === null">
       Please
