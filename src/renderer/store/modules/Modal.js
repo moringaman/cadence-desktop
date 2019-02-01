@@ -3,7 +3,7 @@
 const state = {
     showModal: false,
     modalMessage: 'Are you sure you want to do this',
-    modalResponse: null
+    modalResponse: 2
 }
 
 const mutations = {
@@ -16,6 +16,9 @@ const mutations = {
     },
     shoModal(state) {
         state.showModal = true
+    },
+    resetModal(state) {
+        state.modalResponse = 2
     }
 }
 
@@ -24,8 +27,8 @@ const actions = {
         commit('hideModal', payload)
         return false
     },
-    confirmOperation({commit}) {
-        commit('hideModal', true)
+    confirmOperation({commit}, payload) {
+        commit('hideModal', payload)
         return true
     },
     showModal({state, commit}, payload) {

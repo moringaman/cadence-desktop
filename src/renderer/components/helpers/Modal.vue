@@ -30,11 +30,11 @@ export default {
     computed: {},
     methods:{
       close() {
-        this.$store.dispatch('hideModal', false)
+        this.$store.dispatch('hideModal', 0)
         // this.$emit('cancel')
       },
       confirm() {
-         this.$store.dispatch('confirmOperation')
+         this.$store.dispatch('confirmOperation', 1)
         // this.$emit('confirm')
       }
     },

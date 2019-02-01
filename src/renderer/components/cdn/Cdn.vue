@@ -147,15 +147,17 @@ etc.`
                 let editor = this.editor
                 
             },
-            showModal(message) {
-                this.$store.dispatch('showModal', {message})
-                this.$watch('modalResponse', (result) => {
-                console.log("Result: ", result)
-                    if (result === false) {
-                        return false
-                    } else {
-                        return true
-                    }
+            async showModal(message) {
+                return new Promise((resolve, reject) => {
+                    this.$store.dispatch('showModal', {message})
+                    return this.$watch('modalResponse', (result) => {
+                    console.log("Result: ", result)
+                        if (result === 0) {
+                            resolve(false)
+                        } else if (result === 1) {
+                            resolve(true)
+                        }
+                    })
                 })
             },
             cancel(){
@@ -206,8 +208,9 @@ etc.`
                     })
             },
             favouriteCDN() {
-                let yesNo = this.showModal('You are advised to download libraries before adding them to your favorites so that they are available offline also')
-                if (yesNo) {
+                this.showModal('You are advised to download libraries before adding them to your favorites so that they are available offline also')
+                .then(yesNo => {
+               if (yesNo) {
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
                 if (validLicense === false) {
                     return
@@ -241,6 +244,7 @@ etc.`
                     })
                 }
             }
+                })
             },
             updateFav(){
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
@@ -264,8 +268,10 @@ etc.`
                 if (this.online === true) {
                          console.log('DELETING: ', this.Data.file)
                 if (!this.Data.file) {
-                    let yesNo = this.showModal('If you remove this library from your favourites, you will also lose any notes you have collated for it. Do you really want this?')
-                    if (yesNo) {
+                   this.showModal('If you remove this library from your favourites, you will also lose any notes you have collated for it. Do you really want this?')
+                    .then(result => {
+                        console.log(result)
+                   if (result === true) {
                     let name = this.Data.name
                     let userId = this.currentUser
                     console.log('DELETING: ', name)
@@ -277,7 +283,9 @@ etc.`
                     .then(()=> {
                         this.$store.dispatch('notificationCtrl', {msg: `${name} Library removed from your favourites`, color: 'success'})   
                     })
-                    }
+                    } 
+                    })
+                    
                 } else {
                     // call delete locally stored CDN function
                     //TODO: refuse deletion if Library is a favourite
@@ -295,14 +303,16 @@ etc.`
                     let online = this.online
                     console.log('delete ok')
 
-                    let yesNo = this.showModal("If you delete this Livbrary it will no longer be available on your local server")
+                    this.showModal("If you delete this Library it will no longer be available on your local server")
+                    .then(yesNo => {
                     if (yesNo){
                     this.$store.dispatch('deleteCDN', {name: this.Data.name, file:file, userId: this.currentUser})
                     }
+                    })
                 }
             } else {
                 this.$store.dispatch('notificationCtrl',
-                {msg: 'You are curreently offline deletions cannot be done when offline',
+                {msg: 'You are currently offline deletions cannot be done when offline',
                  color: 'danger'})
             }  
        
@@ -391,7 +401,7 @@ etc.`
     .edit-btn {
         position: absolute;
         right: 0;
-        top: 20px;
+        top: 8px;
         z-index: 2000;
     }
 
