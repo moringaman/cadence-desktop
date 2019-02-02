@@ -9,9 +9,7 @@ import Vuex from 'vuex';
 import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';
 import Prism from 'prismjs';
-
 import bulmaToolTip from 'bulma-tooltip'
- 
 import vueBulmaToolTips from 'vue-bulma-tooltips'
 vueBulmaToolTips.init(Vue)
 

@@ -86,6 +86,18 @@
                    </a>  
              <vue-markdown id="markdown-text" class="content" :source="Data.Notes">
             </vue-markdown>
+                   <div id="publicNote" class="field">
+                    <input 
+                        id="switchExample" 
+                        type="checkbox" 
+                        name="switchExample" 
+                        class="switch" 
+                        checked="checked" 
+                        v-model="publicNote"
+                        @click="notePrivacy"
+                        >
+                    <label for="switchExample">Make notes public?</label>
+                </div>
                    </div>     
                 </footer>
             </div> 
@@ -116,6 +128,7 @@
                 contentNote: this.Data.Notes,
                 edit: false,
                 showNote: false,
+                publicNote: false,
                 edited: true,
                 key: 0,
                 editing: '',
@@ -148,6 +161,7 @@ etc.`
                 
             },
             async showModal(message) {
+                    this.$store.commit('resetModal')
                 return new Promise((resolve, reject) => {
                     this.$store.dispatch('showModal', {message})
                     return this.$watch('modalResponse', (result) => {
@@ -163,6 +177,9 @@ etc.`
             cancel(){
                 this.showNote = false
                 this.edit = false
+            },
+            notePrivacy() {
+                console.log(this.publicNote)
             },
             copyCDN(index) {
                 if (this.Data.latest) {
@@ -372,6 +389,7 @@ etc.`
 </script>
 
 <style>
+    @import '~bulma-switch';
     @import "~bulma/css/bulma.css";
     @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
      @import '~prismjs/themes/prism.css'; 
@@ -387,6 +405,21 @@ etc.`
     .text-area { 
         height: 600px !important;
         margin-bottom: 50px;
+    }
+     
+    .switch {
+        z-index: 5000;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    /* .field {
+        width: 19rem;
+        margin-left: 24rem;
+    } */
+
+    #publicNote{
+        transform: translate(-14.6rem, 0.2rem);
     }
 
     #text-area{

@@ -6,7 +6,7 @@
     <div class="network-status" :style="{backgroundColor: Label}">
       <span v-if="online" :class="{online: online}">ONLINE</span>
       <span v-if="!online" :class="{offline: !online}">OFFLINE</span>
-      <div class="zigzag"></div>
+      <!-- <div class="zigzag"></div> -->
     </div>
   </div>
 </template>
@@ -48,9 +48,6 @@ export default {
 </script>
 
 <style  lang='scss' scoped>
-body {
-  /* overflow: hidden; */
-}
 
 div {
   height: 40px;
@@ -107,6 +104,7 @@ span {
 
 .offline {
   color: white;
+  $backgroundcolor: #333
   /* background-color: #333; */
 }
 

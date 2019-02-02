@@ -1,7 +1,7 @@
 <template>
     <transition name="pop">
         <div v-show="notification !== ' '" class="notify" :class='notification.color'>
-          {{notification.msg}}
+          <p>{{notification.msg}}</p>
           <div class="icon-circle">
             <i class="fa fa-info fa-2x icon-circle__icon"></i>
           </div>
@@ -38,6 +38,10 @@ export default {
   /* overflow: hidden; */
 }
 
+  p {
+    margin-left: 1rem;
+    color: #fff;
+  }
 .notify > .icon-circle {
   width: 50px;
   height: 50px;
