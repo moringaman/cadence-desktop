@@ -21,7 +21,8 @@
 <!-- Modal -->
 
   <app-modal :showModal="showModal">
-    {{modalMessage}}
+    <div v-if="modalMessage!=undefined" v-html="modalMessage"></div>
+    <div v-if="modalMessage=undefined"><input type="text" class="input" placeholder="conditional form"></div>
     </app-modal>
    
  <!-- Modal End -->
@@ -31,7 +32,9 @@
   <!-- Modal -->
 
   <app-modal :showModal="showModal">
-    {{modalMessage}}
+    <!-- <div v-html="modalMessage"></div> -->
+    <div v-if="modalMessage!=undefined" v-html="modalMessage"></div>
+    <div v-else><input type="text" class="input" placeholder="conditional form" v-model="recipientAddress" @change="updateRecipient"></div>
     </app-modal>
    
  <!-- Modal End -->
@@ -42,7 +45,7 @@
 
 <template v-if='showHistory && !showFavs'>
   <app-modal :showModal="showModal" transition="fade">
-    {{modalMessage}}
+  <div v-html="modalMessage"></div>
     </app-modal>
   <div v-if="localCDNStorage.length > 0 && searchData.length == 0 " class="scroll-list" v-bar="{preventParentScroll:true, useScrollbarPseudo:true}">
     <app-cdn-list :searchData="lastSearchData"></app-cdn-list>
@@ -92,7 +95,8 @@
     data: function() {
       return {
         // ipAddress: '',
-        userCode: ''
+        userCode: '',
+        recipientAddress: ''
       }
     },
     components: {
@@ -150,6 +154,9 @@
       },
       actionConfirmed() {
         let result = this.$store.dispatch('confirmOperation')
+      },
+      updateRecipient() {
+        this.$store.commit('updateRecipient', this.recipientAddress)
       }
     },
     computed: {

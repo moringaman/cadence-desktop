@@ -6,11 +6,11 @@
       <p class="modal-card-title">Are you sure?</p>
       <button class="delete" aria-label="close"></button>
     </header>
-    <section class="modal-card-body">
-      <slot>
+    <div class="modal-card-body modal-content">
+      <slot class="content">
         Please confirm this action
       </slot>
-    </section>
+    </div>
     <footer class="modal-card-foot">
       <button class="button is-success" @click='confirm'>Continue</button>
       <button class="button" @click="close">Cancel</button>
@@ -24,7 +24,7 @@ export default {
     props: ['showModal'],
     data: function () {
         return {
-
+         recipientAddress: '' 
         }
     },
     computed: {},

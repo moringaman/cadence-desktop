@@ -2,7 +2,7 @@ import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
 import safeName from '../../helpers/safeName'
 import _ from 'lodash';
-
+import http from 'http'
 const path = require('path')
 const find = require('find')
 const fs = require('fs')
@@ -10,7 +10,8 @@ const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
 
 const state = {
     favs: [],
-    showFavs: false
+    showFavs: false,
+    recipientAddress: ''
 }
 
 const mutations = {
@@ -38,6 +39,9 @@ const mutations = {
     },
     clearFavs(state) {
         state.favs = []
+    },
+    updateRecipient(state, payload) {
+        state.recipientAddress = payload
     }
 }
 
@@ -189,6 +193,46 @@ const actions = {
             }).catch(error => {
                 console.log(error)
             })
+    },
+    shareFav({state}, payload) {
+       // Send Post request to cadence-desktop website to send email 
+       let { Notes = "No Notes have been added for this Library", name, version, description, url } = payload
+       let email = state.recipientAddress
+    //    console.log(JSON.stringify({ Notes, name, description, version, url, email }))
+       var sendData = JSON.stringify({ Notes, name, description, version, url, email })
+    //    ?const API_URL = `http://www.cadence-desktop.com/api/share-email`
+    //    const API_URL = 'http://127.0.0.1:3000/api/share-email'
+       var options = {
+        'method': 'POST',
+        // 'hostname': '127.0.0.1',
+        'hostname': 'www.cadence-desktop.com',
+        // 'port': 3000,
+        'path': '/api/share-email',
+        'headers': {
+          'Content-Type': 'application/json'
+        }
+      };
+      console.log("Sending")
+      var req = http.request(options, function (res) {
+            var chunks = [];
+
+            res.on("data", function (chunk) {
+                chunks.push(chunk);
+            });
+
+            res.on("end", function (chunk) {
+                var body = Buffer.concat(chunks);
+                console.log("Done")
+                // console.log(body.toString());
+            });
+
+            res.on("error", function (error) {
+                console.error(error);
+            });
+        });
+
+        req.write(sendData);
+        req.end();
     },
     delFav({
         commit,

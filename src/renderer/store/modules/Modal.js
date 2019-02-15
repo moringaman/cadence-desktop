@@ -2,7 +2,7 @@
 
 const state = {
     showModal: false,
-    modalMessage: 'Are you sure you want to do this',
+    modalMessage: '',
     modalResponse: 2
 }
 

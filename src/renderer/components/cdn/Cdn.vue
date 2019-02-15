@@ -23,7 +23,7 @@
                 </a>
                 <a v-if='showFavs===true' class="card-header-icon">
                     <!-- <span class="icon" @click="(showNote =!showNote) && (editing=Data.name)"> -->
-                    <span class="icon" >     
+                    <span class="icon" @click="shareFav">     
             <i class="fa fa-envelope"></i>
           </span>
                 </a>
@@ -248,6 +248,7 @@ etc.`
                     version = this.Data.cdnVersion
                 }
                 let userCode = this.userCode
+                console.log('LATEST: ', this.Data.latest)
                 this.$store.dispatch('addFav', {
                         name,
                         version,
@@ -257,7 +258,7 @@ etc.`
                         userCode,
                         online,
                         description,
-                        url: this.Data.latest
+                        url: this.Data.cdn
                     })
                 }
             }
@@ -333,6 +334,18 @@ etc.`
                  color: 'danger'})
             }  
        
+            },
+            shareFav() {
+               // Show modal for user to enter email address of recipient
+                // this.$store.dispatch('shareFav', { data: this.Data, recipient: toAddress })
+                // this.showModal(`<input type="text" class="input" placeholder="reciepient email" ref="emailto">`)
+                this.showModal()
+                .then(yesNo => {
+                    if (yesNo) {
+                        this.$store.dispatch('shareFav', this.Data)
+                    }
+                })
+                console.log('Sharing: ', this.Data)
             },
             ...mapMutations([
                 'clearNotification'
