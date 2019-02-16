@@ -46,6 +46,19 @@
   </div>
 </div>
 
+<!-- <div v-if="online && resetPassword" class="field">
+  <label class="label"></label>
+  <p class="control has-icons-left">
+    <input class="input" key="password-input"
+     v-validate="{is: user.password}" type="password" 
+     placeholder="Confirm Password" 
+     name="passwordConfirm"
+     v-on:keyup.enter="signUp">
+    <span class="icon is-small is-left">
+      <i class="fa fa-lock"></i>
+    </span>
+  </p>
+</div> -->
 
 <div v-if="online" class="field">
   <label class="label"></label>
@@ -78,9 +91,12 @@
        <!-- <a class="button is-primary" @click.prevent.native="login" v-if="errors" disabled>Login</a> -->
        <a v-if="signUpForm === true && online === true" class="button is-info" @click.prevent="signUp">Sign Up</a>
        
-       <a class="button" @click.prevent="loginBasic" v-ttip="'Use simple library search'">Simple Search</a>
+       <a class="button" @click.prevent="loginBasic" v-ttip="'Use simple library search'" >Simple Search</a>
        <a v-if="signUpForm === true && online === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
-       <a v-if="signUpForm === false" class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
+       <div v-if="signUpForm === false">
+       <a class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
+       <a class="form-link" href="#" @click.prevent="open('http://www.cadence-desktop.com')">Reset Password<i class="fa fa-external-link"/></a>
+       </div>
 
        <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
 </form>
@@ -101,7 +117,8 @@ window.__FORM__ = {
   user: {
   selectedEmail: 'Select email address from below'
   },
-  signUpForm: true
+  signUpForm: true,
+  // resetPassword: false
 }
   
   import Firebase from 'firebase'
@@ -273,10 +290,10 @@ body {
 
  #wrapper::after {
    content: '';
-   background: url('../assets/splashBack2.jpg');
+   background: url('../assets/camper-back.jpg');
    background-size: cover;
    background-repeat: no-repeat;
-   filter: saturation(9);
+   filter: saturation(8);
    /* background-position-y: -30px; */
    opacity: 0.5;
    z-index: -1;
@@ -320,6 +337,11 @@ body {
   opacity: .5;
   z-index: 100;
   font-size: 2rem ;
+}
+
+.fa-external-link {
+  margin-left: 0.5rem;
+  margin-top: 0.3rem;
 }
 
 .fa-times:hover {
