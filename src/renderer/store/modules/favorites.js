@@ -51,7 +51,7 @@ const actions = {
         dispatch
     }, payload) {
         let {
-            name = '', version = 'latest', cdn = '', userId, online, Notes = '', description = '', url = ''
+            name = '', version = 'latest', cdn = '', userId, online, Notes = '', description = '', url = '', publicNote = false
         } = payload
         if (online === false) {
             dispatch('notificationCtrl', {
@@ -91,7 +91,8 @@ const actions = {
                     Notes,
                     userId,
                     description,
-                    url
+                    url,
+                    publicNote
                 })
                 .then(response => {
                     localStorage.setItem(`favCDNs-${payload.userCode}`, JSON.stringify(state.favs))
@@ -180,10 +181,11 @@ const actions = {
         console.log("NOTE: ", payload.Note)
         ref.child(safeName(payload.Data.name))
             .update({
-                Notes: payload.Note
+                Notes: payload.Note,
+                publicNote: payload.publicNote
             }).then(response => {
                 console.log('done', response)
-                commit('insertEditedFav', {name: payload.Data.name, Notes: payload.Note })
+                commit('insertEditedFav', {name: payload.Data.name, Notes: payload.Note, publicNote: payload.publicNote })
                 // commit('insertEditedFav', data.val())
                 dispatch('notificationCtrl', {
                     msg: 'Note Updated Successfully',

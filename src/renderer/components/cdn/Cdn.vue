@@ -93,10 +93,11 @@
                         name="switchExample" 
                         class="switch" 
                         checked="checked" 
-                        v-model="publicNote"
-                        @click="notePrivacy"
+                        v-model="Data.publicNote" 
+                        @click="updateFav"
                         >
-                    <label for="switchExample">Make notes public?</label>
+                    <label v-if="Data.publicNote" for="switchExample">Make private?</label>
+                    <label v-if="!Data.publicNote" for="switchExample">Make public?</label>
                 </div>
                    </div>     
                 </footer>
@@ -128,7 +129,7 @@
                 contentNote: this.Data.Notes,
                 edit: false,
                 showNote: false,
-                publicNote: false,
+                publicNote: undefined,
                 edited: true,
                 key: 0,
                 editing: '',
@@ -179,7 +180,10 @@ etc.`
                 this.edit = false
             },
             notePrivacy() {
-                console.log(this.publicNote)
+                this.publicNote = !this.publicNote
+                console.log('PUBLICNOTE?', this.publicNote)
+                this.updateFav()
+                this.key++
             },
             copyCDN(index) {
                 if (this.Data.latest) {
@@ -258,7 +262,8 @@ etc.`
                         userCode,
                         online,
                         description,
-                        url: this.Data.cdn
+                        url: this.Data.cdn,
+                        publicNote: false
                     })
                 }
             }
@@ -271,7 +276,7 @@ etc.`
                 }
                 if(this.online === true){
                     console.log('updating')
-                    this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown, uid:this.currentUser})
+                    this.$store.dispatch('updateFavs', {Data:this.Data, Note: this.compiledMarkdown, uid:this.currentUser, publicNote: this.publicNote})
                     this.edit = false
                 } else {
                     this.$store.dispatch('notificationCtrl', {msg: 'You need to be online to update Library notes', color: 'warning'})
@@ -396,7 +401,7 @@ etc.`
             
             this.userCode = this.currentUser.split("").splice(0,9).join("")
             }
-            
+            this.publicNote = this.Data.publicNote || false
         }
     }
 </script>
