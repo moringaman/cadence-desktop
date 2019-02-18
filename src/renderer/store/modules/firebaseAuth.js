@@ -169,7 +169,13 @@ const actions = {
                 // Load LicenseInfo for user from local storage into state
                 let userObj = {}
                 let parsedUserData = JSON.parse(localStorage.getItem('cadenceUsers'))
-                if (parsedUserData === undefined) {
+                let userFound = false
+                    for (let i = 0; i < parsedUserData.length; i++) {
+                        if (parsedUserData[i].email === email) {
+                            userFound = true
+                        }
+                    }
+                if (parsedUserData === undefined || !userFound )   {
                     // Get data from firebase
                     let dbRef = Firebase.database().ref('user/' + user.uid)
                     dbRef.on('value', snapshot => {
@@ -191,7 +197,18 @@ const actions = {
                             version,
                             uid
                         })
-
+                        let userData = JSON.stringify(snapshot)
+                        if (localStorage.hasOwnProperty('cadenceUsers')) {
+                            let localUserArr = [] // load dropdown default
+                            localUserArr.push(userData)
+                            let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
+                            for (var obj in parsedObj) {
+                                localUserArr.push(JSON.stringify(parsedObj[obj]))
+                            }
+                            localStorage.setItem('cadenceUsers', `[${localUserArr}]`)
+                        } else {
+                            localStorage.setItem('cadenceUsers', `[${userData}]`)
+                        }
                     })
                 } else {
                     // Get from local storage
@@ -222,6 +239,17 @@ const actions = {
         auth.signOut();
         commit('setLoggedOut')
         commit('basicUser', true)
+    },
+    sendPasswordResetEmail({dispatch},payload) {
+        console.log('EMAIL FOR RESET ', payload.email)
+        let emailAddress = payload.email;
+        auth.sendPasswordResetEmail(emailAddress).then(function() {
+        // Email sent.
+            dispatch('notificationCtrl', {msg: "Password reset email sent", color: 'success'})
+        }).catch(function(error) {
+        // An error happened.
+        console.log(error)
+        });
     },
     basicUser({
         commit

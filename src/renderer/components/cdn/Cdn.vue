@@ -93,7 +93,7 @@
                         name="switchExample" 
                         class="switch" 
                         checked="checked" 
-                        v-model="Data.publicNote" 
+                        v-model="this.publicNote" 
                         @click="updateFav"
                         >
                     <label v-if="Data.publicNote" for="switchExample">Make private?</label>

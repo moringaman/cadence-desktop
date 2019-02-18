@@ -9,7 +9,27 @@
         <!-- <div class="card-content-heading">
           Login
         </div> -->
-        <form  v-on:submit.prevent>
+        <form v-if="resetPassword">
+          Password reset
+        <div v-if="online" class="field">
+          <hr>
+          <label class="label"></label>
+          <div class="control has-icons-left">
+          <div class="select">
+            <select v-validate="'email'" v-model="user.selectedEmail" name="emailtoreset">
+              <option selected>{{user.selectedEmail}}</option> 
+              <option v-for="user in localUserInfo" :key="user.email" :value="user.email">{{user.email}}</option>
+            </select>
+            <span class="icon is-small is-left">
+              <i class="fa fa-envelope"></i>
+            </span>
+          </div>
+          </div>
+        </div>
+       <a  class="button is-primary" :class="{'is-success': !errors, 'is-loading': authenticating}" @click.prevent="resetPasswd">Send Password reset email</a><br>
+       <a href="#" @click="resetPassword=false">Back to Login Screen</a>
+          </form>
+        <form v-if="!resetPassword" v-on:submit.prevent>
 <div  v-if="online" class="field">
   <!-- <hr> -->
   <label class="label"></label>
@@ -45,21 +65,6 @@
   </div>
   </div>
 </div>
-
-<!-- <div v-if="online && resetPassword" class="field">
-  <label class="label"></label>
-  <p class="control has-icons-left">
-    <input class="input" key="password-input"
-     v-validate="{is: user.password}" type="password" 
-     placeholder="Confirm Password" 
-     name="passwordConfirm"
-     v-on:keyup.enter="signUp">
-    <span class="icon is-small is-left">
-      <i class="fa fa-lock"></i>
-    </span>
-  </p>
-</div> -->
-
 <div v-if="online" class="field">
   <label class="label"></label>
   <p class="control has-icons-left">
@@ -95,7 +100,7 @@
        <a v-if="signUpForm === true && online === true" class="form-link" href="#" @click.prevent="signUpForm = false">Login, I already registered</a>
        <div v-if="signUpForm === false">
        <a class="form-link" href="#" @click.prevent="signUpForm = true">Register new account?</a>
-       <a class="form-link" href="#" @click.prevent="open('http://www.cadence-desktop.com')">Reset Password<i class="fa fa-external-link"/></a>
+       <a class="form-link" href="#" @click.prevent="resetPassword=true">Reset Password</a>
        </div>
 
        <!-- <a class="button" @click.prevent="loginBasic">Just Use</a> -->
@@ -118,7 +123,7 @@ window.__FORM__ = {
   selectedEmail: 'Select email address from below'
   },
   signUpForm: true,
-  // resetPassword: false
+  resetPassword: true 
 }
   
   import Firebase from 'firebase'
@@ -237,6 +242,10 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       loginBasic() {
         this.$store.dispatch('basicUser', true)
         .then(() => this.$router.push('/cadence'))
+      },
+      resetPasswd(){
+        console.log("SENDING ", this.user.selectedEmail)
+        this.$store.dispatch('sendPasswordResetEmail', {email:this.user.selectedEmail})
       },
       closeApp(){
       // getCurrentWindow().reload()
