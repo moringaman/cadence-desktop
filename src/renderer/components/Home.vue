@@ -123,7 +123,7 @@ window.__FORM__ = {
   selectedEmail: 'Select email address from below'
   },
   signUpForm: true,
-  resetPassword: true 
+  resetPassword: false
 }
   
   import Firebase from 'firebase'

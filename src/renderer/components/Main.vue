@@ -80,6 +80,11 @@
   import Modal from './helpers/Modal.vue'
   import Ads from './helpers/Ads.vue'
   import vuebar from 'vuebar'
+  // import remote from 'electron'
+  import path from 'path'
+
+  const { Tray } = require('electron').remote
+  const nativeImage = require('electron').nativeImage
 
   import {
     mapActions,
@@ -192,7 +197,13 @@
       // }
     },
     created() {
-      console.log('CURRENT USER: ', this.currentUser)
+      // const iconPath = path.join()
+      // let trayIcon = path.join(__static, 'logo2_16.img')
+      // console.log(trayIcon)
+      // const nimage = nativeImage.createFromPath(trayIcon);
+      // console.log(nimage)
+      // let tray = new Tray(nimage)
+      // console.log('CURRENT USER: ', this.currentUser)
       //TODO: Initialize app - add localCDN & favourite (vuejs)
       const userId = this.currentUser
       const online = this.online
