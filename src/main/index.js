@@ -1,4 +1,4 @@
-import {app, BrowserWindow, Tray, Menu} from 'electron';
+import {app, BrowserWindow, Tray, Menu, shell} from 'electron';
 
 const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2');
 
@@ -21,41 +21,42 @@ const winURL =
 function createTray() {
   const trayIcon = require('path').join(__static, 'logo2_16.png');
   // const nimage = nativeImage.createFromPath(trayIcon)
-  console.log(trayIcon)
+  console.log(trayIcon);
   let tray = new Tray(trayIcon);
-  tray.on('click', (e) => {
+  tray.on('click', e => {
     if (mainWindow.isVisible()) {
-      mainWindow.hide()
+      mainWindow.hide();
     } else {
-      mainWindow.show()
+      mainWindow.show();
     }
-  })
-//   const trayMenuTemplate = [
-//     {
-//        label: 'Empty Application',
-//        enabled: false
-//     },
-    
-//     {
-//        label: 'Close',
-//        click: function () {
-//          mainWindow.hide()
-//           console.log("Clicked on settings")
-//        }
-//     },
-    
-//     {
-//        label: 'Help',
-//        click: function () {
-//           console.log("Clicked on Help")
-//        }
-//     }
-//  ]
- 
-//  let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
-//  tray.setContextMenu(trayMenu)
- }
- 
+  });
+  const trayMenuTemplate = [
+    {
+      label: 'Stop Server',
+      enabled: false,
+    },
+
+    {
+      label: 'Quit',
+      click: function() {
+        mainWindow.close();
+        console.log('Clicked on settings');
+      },
+    },
+
+    {
+      label: 'Help',
+      click: function() {
+        console.log('Clicked on Help');
+        shell.openExternal('http://www.cadence-desktop.com')
+      },
+    },
+  ];
+
+  let trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
+  tray.setContextMenu(trayMenu);
+}
+
 function createWindow() {
   /**
    * Initial window options
