@@ -268,25 +268,31 @@ const actions = {
             const ref = db.ref('user/' + payload.userId + '/downloads/')
             // ref.orderByChild('userId').equalTo(payload.userId).limitToFirst(1)
                 ref.on('value', (snapshot) => {
-                    console.log("SNAPSHOT: " , snapshot)
+                    // console.log("SNAPSHOT: " , snapshot)
                     console.log("DOWNLOADS ", snapshot.exists())
-                    
+                    let dataSize = 0
+                   snapshot.forEach(data => {
+                       dataSize++
+                       console.log(dataSize)
+                    })
                         snapshot.forEach(data => {
                             // if (data.val().userId === payload.userId) {
+                                console.log('DATA LENGTH ', data)
                                 localCDNArray.push(data.val())
-                                console.log("LOCALCDNARRAY ", localCDNArray)
                                 let fileExists = false
-                                if(!data.val().cdn === undefined){
+                                if(data.val().cdn !== undefined){
                                     let fileName = data.val().cdn.split('/').splice(-1)
                                     find.file(/\.js$/, userPath, (files) => {
-                                        console.log(files)
-                                        for (let i = 0; i < files.length; i++) {
+                                        for (let i = 0; i < dataSize; i++) {
+                                            console.log("LOOPING")
+                                                // console.log(`${files[i]} -- ${userPath}/${fileName}`)
                                             if (files[i] === `${userPath}/${fileName}`) { // <-- new path
+                                                console.log(`${files[i]} -- ${userPath}/${fileName}`)
                                                 return fileExists = true
                                             }
                                         }
-                                        if (!fileExists) {
-                                            if (!fileName == 'Welcome to Cadence'){
+                                        if (fileExists === false && fileName !== "Cadence Downloads") {
+                                            // if (fileName !== "Cadence Downloads"){
                                                 console.log('need to download: ', fileName)
         
                                                 let download = payload.wget.download(data.val().cdn, `${userPath}/${fileName}`);
@@ -299,7 +305,7 @@ const actions = {
                                                 download.on('end', function (output) {
                                                     console.log(output);
                                                 });  
-                                            }
+                                            // }
                                         }
                                     })
                                 }

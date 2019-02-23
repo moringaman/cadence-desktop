@@ -221,6 +221,7 @@
           console.log('CALLING GETCDNS')
           this.$store.dispatch('getCDNs', {wget, userId, online })
         } 
+          this.$store.dispatch('getCDNs', {wget, userId, online })
          console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
         // this.$store.dispatch('getFavs', this.currentUser)
         this.$store.dispatch('getFavs', {uid: this.currentUser, userCode: this.userCode, online: this.online})
