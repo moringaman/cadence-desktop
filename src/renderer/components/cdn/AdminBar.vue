@@ -3,13 +3,14 @@
     <a href="https://cadence-desktop/buy" v-if="licenseInfo.policy === 'basic' && licenseTimeout < 7" class="account-status"> You're {{ 30 - licenseTimeout }} days into your 30 day free plan - Purchase Licence here for permanent access</a>
     <div class="btn-person" @click="showMenu">
       <i class="fa fa-user-circle fa-2x"></i>
+	<div class="username">{{licenseInfo.username}}</div>	
     </div>
 
     <!-- <transition name="appear"> -->
     <div v-if="shoMenu" class="menu" @mouseleave="showMenu">
       <ul>
         <li @click="shoLicence=!shoLicence">Activate</li>
-        <li>Enter Username</li>
+        <li>Change Username</li>
       </ul>
     </div>
     <div v-if="shoLicence" id="licence-input">
@@ -73,6 +74,9 @@ export default {
 </script>
 
 <style scoped>
+body {
+font-size: 1rem;
+}
 .fa-user-circle {
   color: #ccc;
   /* font-size: 2rem; */
@@ -162,6 +166,12 @@ input {
   top: 0rem;
  right: 2rem;
  font-size: 1rem;
+}
+.username {
+font-size: 0.8rem;
+top: 10px;
+position: absolute;
+right: 50px;
 }
 </style>
 

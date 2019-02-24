@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow;
+let tray = null
 const winURL =
   process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`

@@ -10,7 +10,7 @@ import daysRemaining from '../../helpers/licenseTimer';
 let auth = Firebase.auth();
 
 const Nucleus = require('electron-nucleus')('5c2fd2e8ffc1fb00ce9582e2')
-
+const UsernameGen = require('username-generator')
 
 const state = {
     loggedIn: false,
@@ -65,6 +65,7 @@ const actions = {
                 commit('setLicenseInfo', body)
                 // console.log(Licence)
             })
+	let username = UsernameGen.generateUsername()
         auth.createUserWithEmailAndPassword(payload.email, payload.password)
             .then(user => {
                 console.log(user)
@@ -80,6 +81,7 @@ const actions = {
                 const dbRef = Firebase.database().ref('user/' + user.uid)
                 dbRef.set({
                         licence: key, // Pulled fro Nucleus
+			username: username,
                         email: userEmail,
                         paid: false,
                         expire: expire,
@@ -118,7 +120,8 @@ const actions = {
                             expire,
                             policy,
                             status,
-                            version
+                            version,
+			    username
                         })
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
                             let localUserArr = [] // load dropdown default
@@ -186,7 +189,8 @@ const actions = {
                             expire,
                             policy,
                             status,
-                            version
+                            version,
+			    username
                         } = snapshot
                         commit('setLicenseInfo', {
                             licence,
@@ -195,7 +199,8 @@ const actions = {
                             policy,
                             status,
                             version,
-                            uid
+                            uid,
+			    username
                         })
                         let userData = JSON.stringify(snapshot)
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
