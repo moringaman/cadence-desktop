@@ -113,6 +113,9 @@
        </div > -->
        <app-notify :notification='notification'/>
       <div class="slogun"> coding on the go</div>
+      <div v-if="update" id="update-msg">
+        An update is available for Cadence, download today to get new features and bug fixes<a class="button is-success is-small" id="download-btn" @click="open('http://cadence-desktop/downloads')" href="#">Update</a>
+      </div>
   </div>
 </template>
 
@@ -160,7 +163,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       'notification',
       'authenticating',
       'localUserInfo',
-      'online'
+      'online',
+      'update'
     ]),
     validation: function () {
       return {
@@ -269,6 +273,8 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
       // TODO: Check for network status and update state variable
       this.$store.dispatch('networkStatus')
       this.$store.dispatch('getLocalUserInfo')
+      this.$store.dispatch('getVersion')
+      console.log('Update ', this.update)
     }
   }
 </script>
@@ -460,5 +466,19 @@ body {
     left: 45%;
     transform: translateX(-50%);
   }
+   #update-msg {
+     position: absolute;
+     bottom: 0;
+     width: 100%;
+     height: 40px;
+     background-color:royalblue;
+     /* font-weight: 600; */
+     color: white;
+     padding: 7px;
+     z-index: 5000;
+   }
+   #download-btn {
+     margin: 0 10px;
+   }
 
 </style>

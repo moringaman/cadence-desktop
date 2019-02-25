@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "@octokit/rest": "^16.16.0",
     "ajv": "^5.5.2",
     "axios": "^0.16.1",
     "babel-runtime": "^6.26.0",

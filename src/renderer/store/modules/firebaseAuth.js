@@ -273,6 +273,7 @@ const actions = {
                 // dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
                 commit("setLicenseTimeout", timeLeft)
             } else if  (timeLeft < 0 && state.licenseInfo.policy === 'basic' ) {
+                console.log(timeLeft)
                 dispatch('notificationCtrl', {msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger"})
                 return false
             } else if  (timeLeft < 0 && state.licenseInfo.policy !== 'basic' ) {

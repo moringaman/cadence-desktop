@@ -28,6 +28,7 @@ const mutations = {
     insertEditedFav(state, payload) {
         let objIndex = state.favs.findIndex((obj => obj.name == payload.name))
         state.favs[objIndex].Notes = payload.Notes
+        state.favs[objIndex].publicNote = payload.publicNote
     },
     deleteFav(state, payload) {
         // TEST: Favs not being deleted from local storage

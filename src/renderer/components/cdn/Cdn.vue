@@ -93,8 +93,9 @@
                         name="switchExample" 
                         class="switch" 
                         checked="checked" 
+                        :key="this.key"
                         v-model="this.publicNote" 
-                        @click="updateFav"
+                        @click="notePrivacy"
                         >
                     <label v-if="Data.publicNote" for="switchExample">Make private?</label>
                     <label v-if="!Data.publicNote" for="switchExample">Make public?</label>
@@ -180,7 +181,11 @@ etc.`
                 this.edit = false
             },
             notePrivacy() {
-                this.publicNote = !this.publicNote
+                let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
+                if (!validLicense) {
+                    return
+                }
+                this.publicNote? this.publicNote = false: this.publicNote = true
                 console.log('PUBLICNOTE?', this.publicNote)
                 this.updateFav()
                 this.key++
@@ -233,7 +238,8 @@ etc.`
                 .then(yesNo => {
                if (yesNo) {
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
-                if (validLicense === false) {
+                .then(result => {
+                if (result === false) {
                     return
                 }
                 let name = this.Data.name,
@@ -266,12 +272,15 @@ etc.`
                         publicNote: false
                     })
                 }
+                })
             }
                 })
             },
             updateFav(){
                 let validLicense = this.$store.dispatch('accessRights', {check: 'license'})
-                if (validLicense === false) {
+                .then(result => {
+                console.log('VALID LICENSE ', result)
+                if (result == false) {
                     return
                 }
                 if(this.online === true){
@@ -281,6 +290,7 @@ etc.`
                 } else {
                     this.$store.dispatch('notificationCtrl', {msg: 'You need to be online to update Library notes', color: 'warning'})
                 }
+                })
             },
             deleteFav() {
         
@@ -401,7 +411,7 @@ etc.`
             
             this.userCode = this.currentUser.split("").splice(0,9).join("")
             }
-            this.publicNote = this.Data.publicNote || false
+            this.publicNote = this.Data.publicNote //|| false
         }
     }
 </script>
