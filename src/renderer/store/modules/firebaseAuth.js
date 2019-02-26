@@ -250,7 +250,8 @@ const actions = {
         let emailAddress = payload.email;
         auth.sendPasswordResetEmail(emailAddress).then(function() {
         // Email sent.
-            dispatch('notificationCtrl', {msg: "Password reset email sent", color: 'success'})
+            dispatch('notificationCtrl', {msg: `Password reset email sent to ${emailAddress}`, color: 'success'})
+            Nucleus.track('Password Reset')
         }).catch(function(error) {
         // An error happened.
         console.log(error)
@@ -355,6 +356,7 @@ const actions = {
                     .update(body)
                     .then(() => {
                         // Your Licence has been updated thankyou
+                        Nucleus.track('License Updated')
                         dispatch('notificationCtrl', {msg: "Thankyou for updating your licence you can now access premium features", color: 'success'})
                     })
                 } else {

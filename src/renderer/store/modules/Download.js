@@ -291,9 +291,9 @@ const actions = {
                                                 return fileExists = true
                                             }
                                         }
-                                        if (fileExists === false && fileName !== "Cadence Downloads") {
+                                        if (fileExists == false && fileName[0] !== "Cadence Downloads") {
                                             // if (fileName !== "Cadence Downloads"){
-                                                console.log('need to download: ', fileName)
+                                                console.log('need to download: ', fileName[0])
         
                                                 let download = payload.wget.download(data.val().cdn, `${userPath}/${fileName}`);
                                                 download.on('error', function (err) {

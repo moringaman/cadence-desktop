@@ -226,6 +226,7 @@ const actions = {
             res.on("end", function (chunk) {
                 var body = Buffer.concat(chunks);
                 console.log("Done")
+                Nucleus.track('Share-Favourite')
                 // console.log(body.toString());
             });
 
@@ -260,6 +261,7 @@ const actions = {
         let dbRef = Firebase.database().ref('user/' + payload.userId + '/favorites')
         dbRef.child(safeName(payload.name)).remove()
         console.log("Deleted from firebase")
+                Nucleus.track('Delete-Favourite')
     }
 }
 
