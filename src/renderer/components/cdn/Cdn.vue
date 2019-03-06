@@ -354,6 +354,7 @@ etc.`
                // Show modal for user to enter email address of recipient
                 // this.$store.dispatch('shareFav', { data: this.Data, recipient: toAddress })
                 // this.showModal(`<input type="text" class="input" placeholder="reciepient email" ref="emailto">`)
+                this.$store.commit('setModalTitle', 'Please Enter Email Address')
                 this.showModal()
                 .then(yesNo => {
                     if (yesNo) {

@@ -3,7 +3,11 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Are you sure?</p>
+      <p class="modal-card-title">
+      <slot name="title">
+        Please Confirm
+      </slot>
+      </p>
       <button class="delete" aria-label="close"></button>
     </header>
     <div class="modal-card-body modal-content">

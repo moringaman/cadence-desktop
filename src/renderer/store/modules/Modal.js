@@ -3,7 +3,8 @@
 const state = {
     showModal: false,
     modalMessage: '',
-    modalResponse: 2
+    modalResponse: 2,
+    modalTitle: 'Please Confirm'
 }
 
 const mutations = {
@@ -19,6 +20,9 @@ const mutations = {
     },
     resetModal(state) {
         state.modalResponse = 2
+    },
+    setModalTitle(state, payload) {
+        state.modalTitle = payload
     }
 }
 
@@ -40,7 +44,8 @@ const actions = {
 const getters = {
     showModal: state => state.showModal,
     modalMessage: state=> state.modalMessage,
-    modalResponse: state => state.modalResponse
+    modalResponse: state => state.modalResponse,
+    modalTitle: state => state.modalTitle
 }
 
 export default {

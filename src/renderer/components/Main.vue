@@ -30,11 +30,21 @@
 </template>
 <template v-if='showFavs'>
   <!-- Modal -->
-
   <app-modal :showModal="showModal">
-    <!-- <div v-html="modalMessage"></div> -->
+    <template slot="title">
+      {{ modalTitle }}
+      </template>
     <div v-if="modalMessage!=undefined" v-html="modalMessage"></div>
-    <div v-else><input type="text" class="input" placeholder="conditional form" v-model="recipientAddress" @change="updateRecipient"></div>
+    <div v-else>
+      <input 
+        type="text" 
+        name="email"
+        class="input" 
+        placeholder="Email Address of person you are sharing with" 
+        v-model="recipientAddress" 
+        v-validate="'email'" 
+        @change="updateRecipient">
+      </div>
     </app-modal>
    
  <!-- Modal End -->
@@ -183,7 +193,8 @@
         'currentAd',
         'showModal',
         'modalMessage',
-        'modalResponse'
+        'modalResponse',
+        'modalTitle'
       ])
     },
     watch: {
