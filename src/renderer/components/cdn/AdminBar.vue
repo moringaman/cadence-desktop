@@ -2,8 +2,7 @@
   <div>
     <a href="https://cadence-desktop/buy" v-if="licenseInfo.policy === 'basic' && licenseTimeout < 7" class="account-status"> You're {{ 30 - licenseTimeout }} days into your 30 day free plan - Purchase Licence here for permanent access</a>
     <div class="btn-person" @click="showMenu">
-      <i class="fa fa-user-circle fa-2x"></i>
-	<div class="username">{{licenseInfo.username}}</div>	
+      <i class="fa fa-bars"></i>
     </div>
 
     <!-- <transition name="appear"> -->
@@ -77,8 +76,9 @@ export default {
 body {
 font-size: 1rem;
 }
-.fa-user-circle {
+.fa-bars {
   color: #ccc;
+  font-size: 1.5rem;
   /* font-size: 2rem; */
 }
 

@@ -2,13 +2,15 @@
   <div>
     <div class="logo">
       <img src="../../assets/logo2.svg">Cadence
+       <i id="avatar" class="fa fa-user-circle fa-4x"></i>
+       <div class="username">{{licenseInfo.username}}</div>	
     </div>
     <ul style="display: block">
       <app-menu-item
         fa-icon="fa fa-heart fa-3x"
         item-name="Favorites"
         event-name="showFavs"
-         :favs="favs.length"
+        :favs="favs.length"
         @showFavs="showFav"
         :class="{active:showFavs, point:showFavs}"
       />
@@ -35,10 +37,17 @@
         :favs="0"
         @popular="popular"
       />
-      <li class="nav-item" @click="signOut()">
+       <app-menu-item
+        fa-icon="fa fa-sign-out fa-3x"
+        item-name="signOut"
+        event-name="signOut"
+        :favs="0"
+        @signOut="signOut"
+      />
+      <!-- <li class="nav-item" @click="signOut()">
         <i class="fa fa-sign-out fa-3x"></i>
         <span>LEAVE</span>
-      </li>
+      </li> -->
       <!-- <li><router-link :to="cdnNotes">cnd notes</router-link></li> -->
     </ul>
   </div>
@@ -57,7 +66,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["showFavs", "showHistory", "showLocalStorage", "favs", "localCDNStorage", "lastSearchData"])
+    ...mapGetters([
+      "showFavs",
+      "showHistory",
+      "showLocalStorage",
+      "favs",
+      "localCDNStorage",
+      "lastSearchData",
+      "licenseInfo"
+    ])
   },
   methods: {
     ...mapActions(["clearSearchData", "signOut"]),
@@ -95,20 +112,30 @@ export default {
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 
 .logo {
-  padding: 30px 50px 10px;
+  padding: 5px 20px 20px;
   /* background-color: rgba(0,0,0, 0.2);*/
   background-color: rgba(255, 242, 0, 0.7);
-  color: #fff;
-  margin-left: -15px;
+  color: blueviolet;
+  margin-left: -30px;
   margin-right: -25px;
   font-family: "Roboto Mono", monospace;
-  font-size: 28px;
-  margin-bottom: 50px;
+  font-size: 18px;
+  /* font-weight: 600; */
+  margin-bottom: 20px;
   -webkit-app-region: drag;
 }
 
+.username {
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  color: white;
+  font-weight: 600;
+}
+
 .logo img {
-  width: 50%;
+  width: 20%;
+  margin-right: 0.5rem;
+  transform: translateY(5px);
 }
 
 .active {
@@ -134,19 +161,19 @@ li.point > #pointer {
 }
 
 li > .counter {
-  position:absolute;
+  position: absolute;
   /* height: 20px; */
-  min-width: 20px; 
+  min-width: 20px;
   padding: 2px;
   border-radius: 4px;
   color: #fff;
-  font-size: .8rem;
+  font-size: 0.8rem;
   line-height: 1.1rem;
   background-color: blueviolet;
   font-weight: 600;
   z-index: 3000;
   left: 6.5rem;
-  transform: translateY(-1rem); 
+  transform: translateY(-1rem);
   /* right: 1.6rem;
   top: -1rem; */
   clear: both;
@@ -178,5 +205,10 @@ li i:hover {
   /* font-size: 2.2rem; */
   text-align: center;
   vertical-align: top;
+}
+
+#avatar {
+  margin-top: 1rem;
+  color: white;
 }
 </style>

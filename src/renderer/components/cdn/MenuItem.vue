@@ -27,9 +27,9 @@ export default {
 };
 </script>
 
-<style >
+<style scoped >
 li i {
-  font-size: 1.2rem;
+  font-size: 1rem;
   outline: none;
   margin: 30px auto;
   width: 50px;
@@ -48,7 +48,7 @@ li > span {
 }
 
 .fa {
-  font-size: 2.2rem;
+  font-size: 2.4rem !important;
   text-align: center;
   vertical-align: top;
 }
