@@ -195,6 +195,7 @@ etc.`
                     var cdn = this.Data.latest;
                 } else if (this.Data.file){
                     var cdn = `http://localhost:9082/${this.userCode}/${this.Data.file}`
+                    var origin = this.Data.cdn
                 } else {
                     var cdn = this.Data.cdn
                 }
@@ -202,6 +203,7 @@ etc.`
                     notify = this.$notify
                 this.$store.dispatch('copyCDN', {
                     cdn,
+                    origin,
                     clipboard,
                     notify
                 })
