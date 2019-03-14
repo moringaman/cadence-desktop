@@ -41,10 +41,11 @@ li i {
 
 li > span {
   text-transform: uppercase;
-  transform: translateY(40px);
+  transform: translate(10px, 35px);
   position: absolute;
   color: #fff;
-  font-weight: 600;
+  font-weight: 400;
+  font-size: .8rem;
 }
 
 .fa {

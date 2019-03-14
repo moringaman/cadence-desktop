@@ -88,7 +88,7 @@ font-size: 1rem;
 
 .menu {
   position: absolute;
-  top: 3rem;
+  top: 2.5rem;
   left: 54rem;
   width: 180px;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.2);

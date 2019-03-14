@@ -112,7 +112,7 @@ export default {
 @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
 
 .logo {
-  padding: 5px 20px 20px;
+  padding: 5px 20px 5px;
   /* background-color: rgba(0,0,0, 0.2);*/
   background-color: rgba(255, 242, 0, 0.7);
   color: blueviolet;
@@ -121,13 +121,13 @@ export default {
   font-family: "Roboto Mono", monospace;
   font-size: 18px;
   /* font-weight: 600; */
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   -webkit-app-region: drag;
 }
 
 .username {
   font-size: 0.9rem;
-  margin-top: 1rem;
+  margin: .8rem auto .8rem;
   color: white;
   font-weight: 600;
 }
@@ -181,7 +181,7 @@ li > .counter {
 
 li i {
   outline: none;
-  margin: 30px auto;
+  margin: 20px auto;
   width: 50px;
   color: grey;
   opacity: 0.5;
@@ -210,5 +210,7 @@ li i:hover {
 #avatar {
   margin-top: 1rem;
   color: white;
+  font-size: 4em !important;
+  margin-left: 1rem;
 }
 </style>
