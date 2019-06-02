@@ -207,15 +207,14 @@ const actions = {
     //    const API_URL = 'http://127.0.0.1:3000/api/share-email'
        var options = {
         'method': 'POST',
-        // 'hostname': '127.0.0.1',
         'hostname': 'www.cadence-desktop.com',
-        // 'port': 3000,
         'path': '/api/share-email',
         'headers': {
           'Content-Type': 'application/json'
         }
       };
       console.log("Sending")
+      console.time('mail send operation')
       var req = http.request(options, function (res) {
             var chunks = [];
 
@@ -226,6 +225,7 @@ const actions = {
             res.on("end", function (chunk) {
                 var body = Buffer.concat(chunks);
                 console.log("Done")
+                console.timeEnd('mail sent')
                 Nucleus.track('Share-Favourite')
                 // console.log(body.toString());
             });
