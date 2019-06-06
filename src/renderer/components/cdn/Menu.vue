@@ -1,8 +1,11 @@
 <template>
   <div>
     <div class="logo">
-      <img src="../../assets/logo2.svg">Cadence
-       <i id="avatar" class="fa fa-user-circle fa-4x"></i>
+      <img id="cadence-logo" src="../../assets/logo2.svg">
+       <i v-if="!licenseInfo.avatar" id="avatar" class="fa fa-user-circle fa-4x"></i>
+       <div id="avatar-circle" v-if="licenseInfo.avatar">
+       <img  class="avatar" :src="licenseInfo.avatar" alt="">
+       </div>
        <div class="username">{{licenseInfo.username}}</div>	
     </div>
     <ul style="display: block">
@@ -119,22 +122,24 @@ export default {
   margin-left: -30px;
   margin-right: -25px;
   font-family: "Roboto Mono", monospace;
-  font-size: 18px;
+  font-size: 14px;
   /* font-weight: 600; */
   margin-bottom: 10px;
   -webkit-app-region: drag;
 }
 
 .username {
-  font-size: 0.9rem;
-  margin: .8rem auto .8rem;
-  color: white;
-  font-weight: 600;
+  font-size: 0.7rem;
+  margin: 1.8rem auto .4rem 1rem;
+  color:blueviolet;
+  font-weight: 200;
 }
 
-.logo img {
-  width: 20%;
-  margin-right: 0.5rem;
+.logo #cadence-logo {
+  position: absolute;
+  width: 2rem;
+  left: 0.5rem;
+  margin-right: 3.5rem;
   transform: translateY(5px);
 }
 
@@ -212,5 +217,25 @@ li i:hover {
   color: white;
   font-size: 4em !important;
   margin-left: 1rem;
+}
+
+#avatar-circle {
+  width: 75px;
+  height: 75px;
+  background-color: transparent;
+  /* border: 2px solid #fff; */
+  border-radius: 50%;
+  margin: auto auto;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.avatar {
+  margin: auto auto;
+  position: absolute;
+  width: 90px;
+   /* transform: translateY(-5px); */
+  left: 2.8rem;
+  top: 1.0rem;
 }
 </style>

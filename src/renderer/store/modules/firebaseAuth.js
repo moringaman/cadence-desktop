@@ -6,6 +6,7 @@ import {
 } from '../../helpers/licence';
 
 import daysRemaining from '../../helpers/licenseTimer';
+import avatarMaker from '../../helpers/avatar';
 
 let auth = Firebase.auth();
 
@@ -48,7 +49,7 @@ const mutations = {
     setLicenseInfo(state, payload) {
         state.licenseInfo = payload
     },
-    setLicenseTimeout(state, payload){
+    setLicenseTimeout(state, payload) {
         state.licenseTimeout = payload
     }
 }
@@ -64,9 +65,11 @@ const actions = {
             .then(body => {
                 commit('setLicenseInfo', body)
                 // console.log(Licence)
-            })
-	let username = UsernameGen.generateUsername()
-        auth.createUserWithEmailAndPassword(payload.email, payload.password)
+        let username = UsernameGen.generateUsername()
+        // let avatar = `https://avatars.dicebear.com/v2/bottts/${username}.svg`
+        let avatar = avatarMaker(username)
+        let password = payload.password
+        auth.createUserWithEmailAndPassword(payload.email, password)
             .then(user => {
                 console.log(user)
                 let {
@@ -80,21 +83,22 @@ const actions = {
                 console.log("KEY: ", key)
                 const dbRef = Firebase.database().ref('user/' + user.uid)
                 dbRef.set({
-                        licence: key, // Pulled fro Nucleus
-			username: username,
-                        email: userEmail,
-                        paid: false,
-                        expire: expire,
-                        policy: policy,
-                        status: status,
-                        version: version
-                    })
+                    licence: key, // Pulled fro Nucleus
+                    username: username,
+                    email: userEmail,
+                    paid: false,
+                    expire: expire,
+                    policy: policy,
+                    status: status,
+                    version: version,
+                    avatar: avatar
+                })
                     .then(() => {
                         // TODO: Add to Cadence users local storage for offline use
-                        commit('setLoggedIn', {
-                            loggedIn: true,
-                            user: user.uid
-                        })
+                        // commit('setLoggedIn', {
+                            // loggedIn: true,
+                            // user: user.uid
+                        // })
                         dispatch('addFav', {
                             name: 'Cadence_Favorites',
                             version: "0.1.0 beta",
@@ -121,7 +125,8 @@ const actions = {
                             policy,
                             status,
                             version,
-			    username
+                            username,
+                            avatar
                         })
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
                             let localUserArr = [] // load dropdown default
@@ -141,7 +146,20 @@ const actions = {
                         })
                     })
             })
-            .catch(e => console.log(e.message));
+            }).then(()=>{
+                        dispatch('authenticate',{email:payload.email, password:payload.password})
+                        .then(()=>{
+                            
+                        commit('setLoggedIn', {
+                            loggedIn: true,
+                            user: user.uid
+                        })
+                        })
+            })
+            .catch(e =>{
+                console.log(e.message);
+                    return e.message;
+            })
     },
     authenticate({
         commit,
@@ -173,12 +191,12 @@ const actions = {
                 let userObj = {}
                 let parsedUserData = JSON.parse(localStorage.getItem('cadenceUsers'))
                 let userFound = false
-                    for (let i = 0; i < parsedUserData.length; i++) {
-                        if (parsedUserData[i].email === email) {
-                            userFound = true
-                        }
+                for (let i = 0; i < parsedUserData.length; i++) {
+                    if (parsedUserData[i].email === email) {
+                        userFound = true
                     }
-                if (parsedUserData === undefined || !userFound )   {
+                }
+                if (parsedUserData === undefined || !userFound) {
                     // Get data from firebase
                     let dbRef = Firebase.database().ref('user/' + user.uid)
                     dbRef.on('value', snapshot => {
@@ -190,7 +208,8 @@ const actions = {
                             policy,
                             status,
                             version,
-			    username
+                            username,
+                            avatar
                         } = snapshot
                         commit('setLicenseInfo', {
                             licence,
@@ -200,7 +219,8 @@ const actions = {
                             status,
                             version,
                             uid,
-			    username
+                            username,
+                            avatar
                         })
                         let userData = JSON.stringify(snapshot)
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
@@ -245,16 +265,16 @@ const actions = {
         commit('setLoggedOut')
         commit('basicUser', true)
     },
-    sendPasswordResetEmail({dispatch},payload) {
+    sendPasswordResetEmail({ dispatch }, payload) {
         console.log('EMAIL FOR RESET ', payload.email)
         let emailAddress = payload.email;
-        auth.sendPasswordResetEmail(emailAddress).then(function() {
-        // Email sent.
-            dispatch('notificationCtrl', {msg: `Password reset email sent to ${emailAddress}`, color: 'success'})
+        auth.sendPasswordResetEmail(emailAddress).then(function () {
+            // Email sent.
+            dispatch('notificationCtrl', { msg: `Password reset email sent to ${emailAddress}`, color: 'success' })
             Nucleus.track('Password Reset')
-        }).catch(function(error) {
-        // An error happened.
-        console.log(error)
+        }).catch(function (error) {
+            // An error happened.
+            console.log(error)
         });
     },
     basicUser({
@@ -270,15 +290,15 @@ const actions = {
         // TODO: check license type & status from state
         if (payload.check === "license") {
             let timeLeft = daysRemaining(state.licenseInfo.expire)
-            if (timeLeft > 0 && state.licenseInfo.policy === 'basic' ) {
+            if (timeLeft > 0 && state.licenseInfo.policy === 'basic') {
                 // dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
                 commit("setLicenseTimeout", timeLeft)
-            } else if  (timeLeft < 0 && state.licenseInfo.policy === 'basic' ) {
+            } else if (timeLeft < 0 && state.licenseInfo.policy === 'basic') {
                 console.log(timeLeft)
-                dispatch('notificationCtrl', {msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger"})
+                dispatch('notificationCtrl', { msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger" })
                 return false
-            } else if  (timeLeft < 0 && state.licenseInfo.policy !== 'basic' ) {
-                dispatch('notificationCtrl', {msg: `Your yearly license has expired, Please purchase a licence to contimue using this feature`, color: "danger"})
+            } else if (timeLeft < 0 && state.licenseInfo.policy !== 'basic') {
+                dispatch('notificationCtrl', { msg: `Your yearly license has expired, Please purchase a licence to contimue using this feature`, color: "danger" })
                 return false
             } else {
                 return true
@@ -314,7 +334,7 @@ const actions = {
             .then(body => {
                 console.log("Licence Info ", body)
                 if (body.error === "License not existing.") {
-                    dispatch('notificationCtrl', {msg: "licence not found on server", color: 'danger'})
+                    dispatch('notificationCtrl', { msg: "licence not found on server", color: 'danger' })
                     return
                 }
                 if (state.licenseInfo.email === body.userEmail) {
@@ -334,7 +354,8 @@ const actions = {
                         policy,
                         licence,
                         status,
-                        version
+                        version,
+                        avatar
                     } = body
                     // create new user data including userId
                     let newUserData = {
@@ -344,7 +365,8 @@ const actions = {
                         expire,
                         policy,
                         status,
-                        version
+                        version,
+                        avatar
                     }
                     // push new user data onto temp array
                     localUserArr.push(newUserData)
@@ -353,17 +375,17 @@ const actions = {
 
                     //Update users licence info in firebase
                     Firebase.database().ref('user/' + state.currentUser)
-                    .update(body)
-                    .then(() => {
-                        // Your Licence has been updated thankyou
-                        Nucleus.track('License Updated')
-                        dispatch('notificationCtrl', {msg: "Thankyou for updating your licence you can now access premium features", color: 'success'})
-                    })
+                        .update(body)
+                        .then(() => {
+                            // Your Licence has been updated thankyou
+                            Nucleus.track('License Updated')
+                            dispatch('notificationCtrl', { msg: "Thankyou for updating your licence you can now access premium features", color: 'success' })
+                        })
                 } else {
                     // licence does not belong to this email address
-                    dispatch('notificationCtrl', {msg: "Sorry but this licence does not match the email address you're signed in with", color: 'danger'})
+                    dispatch('notificationCtrl', { msg: "Sorry but this licence does not match the email address you're signed in with", color: 'danger' })
                 }
-                
+
             })
     },
     loggedInStatusCheck() {

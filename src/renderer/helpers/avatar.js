@@ -1,9 +1,7 @@
-import Avatars from '@dicebear/avatars';
-import sprites from '@dicebear/avatars-bottts-sprites';
 
-let options = {};
-
-exports.avatarMaker = email => {
-let avatars = new Avatars(sprites(options));
-return avatars.create(email);
+export default function avatarMaker(username) {
+  let genderArray = ['male', 'female']
+  let gender = genderArray[Math.round(Math.random())]
+    let avatarUrl = `https://avatars.dicebear.com/v2/${gender}/${username}.svg`
+  return avatarUrl;         
 }
