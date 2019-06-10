@@ -145,17 +145,20 @@ const actions = {
                             color: 'success'
                         })
                     })
+            }, err => {
+                return;
             })
             }).then(()=>{
                         dispatch('authenticate',{email:payload.email, password:payload.password})
-                        .then(()=>{
+                        
+            })
+            .then(()=>{
                             
                         commit('setLoggedIn', {
                             loggedIn: true,
                             user: user.uid
                         })
                         })
-            })
             .catch(e =>{
                 console.log(e.message);
                     return e.message;

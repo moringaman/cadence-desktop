@@ -130,14 +130,17 @@ export default {
 
 .username {
   font-size: 0.7rem;
-  margin: 1.8rem auto .4rem 1rem;
-  color:blueviolet;
-  font-weight: 200;
+  margin: 1.0rem auto .4rem 1rem;
+  padding: 0.5rem;
+  color: #fff;
+  font-weight: 600;
+  background-color:rgb(137, 43, 226);
+  display: inline-block;
 }
 
 .logo #cadence-logo {
   position: absolute;
-  width: 2rem;
+  width: 1.5rem;
   left: 0.5rem;
   margin-right: 3.5rem;
   transform: translateY(5px);
@@ -236,6 +239,6 @@ li i:hover {
   width: 90px;
    /* transform: translateY(-5px); */
   left: 2.8rem;
-  top: 1.0rem;
+  top: 1.4rem;
 }
 </style>
