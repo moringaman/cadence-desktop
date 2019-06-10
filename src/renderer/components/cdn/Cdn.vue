@@ -21,7 +21,7 @@
             <i class="fa fa-clipboard"></i>
           </span>
                 </a>
-                <a v-if='showFavs===true' class="card-header-icon">
+                <a v-if='showFavs===true' class="card-header-icon tooltip" v-ttip.bottom="'Email to Friend'">
                     <!-- <span class="icon" @click="(showNote =!showNote) && (editing=Data.name)"> -->
                     <span class="icon" @click="shareFav">     
             <i class="fa fa-envelope"></i>
