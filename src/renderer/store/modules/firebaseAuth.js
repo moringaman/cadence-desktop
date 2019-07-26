@@ -193,13 +193,16 @@ const actions = {
                 // Load LicenseInfo for user from local storage into state
                 let userObj = {}
                 let parsedUserData = JSON.parse(localStorage.getItem('cadenceUsers'))
+                console.log('PARSED: ', parsedUserData)
                 let userFound = false
-                for (let i = 0; i < parsedUserData.length; i++) {
-                    if (parsedUserData[i].email === email) {
-                        userFound = true
+                if (parsedUserData) {
+                    for (let i = 0; i < parsedUserData.length; i++) {
+                        if (parsedUserData[i].email === email) {
+                            userFound = true
+                        }
                     }
                 }
-                if (parsedUserData === undefined || !userFound) {
+                if (!parsedUserData || !userFound) {
                     // Get data from firebase
                     let dbRef = Firebase.database().ref('user/' + user.uid)
                     dbRef.on('value', snapshot => {
@@ -213,7 +216,7 @@ const actions = {
                             version,
                             username,
                             avatar
-                        } = snapshot
+                        } = snapshot.val()
                         commit('setLicenseInfo', {
                             licence,
                             email,
@@ -293,14 +296,14 @@ const actions = {
         // TODO: check license type & status from state
         if (payload.check === "license") {
             let timeLeft = daysRemaining(state.licenseInfo.expire)
-            if (timeLeft > 0 && state.licenseInfo.policy === 'basic') {
+            if (timeLeft > 0 && state.licenseInfo.policy !== 'pro') {
                 // dispatch('notificationCtrl', {msg: `Your 30 day trial will end in ${timeLeft} days time`, color: "warning"})
                 commit("setLicenseTimeout", timeLeft)
-            } else if (timeLeft < 0 && state.licenseInfo.policy === 'basic') {
+            } else if (timeLeft < 0 && state.licenseInfo.policy !== 'pro') {
                 console.log(timeLeft)
                 dispatch('notificationCtrl', { msg: `Your 30 day trial has ended, Please purchase a licence to contimue using this feature`, color: "danger" })
                 return false
-            } else if (timeLeft < 0 && state.licenseInfo.policy !== 'basic') {
+            } else if (timeLeft < 0 && state.licenseInfo.policy !== 'pro') {
                 dispatch('notificationCtrl', { msg: `Your yearly license has expired, Please purchase a licence to contimue using this feature`, color: "danger" })
                 return false
             } else {
