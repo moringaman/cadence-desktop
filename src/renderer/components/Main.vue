@@ -40,6 +40,7 @@
         type="text" 
         name="email"
         class="input" 
+        :class="{'is-danger': errors.first('email')}"
         placeholder="Email Address of person you are sharing with" 
         v-model="recipientAddress" 
         v-validate="'email'" 
@@ -171,7 +172,15 @@
         let result = this.$store.dispatch('confirmOperation')
       },
       updateRecipient() {
-        this.$store.commit('updateRecipient', this.recipientAddress)
+        this.$validator.validate().then(result => {
+          if(!result){
+           this.$store.dispatch('notificationCtrl', {msg: 'Please enter a vaid email address',
+           color: 'danger'})
+          } else {
+            this.$store.commit('updateRecipient', this.recipientAddress)
+          }
+        })
+        
       }
     },
     computed: {

@@ -361,6 +361,9 @@ etc.`
                 .then(yesNo => {
                     if (yesNo) {
                         this.$store.dispatch('shareFav', this.Data)
+                            .catch(err => {
+                                console.log(err)
+                            })
                     }
                 })
                 console.log('Sharing: ', this.Data)

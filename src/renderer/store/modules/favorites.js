@@ -1,6 +1,7 @@
 import Firebase from '../../helpers/firebase';
 import uid from '../../helpers/uid';
 import safeName from '../../helpers/safeName'
+import isValidEmail from '../../helpers/emailValidate.js'
 import _ from 'lodash';
 import http from 'http'
 const path = require('path')
@@ -197,10 +198,14 @@ const actions = {
                 console.log(error)
             })
     },
-    shareFav({state}, payload) {
+    shareFav({state, dispatch}, payload) {
        // Send Post request to cadence-desktop website to send email 
        let { Notes = "No Notes have been added for this Library", name, version, description, url } = payload
        let email = state.recipientAddress
+       let isValid = isValidEmail(email)
+       if(isValid == false){
+           return new Error('Invalid Email Address')
+       }
     //    console.log(JSON.stringify({ Notes, name, description, version, url, email }))
        var sendData = JSON.stringify({ Notes, name, description, version, url, email })
     //    ?const API_URL = `http://www.cadence-desktop.com/api/share-email`
@@ -226,6 +231,10 @@ const actions = {
                 var body = Buffer.concat(chunks);
                 console.log("Done")
                 console.timeEnd('mail sent')
+                dispatch('notificationCtrl', {
+                    msg: 'Library Sent sucessfully',
+                    color: 'success'
+                })
                 Nucleus.track('Share-Favourite')
                 // console.log(body.toString());
             });

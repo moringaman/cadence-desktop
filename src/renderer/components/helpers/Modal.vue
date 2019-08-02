@@ -17,7 +17,7 @@
     </div>
     <footer class="modal-card-foot">
       <button class="button is-success" @click='confirm'>Continue</button>
-      <button class="button" @click="close">Cancel</button>
+      <button class="button"  @click="close">Cancel</button>
     </footer>
   </div>
 </div>
