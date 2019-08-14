@@ -11,7 +11,7 @@
             <i class="fa fa-trash"></i>
           </span>
                 </a> 
-                <a v-if='showFavs===false && searchData.length < 1' class="card-header-icon tooltip" v-ttip.bottom="'Add to favorites'">
+                <a v-if='(showFavs===false && searchData.length < 1) && showHistory == false' class="card-header-icon tooltip" v-ttip.bottom="'Add to favorites'">
                     <span class="icon" @click="favouriteCDN()">
             <i class="fa fa-heart"></i>
           </span>
@@ -193,11 +193,14 @@ etc.`
             copyCDN(index) {
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
+                    console.log(cdn)
                 } else if (this.Data.file){
                     var cdn = `http://localhost:9082/${this.userCode}/${this.Data.file}`
                     var origin = this.Data.cdn
                 } else {
                     var cdn = this.Data.cdn
+                    var origin = this.Data.cdn
+                    console.log(cdn)
                 }
                 let clipboard = this.$clipboard,
                     notify = this.$notify

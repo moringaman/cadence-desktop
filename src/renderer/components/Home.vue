@@ -114,7 +114,7 @@
        <app-notify :notification='notification'/>
       <div class="slogun"> coding on the go</div>
       <div v-if="update" id="update-msg">
-        An update is available for Cadence, download today to get new features and bug fixes<a class="button is-success is-small" id="download-btn" @click="open('http://cadence-desktop/downloads')" href="#">Update</a>
+        An update is available for Cadence, download today to get new features and bug fixes<a class="button is-success is-small" id="download-btn" @click="open('http://cadence-desktop/download')" href="#">Update</a>
       </div>
   </div>
 </template>
