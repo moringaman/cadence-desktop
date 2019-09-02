@@ -53,7 +53,7 @@ const actions = {
         dispatch
     }, payload) {
         let {
-            name = '', version = 'latest', cdn = '', userId, online, Notes = '', description = '', url = '', publicNote = false
+            name = '', version = 'latest', cdn = '', userId, online, Notes = '', description = '', url = '', publicNote = false, username = '', avatar = ''
         } = payload
         if (online === false) {
             dispatch('notificationCtrl', {
@@ -94,7 +94,10 @@ const actions = {
                     userId,
                     description,
                     url,
-                    publicNote
+                    publicNote,
+                    noteVotes: '0',
+                    avatar,
+                    username
                 })
                 .then(response => {
                     localStorage.setItem(`favCDNs-${payload.userCode}`, JSON.stringify(state.favs))

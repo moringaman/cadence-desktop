@@ -274,7 +274,9 @@ etc.`
                         online,
                         description,
                         url: this.Data.cdn,
-                        publicNote: false
+                        publicNote: false,
+                        username: this.licenseInfo.username,
+                        avatar: this.licenseInfo.avatar
                     })
                 }
                 })
@@ -388,7 +390,8 @@ etc.`
                 'favs',
                 'showHistory',
                 'showProgress',
-                'modalResponse'
+                'modalResponse',
+                'licenseInfo'
             ]),
              compiledMarkdown: function () {
                  console.log('compiled')
@@ -412,7 +415,7 @@ etc.`
             Prism.highlightAll()
         },
         created() {
-    
+              console.log('Avatar', this.licenseInfo.avatar)
              if (Object.keys(this.currentUser) != 0) {
             if (this.searchData.length > 1 || this.showHistory == true) {
                 this.fileNameData = this.Data.latest.split('/').splice('-1')[0]
