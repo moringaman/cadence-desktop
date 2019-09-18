@@ -21,7 +21,8 @@ const state = {
     authenticating: false,
     localUserInfo: [],
     licenseInfo: {},
-    licenseTimeout: 30
+    licenseTimeout: 30,
+    osType: " "
 }
 
 const mutations = {
@@ -51,6 +52,10 @@ const mutations = {
     },
     setLicenseTimeout(state, payload) {
         state.licenseTimeout = payload
+    },
+    setOsType(state) {
+        const OS = window.navigator.platform.split(' ')[0]
+        state.osType = OS
     }
 }
 
@@ -294,6 +299,7 @@ const actions = {
         state
     }, payload) {
         // TODO: check license type & status from state
+        if(state.osType==="Linux") return true
         if (payload.check === "license") {
             let timeLeft = daysRemaining(state.licenseInfo.expire)
             if (timeLeft > 0 && state.licenseInfo.policy !== 'pro') {
@@ -436,7 +442,8 @@ const getters = {
     authenticating: state => state.authenticating,
     localUserInfo: state => state.localUserInfo,
     licenseInfo: state => state.licenseInfo,
-    licenseTimeout: state => state.licenseTimeout
+    licenseTimeout: state => state.licenseTimeout,
+    osType: state => state.osType
 }
 
 export default {

@@ -65,7 +65,9 @@
       <div class='local-count' v-if='localCDNStorage.length > 0 && searchData.length < 1'>
       <p>You have {{ localCDNStorage.length }} CDN's available for use offline</p>
       </div>
+      <div v-if="osType!=='Linux'">
        <app-ads/>
+      </div>
       <app-notify :notification='notification'/>
     </div>
      <app-footer></app-footer>
@@ -203,7 +205,8 @@
         'showModal',
         'modalMessage',
         'modalResponse',
-        'modalTitle'
+        'modalTitle',
+        'osType'
       ])
     },
     watch: {
@@ -225,6 +228,7 @@
       // let tray = new Tray(nimage)
       // console.log('CURRENT USER: ', this.currentUser)
       //TODO: Initialize app - add localCDN & favourite (vuejs)
+      this.$store.commit('setOsType')
       const userId = this.currentUser
       const online = this.online
       this.getIp()
