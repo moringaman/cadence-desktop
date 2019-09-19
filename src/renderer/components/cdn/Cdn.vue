@@ -193,14 +193,17 @@ etc.`
             copyCDN(index) {
                 if (this.Data.latest) {
                     var cdn = this.Data.latest;
-                    console.log(cdn)
                 } else if (this.Data.file){
                     var cdn = `http://localhost:9082/${this.userCode}/${this.Data.file}`
                     var origin = this.Data.cdn
+                    console.log('Origin', origin)
                 } else {
                     var cdn = this.Data.cdn
-                    var origin = this.Data.cdn
-                    console.log(cdn)
+                    // var origin = this.Data.cdn
+                    var origin = this.Data.url
+                    console.log('CDN: ', cdn)
+                    console.log('Origin 2: ', origin)
+                    console.log('URL Origin: ', this.Data.url)
                 }
                 let clipboard = this.$clipboard,
                     notify = this.$notify
