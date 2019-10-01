@@ -564,6 +564,7 @@ etc.`
         
         overflow-wrap: break-word;
         overflow: visible !important;
+        color: #4a4a4a !important;
     }
     
     .card-content.header {
