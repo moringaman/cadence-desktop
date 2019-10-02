@@ -1,4 +1,4 @@
-let currentVersion = "1.0.2" // Current app version matching package,json version
+let currentVersion = "1.0.3" // Current app version matching package,json version
 
 const Octokit = require('@octokit/rest')
 let octokit = new Octokit({
