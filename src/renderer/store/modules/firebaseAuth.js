@@ -66,17 +66,18 @@ const actions = {
         dispatch
     }, payload) {
         //TODO: write code to create new user account & profile with licence key
+        console.log(payload.email)
         createLicence.query(payload.email, 'basic')
             .then(body => {
                 commit('setLicenseInfo', body)
-                // console.log(Licence)
+                 console.log(body)
         let username = UsernameGen.generateUsername()
         // let avatar = `https://avatars.dicebear.com/v2/bottts/${username}.svg`
         let avatar = avatarMaker(username)
         let password = payload.password
         auth.createUserWithEmailAndPassword(payload.email, password)
-            .then(user => {
-                console.log(user)
+            .then(UserCredential => {
+                console.log(UserCredential)
                 let {
                     key,
                     expire,
@@ -86,7 +87,7 @@ const actions = {
                     userEmail
                 } = state.licenseInfo
                 console.log("KEY: ", key)
-                const dbRef = Firebase.database().ref('user/' + user.uid)
+                const dbRef = Firebase.database().ref('user/' + UserCredential.uid)
                 dbRef.set({
                     licence: key, // Pulled fro Nucleus
                     username: username,
@@ -108,7 +109,7 @@ const actions = {
                             name: 'CDN-Desktop_Favorites',
                             version: "0.1.0 beta",
                             cdn: `Favourites added from seach results will appear here for future use readthe notes below for more information`,
-                            userId: user.uid,
+                            userId: UserCredential.uid,
                             Notes: `<br><h3>Activate CDN-Desktop to unlock Premium Features</h3>
                             <p>Want to support our team contiune development on CDN Desktop and get updates and enhancements?</p>
                             <p>Head over to <a href='https://cadence-desktop.com' target='_blank' class='url'>https://cadence-desktop.com</a> to purchase a full licence for just $5 and you&#39;ll get access to all the features and updates for life!!</p>
@@ -119,12 +120,12 @@ const actions = {
                         })
                         dispatch('downloadCDN', {
                             cdn: 'seed',
-                            currentUser: user.uid
+                            currentUser: UserCredential.uid
                         })
                         // check for local user register
                         let userData = JSON.stringify({
                             licence: key,
-                            uid: user.uid,
+                            uid: UserCredential.uid,
                             email: payload.email,
                             expire,
                             policy,
@@ -161,7 +162,7 @@ const actions = {
                             
                         commit('setLoggedIn', {
                             loggedIn: true,
-                            user: user.uid
+                            user: UserCredential.uid
                         })
                         })
             .catch(e =>{
