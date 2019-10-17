@@ -89,8 +89,8 @@ const actions = {
             let userId = currentUser
             commit('setLocalCDNs', {
                 cdn: "Cadence Downloads",
-                file: "Libraries downloaded from search results appear here and served via your local cadence server",
-                name: 'Welcome to Cadence',
+                file: "Libraries downloaded from search results appear here and served via your local CDN Desktop server",
+                name: 'Welcome to CDN Desktop',
                 version: 'Notes',
                 userId: userId
             })
@@ -98,8 +98,8 @@ const actions = {
                         .ref('user/' + userId + '/downloads/' + "cdn_seed_data")
                         .set({
                             cdn: "Cadence Downloads",
-                            file: "Libraries downloaded from search results appear here, served via your local cadence server",
-                            name: 'Welcome to Cadence',
+                            file: "Libraries downloaded from search results appear here, served via your local CDN Desktop server",
+                            name: 'Welcome to CDN Desktop',
                             version: 'Notes',
                             userId: userId
                         }).then(response =>{

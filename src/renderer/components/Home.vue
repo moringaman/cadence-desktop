@@ -3,7 +3,7 @@
     <div class="overlay"></div>
     <div class="btn-close" @click='closeApp'><i class="fa fa-times fa-2x"></i></div>
     <img class="splash-logo" src=".././assets/logo2.svg">
-    <p class='welcome'>Cadence</p>
+    <p class='welcome'>CDN Desktop</p>
   <div class="card">
       <div class="card-content">
         <!-- <div class="card-content-heading">
@@ -114,7 +114,7 @@
        <app-notify :notification='notification'/>
       <div class="slogun"> coding on the go</div>
       <div v-if="update" id="update-msg">
-        An update is available for Cadence, download today to get new features and bug fixes<a class="button is-success is-small" id="download-btn" @click="open('http://cadence-desktop/download')" href="#">Update</a>
+        An update is available for CDN Desktop, download today to get new features and bug fixes<a class="button is-success is-small" id="download-btn" @click="open('http://cadence-desktop/download')" href="#">Update</a>
       </div>
   </div>
 </template>

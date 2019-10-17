@@ -1,6 +1,6 @@
 {
-  "name": "cadence-app",
-  "version": "1.0.3",
+  "name": "cdn-desktop",
+  "version": "1.0.4",
   "author": "Leon D (code@Webnostix.co.uk)",
   "description": "CDN Organizer",
   "license": "(GPL) General Purpose License",
@@ -17,7 +17,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "cadence-app",
+    "productName": "cdn-desktop",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
