@@ -250,9 +250,14 @@
         // this.$store.dispatch('getFavs', this.currentUser)
         this.$store.dispatch('getFavs', {uid: this.currentUser, userCode: this.userCode, online: this.online})
       } else {
+        console.log('Offline Mode')
+        
           // TODO: Load favourites from local storage if offline or not logged in
           //  this.$store.dispatch('getFavs')
           // this.$store.commit('loadSearchHistory')
+        //    this.$store.dispatch('getCDNs', {wget, userId, online })
+        //  console.log(localStorage.getItem(`localCDNs-${this.userCode}`))
+        // this.$store.dispatch('getFavs', {uid: this.currentUser, userCode: this.userCode, online: this.online})
       }
       this.$store.dispatch('getRandomAd')
       

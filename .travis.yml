@@ -2,6 +2,8 @@ osx_image: xcode8.3
 sudo: required
 dist: trusty
 language: c
+env:
+  - CSC_LINK=https://firebasestorage.googleapis.com/v0/b/cadence-8edfc.appspot.com/o/DevCertificate.p12?alt=media&token=185c6f8c-f09c-4489-bf7d-5cb0e7f7a766
 matrix:
   include:
   - os: osx

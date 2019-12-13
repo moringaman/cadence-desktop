@@ -217,7 +217,7 @@ var emailRE = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(
                       userObj.status = parsedUserData[i].status
                     }
                   }
-                  console.log( userObj) // uid and email
+                  console.log("Local User Obj", userObj) // uid and email
                   // TODO: set logged in to true and load userdata associated with email selectedEmail in userObj
                   // load favs
                   // set loggedIn to true

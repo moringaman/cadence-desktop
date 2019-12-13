@@ -53,30 +53,34 @@ const actions = {
     commit('toggleShowLocalStorage', false)
     commit('loadSearchData', [])
     commit('toggleDataLoading')
+    console.log(search)
     const URL = `https://api.cdnjs.com/libraries?search=`;
-    axios.get(URL + search + '&fields=version,description')
+    axios.get(`${URL}${search}&fields=version,description`)
       .then((response) => {
-        if (response.data.results.length < 1) {
+        if (response.data.results.length < 1 || response.data.results.length > 300) {
           console.log('no results found')
           dispatch('notificationCtrl', {
             msg: 'No results were found using that search term, please try another',
             color: 'danger'
           })
-        }
-        let searchData = response.data.results;
-        commit('clearSearchData')
-        commit('toggleShowHistory', false)
-        commit('showFavs', false)
-        commit('toggleDataLoading')
-        setTimeout(() => {
-          commit('loadSearchData', searchData)
-        }, 500)
-        // localStorage.setItem('searchHistory', JSON.stringify(searchData))
-        //  console.log(response);
-        // commit('loadSearchHistory', localStorage.getItem('searchHistory'))
+          commit('toggleDataLoading')
+        } else {
+          let searchData = response.data.results;
+          commit('clearSearchData')
+          commit('toggleShowHistory', false)
+          commit('showFavs', false)
+          commit('toggleDataLoading')
+          setTimeout(() => {
+            commit('loadSearchData', searchData)
+          }, 500)
+          // localStorage.setItem('searchHistory', JSON.stringify(searchData))
+          //  console.log(response);
+          // commit('loadSearchHistory', localStorage.getItem('searchHistory'))
+        }  
       })
       .catch(err => {
         console.log('ERR: ', err)
+        return (Err ('failed'))
       })
 
   }

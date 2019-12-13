@@ -214,7 +214,6 @@ const actions = {
                     dbRef.on('value', snapshot => {
                         let {
                             licence,
-                            uid,
                             email,
                             expire,
                             policy,
@@ -223,28 +222,31 @@ const actions = {
                             username,
                             avatar
                         } = snapshot.val()
-                        commit('setLicenseInfo', {
+                        const userData = {
                             licence,
                             email,
                             expire,
                             policy,
                             status,
                             version,
-                            uid,
+                            uid:user.uid,
                             username,
                             avatar
-                        })
-                        let userData = JSON.stringify(snapshot)
+                        }
+                        commit('setLicenseInfo', userData)
+                        console.log("UserData", userData) // Maybe snapshot.val()
                         if (localStorage.hasOwnProperty('cadenceUsers')) {
-                            let localUserArr = [] // load dropdown default
+                            const localUserArr = [] // load dropdown default
                             localUserArr.push(userData)
-                            let parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
+                            const parsedObj = JSON.parse(localStorage.getItem('cadenceUsers'))
                             for (var obj in parsedObj) {
                                 localUserArr.push(JSON.stringify(parsedObj[obj]))
                             }
                             localStorage.setItem('cadenceUsers', `[${localUserArr}]`)
                         } else {
-                            localStorage.setItem('cadenceUsers', `[${userData}]`)
+                            let parsedUserData = JSON.stringify(userData)
+                            localStorage.setItem('cadenceUsers', `[${parsedUserData}]`)
+                            console.log("UserData", userData) // Maybe snapshot.val()
                         }
                     })
                 } else {
