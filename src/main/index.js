@@ -41,14 +41,14 @@ function createTray() {
       label: 'Quit',
       click: function() {
         mainWindow.close();
-        console.log('Clicked on settings');
+        // console.log('Clicked on settings');
       },
     },
 
     {
       label: 'Help',
       click: function() {
-        console.log('Clicked on Help');
+        // console.log('Clicked on Help');
         shell.openExternal('http://www.cadence-desktop.com')
       },
     },
