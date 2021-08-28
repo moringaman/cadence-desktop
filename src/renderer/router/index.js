@@ -4,7 +4,9 @@ import BootstrapVue from 'bootstrap-vue';
 import Clipboard from 'v-clipboard'
 import VueBar from 'vuebar';
 import VueUp from'vueup';
-import Firebase from 'firebase';
+import Firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 import Vuex from 'vuex';
 import VeeValidate from 'vee-validate';
 import Wget from 'wget-improved';

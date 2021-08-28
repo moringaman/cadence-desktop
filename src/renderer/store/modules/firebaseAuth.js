@@ -182,6 +182,7 @@ const actions = {
             password
         } = payload
         console.log(email)
+        console.log(password)
         auth.signInWithEmailAndPassword(email, password)
             .then(function (data) {
                 console.log('DATA:', data)

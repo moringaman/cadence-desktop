@@ -129,7 +129,9 @@ window.__FORM__ = {
   resetPassword: false
 }
   
-  import Firebase from 'firebase'
+  import Firebase from 'firebase/compat/app'
+  import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
   import Router from 'vue-router'
   import {mapGetters} from 'vuex'
   import Notify from './helpers/Notify.vue'
